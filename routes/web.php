@@ -11,6 +11,8 @@ use App\Http\Controllers\DiagnosticoController;
 use App\Http\Controllers\ProcedimentoController;
 use App\Http\Controllers\RegistoCirurgicoController;
 use App\Http\Controllers\CirurgiaController;
+use App\Http\Controllers\AtividadeCientificaController;
+use App\Http\Controllers\FormacaoController;
 
 Route::get('/', function () {
     return Inertia::render('welcome', [
@@ -35,6 +37,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'complicacoes' => \App\Models\Cirurgia::whereHas('registoCirurgico', function($q) use ($userId) {
                     $q->where('user_id', $userId);
                 })->whereNotNull('clavien-dindo')->count(),
+                'publicacoes' => \App\Models\AtividadeCientifica::where('user_id', $userId)->count(),
+                'formacoes' => \App\Models\Formacao::where('user_id', $userId)->count(),
+                'horasFormacao' => \App\Models\Formacao::where('user_id', $userId)->sum('duracao_horas') ?? 0,
+                'creditosFormacao' => \App\Models\Formacao::where('user_id', $userId)->sum('creditos') ?? 0,
             ],
             'recentRegistos' => \App\Models\RegistoCirurgico::where('user_id', $userId)
                 ->with(['utente', 'tipoDeCirurgia'])
@@ -62,6 +68,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('registos-cirurgicos', RegistoCirurgicoController::class)
         ->parameters(['registos-cirurgicos' => 'registo']);
     Route::resource('cirurgias', CirurgiaController::class);
+    
+    // Atividade Científica Routes
+    Route::resource('atividades-cientificas', AtividadeCientificaController::class)
+        ->parameters(['atividades-cientificas' => 'atividade']);
+    Route::get('atividades-cientificas/{atividade}/download', [AtividadeCientificaController::class, 'download'])
+        ->name('atividades-cientificas.download');
+    
+    // Formações Routes
+    Route::resource('formacoes', FormacaoController::class)
+        ->parameters(['formacoes' => 'formacao']);
+    Route::get('formacoes/{formacao}/download', [FormacaoController::class, 'download'])
+        ->name('formacoes.download');
 });
 
 require __DIR__.'/settings.php';

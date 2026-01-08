@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
 
         // Criar admin
         User::firstOrCreate(
-            ['email' => 'admin@medfolio.com'],
+            ['email' => 'admin@medtrack.com'],
             [
                 'name' => 'Administrador',
                 'password' => 'password',
@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // Seeders do sistema Medfolio (ordem é importante devido às foreign keys)
+        // Seeders do sistema MedTrack (ordem é importante devido às foreign keys)
         $this->call([
             AreaSeeder::class,
             TipoDeCirurgiaSeeder::class,
@@ -43,6 +43,8 @@ class DatabaseSeeder extends Seeder
             UtenteSeeder::class,
             RegistoCirurgicoSeeder::class,
             CirurgiaSeeder::class,
+            AtividadeCientificaSeeder::class,
+            FormacaoSeeder::class,
         ]);
 
         $this->command->info('✅ Database seeding completo!');
@@ -58,6 +60,8 @@ class DatabaseSeeder extends Seeder
                 ['Utentes', \App\Models\Utente::count()],
                 ['Registos Cirúrgicos', \App\Models\RegistoCirurgico::count()],
                 ['Cirurgias', \App\Models\Cirurgia::count()],
+                ['Atividades Científicas', \App\Models\AtividadeCientifica::count()],
+                ['Formações', \App\Models\Formacao::count()],
                 ['Utilizadores', User::count()],
             ]
         );

@@ -15,24 +15,24 @@ export default function AuthSimpleLayout({
     description,
 }: PropsWithChildren<AuthLayoutProps>) {
     return (
-        <div className="flex min-h-svh bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="flex min-h-svh bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
             {/* Left Side - Branding */}
             <div className="hidden lg:flex lg:w-1/2 lg:flex-col lg:justify-center lg:px-12 xl:px-16">
                 <div className="relative">
-                    <div className="absolute -left-4 -top-4 h-32 w-32 rounded-full bg-blue-400 opacity-30 blur-3xl"></div>
-                    <div className="absolute -bottom-4 -right-4 h-40 w-40 rounded-full bg-blue-500 opacity-30 blur-3xl"></div>
+                    <div className="absolute -left-4 -top-4 h-32 w-32 rounded-full bg-emerald-400 opacity-30 blur-3xl"></div>
+                    <div className="absolute -bottom-4 -right-4 h-40 w-40 rounded-full bg-teal-500 opacity-30 blur-3xl"></div>
                     
                     <div className="relative space-y-8">
                         <Link
                             href={home()}
                             className="inline-flex items-center gap-3 font-medium"
                         >
-                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 shadow-lg">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-600 shadow-lg">
                                 <Activity className="h-7 w-7 text-white" />
                             </div>
                             <div>
                                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                                    Medfolio
+                                    MedTrack
                                 </h1>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
                                     Sistema de Gestão Cirúrgica
@@ -43,7 +43,7 @@ export default function AuthSimpleLayout({
                         <div className="space-y-6">
                             <h2 className="text-4xl font-bold leading-tight text-gray-900 dark:text-white">
                                 Gestão Profissional de<br />
-                                <span className="text-blue-600">Registos Cirúrgicos</span>
+                                <span className="text-emerald-600">Registos Cirúrgicos</span>
                             </h2>
                             <p className="text-lg text-gray-600 dark:text-gray-300">
                                 Plataforma completa para organização, monitorização e análise de intervenções cirúrgicas.
@@ -87,12 +87,12 @@ export default function AuthSimpleLayout({
                             href={home()}
                             className="flex items-center gap-3"
                         >
-                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 shadow-lg">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-600 shadow-lg">
                                 <Activity className="h-7 w-7 text-white" />
                             </div>
                             <div>
                                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                                    Medfolio
+                                    MedTrack
                                 </h1>
                                 <p className="text-xs text-gray-600 dark:text-gray-400">
                                     Sistema de Gestão Cirúrgica

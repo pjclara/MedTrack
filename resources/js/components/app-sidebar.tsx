@@ -13,7 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, FileText, Activity } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, FileText, Activity, GraduationCap, Award } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -36,6 +36,16 @@ const mainNavItems: NavItem[] = [
         title: 'Cirurgias',
         href: '/cirurgias',
         icon: Activity,
+    },
+    {
+        title: 'Atividade Científica',
+        href: '/atividades-cientificas',
+        icon: GraduationCap,
+    },
+    {
+        title: 'Formações',
+        href: '/formacoes',
+        icon: Award,
     },
 ];
 

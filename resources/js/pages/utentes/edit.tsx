@@ -162,7 +162,7 @@ export default function UtenteEdit({ utente }: UtenteEditProps) {
                                         Cancelar
                                     </Button>
                                 </Link>
-                                <Button type="submit" disabled={processing} className="bg-blue-600 hover:bg-blue-700">
+                                <Button type="submit" disabled={processing} className="bg-emerald-600 hover:bg-emerald-700">
                                     <Save className="mr-2 h-4 w-4" />
                                     {processing ? 'A guardar...' : 'Guardar Alterações'}
                                 </Button>

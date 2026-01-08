@@ -116,7 +116,7 @@ export default function Profile({
                                     <Button
                                         disabled={processing}
                                         data-test="update-profile-button"
-                                        className="bg-blue-600 hover:bg-blue-700"
+                                        className="bg-emerald-600 hover:bg-emerald-700"
                                     >
                                         Guardar
                                     </Button>

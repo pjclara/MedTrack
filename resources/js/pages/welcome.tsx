@@ -12,18 +12,18 @@ export default function Welcome({
 
     return (
         <>
-            <Head title="Medfolio - Sistema de Gestão de Registos Cirúrgicos" />
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+            <Head title="MedTrack - Sistema de Gestão de Registos Cirúrgicos" />
+            <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
                 {/* Header */}
                 <header className="border-b border-gray-200 bg-white/80 backdrop-blur-sm dark:border-gray-700 dark:bg-gray-800/80">
                     <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
                         <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-600">
                                 <Activity className="h-6 w-6 text-white" />
                             </div>
                             <div>
                                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                                    Medfolio
+                                    MedTrack
                                 </h1>
                                 <p className="text-xs text-gray-600 dark:text-gray-400">
                                     Sistema de Gestão Cirúrgica
@@ -34,7 +34,7 @@ export default function Welcome({
                             {auth.user ? (
                                 <Link
                                     href={dashboard()}
-                                    className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+                                    className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
                                 >
                                     Dashboard
                                 </Link>
@@ -49,7 +49,7 @@ export default function Welcome({
                                     {canRegister && (
                                         <Link
                                             href={register()}
-                                            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+                                            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
                                         >
                                             Registar
                                         </Link>
@@ -64,7 +64,7 @@ export default function Welcome({
                 <section className="mx-auto max-w-7xl px-6 py-20">
                     <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
                         <div className="flex flex-col justify-center">
-                            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
                                 <Activity className="h-4 w-4" />
                                 Plataforma Médica Profissional
                             </div>
@@ -82,7 +82,7 @@ export default function Welcome({
                                 {auth.user ? (
                                     <Link
                                         href={dashboard()}
-                                        className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-8 py-4 text-base font-semibold text-white shadow-lg transition-all hover:bg-blue-700 hover:shadow-xl"
+                                        className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-8 py-4 text-base font-semibold text-white shadow-lg transition-all hover:bg-emerald-700 hover:shadow-xl"
                                     >
                                         Aceder ao Dashboard
                                         <TrendingUp className="h-5 w-5" />
@@ -91,7 +91,7 @@ export default function Welcome({
                                     <>
                                         <Link
                                             href={register()}
-                                            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-8 py-4 text-base font-semibold text-white shadow-lg transition-all hover:bg-blue-700 hover:shadow-xl"
+                                            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-8 py-4 text-base font-semibold text-white shadow-lg transition-all hover:bg-emerald-700 hover:shadow-xl"
                                         >
                                             Começar Agora
                                             <Activity className="h-5 w-5" />
@@ -108,8 +108,8 @@ export default function Welcome({
                         </div>
                         <div className="relative">
                             <div className="relative rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 p-8 shadow-2xl">
-                                <div className="absolute -left-4 -top-4 h-24 w-24 rounded-full bg-blue-400 opacity-50 blur-2xl"></div>
-                                <div className="absolute -bottom-4 -right-4 h-32 w-32 rounded-full bg-blue-500 opacity-50 blur-2xl"></div>
+                                <div className="absolute -left-4 -top-4 h-24 w-24 rounded-full bg-emerald-400 opacity-50 blur-2xl"></div>
+                                <div className="absolute -bottom-4 -right-4 h-32 w-32 rounded-full bg-teal-500 opacity-50 blur-2xl"></div>
                                 <div className="relative space-y-4">
                                     <div className="rounded-lg bg-white/10 p-6 backdrop-blur-sm">
                                         <div className="mb-3 flex items-center gap-3">
@@ -163,7 +163,7 @@ export default function Welcome({
                         </div>
                         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                             <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-lg dark:border-gray-700 dark:bg-gray-900">
-                                <div className="mb-4 inline-flex rounded-lg bg-blue-100 p-3 dark:bg-blue-900/30">
+                                <div className="mb-4 inline-flex rounded-lg bg-emerald-100 p-3 dark:bg-emerald-900/30">
                                     <FileText className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                                 </div>
                                 <h4 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">
@@ -244,7 +244,7 @@ export default function Welcome({
                         {!auth.user && (
                             <Link
                                 href={register()}
-                                className="inline-flex items-center gap-2 rounded-lg bg-white px-10 py-4 text-lg font-semibold text-blue-600 shadow-xl transition-all hover:bg-blue-50"
+                                className="inline-flex items-center gap-2 rounded-lg bg-white px-10 py-4 text-lg font-semibold text-emerald-600 shadow-xl transition-all hover:bg-emerald-50"
                             >
                                 Criar Conta Gratuita
                                 <Activity className="h-5 w-5" />
@@ -258,15 +258,15 @@ export default function Welcome({
                     <div className="mx-auto max-w-7xl px-6">
                         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
                             <div className="flex items-center gap-3">
-                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
+                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600">
                                     <Activity className="h-5 w-5 text-white" />
                                 </div>
                                 <span className="font-semibold text-gray-900 dark:text-white">
-                                    Medfolio
+                                    MedTrack
                                 </span>
                             </div>
                             <p className="text-sm text-gray-600 dark:text-gray-400">
-                                © {new Date().getFullYear()} Medfolio. Sistema de Gestão de Registos Cirúrgicos.
+                                © {new Date().getFullYear()} MedTrack. Sistema de Gestão de Registos Cirúrgicos.
                             </p>
                         </div>
                     </div>

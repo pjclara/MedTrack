@@ -21,7 +21,7 @@ class SeedMedfolioData extends Command
      *
      * @var string
      */
-    protected $description = 'Seed Medfolio database with sample data';
+    protected $description = 'Seed MedTrack database with sample data';
 
     /**
      * Execute the console command.
@@ -130,7 +130,7 @@ class SeedMedfolioData extends Command
         $this->newLine();
         $this->info('💡 Credenciais de teste:');
         $this->line('   Email: test@example.com');
-        $this->line('   Email: admin@medfolio.com');
+        $this->line('   Email: admin@medtrack.com');
         $this->line('   Password: password');
     }
 }

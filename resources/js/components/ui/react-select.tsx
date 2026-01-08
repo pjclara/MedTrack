@@ -143,7 +143,7 @@ export function CustomMultiSelect({ onChange, ...props }: CustomMultiSelectProps
         }),
         multiValue: (base: any) => ({
             ...base,
-            backgroundColor: 'hsl(221.2 83.2% 53.3%)',
+            backgroundColor: 'hsl(160 84% 39%)',
             borderRadius: '0.375rem',
         }),
         multiValueLabel: (base: any) => ({
@@ -154,7 +154,7 @@ export function CustomMultiSelect({ onChange, ...props }: CustomMultiSelectProps
             ...base,
             color: 'hsl(0 0% 100%)',
             '&:hover': {
-                backgroundColor: 'hsl(221.2 83.2% 43.3%)',
+                backgroundColor: 'hsl(160 84% 32%)',
                 color: 'hsl(0 0% 100%)',
             },
         }),

@@ -49,7 +49,7 @@ export default function CirurgiaIndex({ cirurgias }: CirurgiaIndexProps) {
                         </p>
                     </div>
                     <Link href="/cirurgias/create">
-                        <Button className="bg-blue-600 hover:bg-blue-700">
+                        <Button className="bg-emerald-600 hover:bg-emerald-700">
                             <PlusCircle className="mr-2 h-4 w-4" />
                             Nova Cirurgia
                         </Button>

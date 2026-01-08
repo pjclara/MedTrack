@@ -1,4 +1,4 @@
-# Seeders do Sistema Medfolio
+# Seeders do Sistema MedTrack
 
 ## 📋 Ordem de Execução
 
@@ -127,7 +127,7 @@ Edite os respectivos seeders e adicione aos arrays.
 
 4. **Usuários de teste**:
    - Email: `test@example.com` / Password: `password`
-   - Email: `admin@medfolio.com` / Password: `password`
+   - Email: `admin@medtrack.com` / Password: `password`
 
 ## 📝 Exemplo de Uso
 
