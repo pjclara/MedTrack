@@ -25,10 +25,8 @@ interface EditAtividadeProps {
     categorias: string[];
 }
 
-export default function EditAtividade({ atividade, tipos, categorias }: EditAtividadeProps) {
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [removerFicheiro, setRemoverFicheiro] = useState(false);
-    const [formData, setFormData] = useState({
+export default function EditAtividade({ atividade, tipos = [], categorias = [] }: EditAtividadeProps) {
+    const { data, setData, post, processing, errors } = useForm({
         titulo: atividade.titulo,
         descricao: atividade.descricao || '',
         tipo: atividade.tipo,
@@ -44,40 +42,22 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
         link: atividade.link || '',
         fator_impacto: atividade.fator_impacto?.toString() || '',
         observacoes: atividade.observacoes || '',
+        ficheiro: null as File | null,
+        remover_ficheiro: false,
+        _method: 'PUT'
     });
-
-    const { post, processing } = useForm();
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-            setSelectedFile(e.target.files[0]);
+            setData('ficheiro', e.target.files[0]);
         }
     };
 
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        const data = new FormData();
-        data.append('_method', 'PUT');
-        
-        // Add all form fields
-        Object.entries(formData).forEach(([key, value]) => {
-            if (value !== '' && value !== null) {
-                data.append(key, value.toString());
-            }
-        });
-
-        // Add file removal flag
-        if (removerFicheiro) {
-            data.append('remover_ficheiro', '1');
-        }
-
-        // Add new file if selected
-        if (selectedFile) {
-            data.append('ficheiro', selectedFile);
-        }
-
-        router.post(`/atividades-cientificas/${atividade.id}`, data as any, {
+        // Use post with _method: 'PUT' for multipart/form-data compatibility
+        post(`/atividades-cientificas/${atividade.id}`, {
             onSuccess: () => {
                 toast.success('Atividade científica atualizada com sucesso!');
             },
@@ -116,11 +96,12 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                                 </Label>
                                 <Input
                                     id="titulo"
-                                    value={formData.titulo}
-                                    onChange={(e) => setFormData({ ...formData, titulo: e.target.value })}
+                                    value={data.titulo}
+                                    onChange={(e) => setData('titulo', e.target.value)}
                                     placeholder="Título da atividade"
-                                    required
+                                    className={errors.titulo ? 'border-destructive' : ''}
                                 />
+                                {errors.titulo && <p className="text-sm text-destructive">{errors.titulo}</p>}
                             </div>
 
                             {/* Tipo e Data */}
@@ -130,10 +111,10 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                                         Tipo <span className="text-destructive">*</span>
                                     </Label>
                                     <Select
-                                        value={formData.tipo}
-                                        onValueChange={(value) => setFormData({ ...formData, tipo: value })}
+                                        value={data.tipo}
+                                        onValueChange={(value) => setData('tipo', value)}
                                     >
-                                        <SelectTrigger>
+                                        <SelectTrigger className={errors.tipo ? 'border-destructive' : ''}>
                                             <SelectValue placeholder="Selecione o tipo" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -144,6 +125,7 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                    {errors.tipo && <p className="text-sm text-destructive">{errors.tipo}</p>}
                                 </div>
 
                                 <div className="space-y-2">
@@ -153,10 +135,11 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                                     <Input
                                         id="data"
                                         type="date"
-                                        value={formData.data}
-                                        onChange={(e) => setFormData({ ...formData, data: e.target.value })}
-                                        required
+                                        value={data.data}
+                                        onChange={(e) => setData('data', e.target.value)}
+                                        className={errors.data ? 'border-destructive' : ''}
                                     />
+                                    {errors.data && <p className="text-sm text-destructive">{errors.data}</p>}
                                 </div>
                             </div>
 
@@ -165,11 +148,13 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                                 <Label htmlFor="descricao">Descrição</Label>
                                 <Textarea
                                     id="descricao"
-                                    value={formData.descricao}
-                                    onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
+                                    value={data.descricao}
+                                    onChange={(e) => setData('descricao', e.target.value)}
                                     placeholder="Breve descrição da atividade..."
                                     rows={3}
+                                    className={errors.descricao ? 'border-destructive' : ''}
                                 />
+                                {errors.descricao && <p className="text-sm text-destructive">{errors.descricao}</p>}
                             </div>
 
                             {/* Revista/Conferência e Localização */}
@@ -178,20 +163,24 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                                     <Label htmlFor="revista_conferencia">Revista/Conferência/Evento</Label>
                                     <Input
                                         id="revista_conferencia"
-                                        value={formData.revista_conferencia}
-                                        onChange={(e) => setFormData({ ...formData, revista_conferencia: e.target.value })}
+                                        value={data.revista_conferencia}
+                                        onChange={(e) => setData('revista_conferencia', e.target.value)}
                                         placeholder="Nome da revista ou evento"
+                                        className={errors.revista_conferencia ? 'border-destructive' : ''}
                                     />
+                                    {errors.revista_conferencia && <p className="text-sm text-destructive">{errors.revista_conferencia}</p>}
                                 </div>
 
                                 <div className="space-y-2">
                                     <Label htmlFor="localizacao">Localização</Label>
                                     <Input
                                         id="localizacao"
-                                        value={formData.localizacao}
-                                        onChange={(e) => setFormData({ ...formData, localizacao: e.target.value })}
+                                        value={data.localizacao}
+                                        onChange={(e) => setData('localizacao', e.target.value)}
                                         placeholder="Cidade, País"
+                                        className={errors.localizacao ? 'border-destructive' : ''}
                                     />
+                                    {errors.localizacao && <p className="text-sm text-destructive">{errors.localizacao}</p>}
                                 </div>
                             </div>
 
@@ -199,20 +188,21 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                             <div className="space-y-2">
                                 <Label htmlFor="categoria">Categoria</Label>
                                 <Select
-                                    value={formData.categoria}
-                                    onValueChange={(value) => setFormData({ ...formData, categoria: value })}
+                                    value={data.categoria}
+                                    onValueChange={(value) => setData('categoria', value)}
                                 >
-                                    <SelectTrigger>
+                                    <SelectTrigger className={errors.categoria ? 'border-destructive' : ''}>
                                         <SelectValue placeholder="Selecione a categoria" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {categorias.map((cat) => (
+                                        {(categorias || []).map((cat) => (
                                             <SelectItem key={cat} value={cat}>
                                                 {cat}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
+                                {errors.categoria && <p className="text-sm text-destructive">{errors.categoria}</p>}
                             </div>
 
                             {/* Autores */}
@@ -220,11 +210,13 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                                 <Label htmlFor="autores">Autores</Label>
                                 <Textarea
                                     id="autores"
-                                    value={formData.autores}
-                                    onChange={(e) => setFormData({ ...formData, autores: e.target.value })}
+                                    value={data.autores}
+                                    onChange={(e) => setData('autores', e.target.value)}
                                     placeholder="Lista de autores separados por vírgula"
                                     rows={2}
+                                    className={errors.autores ? 'border-destructive' : ''}
                                 />
+                                {errors.autores && <p className="text-sm text-destructive">{errors.autores}</p>}
                             </div>
 
                             {/* Autor Principal e Posição */}
@@ -232,9 +224,9 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                                 <div className="flex items-center space-x-2">
                                     <Checkbox
                                         id="autor_principal"
-                                        checked={formData.autor_principal}
+                                        checked={data.autor_principal}
                                         onCheckedChange={(checked) => 
-                                            setFormData({ ...formData, autor_principal: checked as boolean })
+                                            setData('autor_principal', checked as boolean)
                                         }
                                     />
                                     <Label htmlFor="autor_principal" className="cursor-pointer">
@@ -248,10 +240,12 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                                         id="posicao_autor"
                                         type="number"
                                         min="1"
-                                        value={formData.posicao_autor}
-                                        onChange={(e) => setFormData({ ...formData, posicao_autor: e.target.value })}
+                                        value={data.posicao_autor}
+                                        onChange={(e) => setData('posicao_autor', e.target.value)}
                                         placeholder="Ex: 2, 3, 4..."
+                                        className={errors.posicao_autor ? 'border-destructive' : ''}
                                     />
+                                    {errors.posicao_autor && <p className="text-sm text-destructive">{errors.posicao_autor}</p>}
                                 </div>
                             </div>
 
@@ -261,20 +255,24 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                                     <Label htmlFor="doi">DOI</Label>
                                     <Input
                                         id="doi"
-                                        value={formData.doi}
-                                        onChange={(e) => setFormData({ ...formData, doi: e.target.value })}
+                                        value={data.doi}
+                                        onChange={(e) => setData('doi', e.target.value)}
                                         placeholder="10.1000/xyz123"
+                                        className={errors.doi ? 'border-destructive' : ''}
                                     />
+                                    {errors.doi && <p className="text-sm text-destructive">{errors.doi}</p>}
                                 </div>
 
                                 <div className="space-y-2">
                                     <Label htmlFor="isbn">ISBN</Label>
                                     <Input
                                         id="isbn"
-                                        value={formData.isbn}
-                                        onChange={(e) => setFormData({ ...formData, isbn: e.target.value })}
+                                        value={data.isbn}
+                                        onChange={(e) => setData('isbn', e.target.value)}
                                         placeholder="978-3-16-148410-0"
+                                        className={errors.isbn ? 'border-destructive' : ''}
                                     />
+                                    {errors.isbn && <p className="text-sm text-destructive">{errors.isbn}</p>}
                                 </div>
 
                                 <div className="space-y-2">
@@ -284,10 +282,12 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                                         type="number"
                                         step="0.001"
                                         min="0"
-                                        value={formData.fator_impacto}
-                                        onChange={(e) => setFormData({ ...formData, fator_impacto: e.target.value })}
+                                        value={data.fator_impacto}
+                                        onChange={(e) => setData('fator_impacto', e.target.value)}
                                         placeholder="Ex: 5.234"
+                                        className={errors.fator_impacto ? 'border-destructive' : ''}
                                     />
+                                    {errors.fator_impacto && <p className="text-sm text-destructive">{errors.fator_impacto}</p>}
                                 </div>
                             </div>
 
@@ -297,10 +297,12 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                                 <Input
                                     id="link"
                                     type="url"
-                                    value={formData.link}
-                                    onChange={(e) => setFormData({ ...formData, link: e.target.value })}
+                                    value={data.link}
+                                    onChange={(e) => setData('link', e.target.value)}
                                     placeholder="https://..."
+                                    className={errors.link ? 'border-destructive' : ''}
                                 />
+                                {errors.link && <p className="text-sm text-destructive">{errors.link}</p>}
                             </div>
 
                             {/* Upload de Ficheiro */}
@@ -308,7 +310,7 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                                 <Label htmlFor="ficheiro">Ficheiro Anexo</Label>
                                 
                                 {/* Existing file */}
-                                {atividade.ficheiro_path && !removerFicheiro && !selectedFile && (
+                                {atividade.ficheiro_path && !data.remover_ficheiro && !data.ficheiro && (
                                     <div className="flex items-center gap-2 p-3 rounded-lg bg-muted">
                                         <Upload className="h-4 w-4 text-muted-foreground" />
                                         <div className="flex-1">
@@ -321,7 +323,7 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                                             type="button"
                                             variant="destructive"
                                             size="sm"
-                                            onClick={() => setRemoverFicheiro(true)}
+                                            onClick={() => setData('remover_ficheiro', true)}
                                         >
                                             <Trash2 className="h-4 w-4" />
                                         </Button>
@@ -329,14 +331,14 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                                 )}
 
                                 {/* File removed message */}
-                                {removerFicheiro && !selectedFile && (
+                                {data.remover_ficheiro && !data.ficheiro && (
                                     <div className="p-3 rounded-lg bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-400">
                                         <p className="text-sm">Ficheiro será removido ao guardar</p>
                                         <Button
                                             type="button"
                                             variant="link"
                                             size="sm"
-                                            onClick={() => setRemoverFicheiro(false)}
+                                            onClick={() => setData('remover_ficheiro', false)}
                                             className="px-0 h-auto"
                                         >
                                             Cancelar remoção
@@ -345,7 +347,7 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                                 )}
 
                                 {/* New file upload or replace */}
-                                {(!atividade.ficheiro_path || removerFicheiro || selectedFile) && (
+                                {(!atividade.ficheiro_path || data.remover_ficheiro || data.ficheiro) && (
                                     <>
                                         <div className="flex items-center gap-2">
                                             <Input
@@ -353,22 +355,23 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                                                 type="file"
                                                 onChange={handleFileChange}
                                                 accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png"
-                                                className="cursor-pointer"
+                                                className={`cursor-pointer ${errors.ficheiro ? 'border-destructive' : ''}`}
                                             />
-                                            {selectedFile && (
+                                            {data.ficheiro && (
                                                 <Button
                                                     type="button"
                                                     variant="ghost"
                                                     size="sm"
-                                                    onClick={() => setSelectedFile(null)}
+                                                    onClick={() => setData('ficheiro', null)}
                                                 >
                                                     <X className="h-4 w-4" />
                                                 </Button>
                                             )}
                                         </div>
-                                        {selectedFile && (
+                                        {errors.ficheiro && <p className="text-sm text-destructive">{errors.ficheiro}</p>}
+                                        {data.ficheiro && (
                                             <p className="text-sm text-muted-foreground">
-                                                Novo ficheiro: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
+                                                Novo ficheiro: {data.ficheiro.name} ({(data.ficheiro.size / 1024 / 1024).toFixed(2)} MB)
                                             </p>
                                         )}
                                         <p className="text-sm text-muted-foreground">
@@ -383,11 +386,13 @@ export default function EditAtividade({ atividade, tipos, categorias }: EditAtiv
                                 <Label htmlFor="observacoes">Observações</Label>
                                 <Textarea
                                     id="observacoes"
-                                    value={formData.observacoes}
-                                    onChange={(e) => setFormData({ ...formData, observacoes: e.target.value })}
+                                    value={data.observacoes}
+                                    onChange={(e) => setData('observacoes', e.target.value)}
                                     placeholder="Notas adicionais..."
                                     rows={3}
+                                    className={errors.observacoes ? 'border-destructive' : ''}
                                 />
+                                {errors.observacoes && <p className="text-sm text-destructive">{errors.observacoes}</p>}
                             </div>
                         </CardContent>
                     </Card>

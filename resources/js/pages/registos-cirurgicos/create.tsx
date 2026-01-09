@@ -319,7 +319,7 @@ export default function RegistoCirurgicoCreate({
                                                 <SelectValue placeholder="Selecione" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {enums.sexo.map((s) => (
+                                                {(enums?.sexo || []).map((s) => (
                                                     <SelectItem key={s} value={s}>{s}</SelectItem>
                                                 ))}
                                             </SelectContent>
@@ -543,7 +543,7 @@ export default function RegistoCirurgicoCreate({
                                                                     <SelectValue placeholder="Selecione" />
                                                                 </SelectTrigger>
                                                                 <SelectContent>
-                                                                    {procedimentos.map((p) => (
+                                                                    {(procedimentos || []).map((p) => (
                                                                         <SelectItem key={p.id} value={p.id.toString()}>
                                                                             {p.nome}
                                                                         </SelectItem>
@@ -562,7 +562,7 @@ export default function RegistoCirurgicoCreate({
                                                                     <SelectValue placeholder="Selecione" />
                                                                 </SelectTrigger>
                                                                 <SelectContent>
-                                                                    {enums.funcoes.map((f) => (
+                                                                    {(enums?.funcoes || []).map((f) => (
                                                                         <SelectItem key={f} value={f}>{f}</SelectItem>
                                                                     ))}
                                                                 </SelectContent>
@@ -627,7 +627,7 @@ export default function RegistoCirurgicoCreate({
                                                                     </SelectTrigger>
                                                                     <SelectContent>
                                                                         <SelectItem value="none">Nenhum</SelectItem>
-                                                                        {enums.clavien.map((c) => (
+                                                                        {(enums?.clavien || []).map((c) => (
                                                                             <SelectItem key={c} value={c}>{c}</SelectItem>
                                                                         ))}
                                                                     </SelectContent>

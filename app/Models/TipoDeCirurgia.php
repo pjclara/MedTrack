@@ -16,7 +16,7 @@ class TipoDeCirurgia extends Model
     /**
      * Relação com registos cirúrgicos
      */
-    public function registoCirurgicos()
+    public function registosCirurgicos()
     {
         return $this->hasMany(RegistoCirurgico::class);
     }

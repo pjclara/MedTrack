@@ -50,8 +50,8 @@ class RegistoCirurgicoController extends Controller
         return Inertia::render('registos-cirurgicos/create', [
             'tiposDeCirurgia' => TipoDeCirurgia::orderBy('nome')->get(['id', 'nome']),
             'tiposDeOrigem' => TipoDeOrigem::orderBy('nome')->get(['id', 'nome']),
-            'diagnosticos' => Diagnostico::orderBy('nome')->get(['id', 'nome']),
-            'procedimentos' => Procedimento::orderBy('nome')->get(['id', 'nome']),
+            'diagnosticos' => Diagnostico::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
+            'procedimentos' => Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'enums' => [
                 'sexo' => config('medfolio.sexo_options'),
                 'funcoes' => config('medfolio.funcao_options'),
@@ -89,7 +89,7 @@ class RegistoCirurgicoController extends Controller
 
             $registoData = $payload['registo'];
 
-            $registo = $utente->registoCirurgicos()->create([
+            $registo = $utente->registosCirurgicos()->create([
                 'user_id' => auth()->id(),
                 'data_cirurgia' => $registoData['data_cirurgia'],
                 'tipo_de_cirurgia_id' => $registoData['tipo_de_cirurgia_id'],
@@ -196,8 +196,8 @@ class RegistoCirurgicoController extends Controller
             ],
             'tiposDeCirurgia' => TipoDeCirurgia::orderBy('nome')->get(['id', 'nome']),
             'tiposDeOrigem' => TipoDeOrigem::orderBy('nome')->get(['id', 'nome']),
-            'diagnosticos' => Diagnostico::orderBy('nome')->get(['id', 'nome']),
-            'procedimentos' => Procedimento::orderBy('nome')->get(['id', 'nome']),
+            'diagnosticos' => Diagnostico::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
+            'procedimentos' => Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'enums' => [
                 'sexo' => config('medfolio.sexo_options'),
                 'funcoes' => config('medfolio.funcao_options'),

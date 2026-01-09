@@ -6,6 +6,7 @@ use App\Models\Procedimento;
 use App\Models\Area;
 use App\Http\Requests\StoreProcedimentoRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class ProcedimentoController extends Controller
@@ -15,11 +16,12 @@ class ProcedimentoController extends Controller
      */
     public function index()
     {
-        $procedimentos = Procedimento::with('areaRelation:id,nome')
+        $procedimentos = Procedimento::where('user_id', auth()->id())
+            ->with('areaRelation:id,nome')
             ->withCount('cirurgias')
             ->orderBy('nome')
             ->paginate(15);
-        return Inertia::render('Procedimentos/Index', [
+        return Inertia::render('procedimentos/index', [
             'procedimentos' => $procedimentos
         ]);
     }
@@ -29,8 +31,9 @@ class ProcedimentoController extends Controller
      */
     public function create()
     {
-        $areas = Area::orderBy('nome')->get();
-        return Inertia::render('Procedimentos/Create', [
+        Gate::authorize('create', Procedimento::class);
+        $areas = Area::where('user_id', auth()->id())->orderBy('nome')->get();
+        return Inertia::render('procedimentos/create', [
             'areas' => $areas
         ]);
     }
@@ -40,7 +43,9 @@ class ProcedimentoController extends Controller
      */
     public function store(StoreProcedimentoRequest $request)
     {
+        Gate::authorize('create', Procedimento::class);
         $validated = $request->validated();
+        $validated['user_id'] = auth()->id();
 
         Procedimento::create($validated);
 
@@ -53,8 +58,9 @@ class ProcedimentoController extends Controller
      */
     public function show(Procedimento $procedimento)
     {
+        Gate::authorize('view', $procedimento);
         $procedimento->load('areaRelation', 'cirurgias');
-        return Inertia::render('Procedimentos/Show', [
+        return Inertia::render('procedimentos/show', [
             'procedimento' => $procedimento
         ]);
     }
@@ -64,8 +70,9 @@ class ProcedimentoController extends Controller
      */
     public function edit(Procedimento $procedimento)
     {
-        $areas = Area::orderBy('nome')->get();
-        return Inertia::render('Procedimentos/Edit', [
+        Gate::authorize('update', $procedimento);
+        $areas = Area::where('user_id', auth()->id())->orderBy('nome')->get();
+        return Inertia::render('procedimentos/edit', [
             'procedimento' => $procedimento,
             'areas' => $areas
         ]);
@@ -76,6 +83,7 @@ class ProcedimentoController extends Controller
      */
     public function update(StoreProcedimentoRequest $request, Procedimento $procedimento)
     {
+        Gate::authorize('update', $procedimento);
         $validated = $request->validated();
 
         $procedimento->update($validated);
@@ -89,6 +97,7 @@ class ProcedimentoController extends Controller
      */
     public function destroy(Procedimento $procedimento)
     {
+        Gate::authorize('delete', $procedimento);
         $procedimento->delete();
 
         return redirect()->route('procedimentos.index')

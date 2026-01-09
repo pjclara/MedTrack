@@ -10,7 +10,6 @@ use App\Http\Controllers\AreaController;
 use App\Http\Controllers\DiagnosticoController;
 use App\Http\Controllers\ProcedimentoController;
 use App\Http\Controllers\RegistoCirurgicoController;
-use App\Http\Controllers\CirurgiaController;
 use App\Http\Controllers\AtividadeCientificaController;
 use App\Http\Controllers\FormacaoController;
 
@@ -37,7 +36,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'complicacoes' => \App\Models\Cirurgia::whereHas('registoCirurgico', function($q) use ($userId) {
                     $q->where('user_id', $userId);
                 })->whereNotNull('clavien-dindo')->count(),
-                'publicacoes' => \App\Models\AtividadeCientifica::where('user_id', $userId)->count(),
+                'totalPublicacoes' => \App\Models\AtividadeCientifica::where('user_id', $userId)->count(),
                 'formacoes' => \App\Models\Formacao::where('user_id', $userId)->count(),
                 'horasFormacao' => \App\Models\Formacao::where('user_id', $userId)->sum('duracao_horas') ?? 0,
                 'creditosFormacao' => \App\Models\Formacao::where('user_id', $userId)->sum('creditos') ?? 0,
@@ -67,7 +66,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('procedimentos', ProcedimentoController::class);
     Route::resource('registos-cirurgicos', RegistoCirurgicoController::class)
         ->parameters(['registos-cirurgicos' => 'registo']);
-    Route::resource('cirurgias', CirurgiaController::class);
     
     // Atividade Científica Routes
     Route::resource('atividades-cientificas', AtividadeCientificaController::class)

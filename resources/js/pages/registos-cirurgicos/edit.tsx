@@ -272,7 +272,7 @@ export default function RegistoCirurgicoEdit({
                                             <SelectValue placeholder="Selecione o sexo" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {enums.sexo.map((sexo) => (
+                                            {(enums?.sexo || []).map((sexo) => (
                                                 <SelectItem key={sexo} value={sexo}>
                                                     {sexo}
                                                 </SelectItem>
@@ -316,7 +316,7 @@ export default function RegistoCirurgicoEdit({
                                             <SelectValue placeholder="Selecione o tipo" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {tiposDeCirurgia.map((tipo) => (
+                                            {(tiposDeCirurgia || []).map((tipo) => (
                                                 <SelectItem key={tipo.id} value={tipo.id.toString()}>
                                                     {tipo.nome}
                                                 </SelectItem>
@@ -337,7 +337,7 @@ export default function RegistoCirurgicoEdit({
                                             <SelectValue placeholder="Selecione a origem" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {tiposDeOrigem.map((tipo) => (
+                                            {(tiposDeOrigem || []).map((tipo) => (
                                                 <SelectItem key={tipo.id} value={tipo.id.toString()}>
                                                     {tipo.nome}
                                                 </SelectItem>
@@ -358,7 +358,7 @@ export default function RegistoCirurgicoEdit({
                                             <SelectValue placeholder="Selecione a abordagem" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {enums.tipo_de_abordagem.map((tipo) => (
+                                            {(enums?.tipo_de_abordagem || []).map((tipo) => (
                                                 <SelectItem key={tipo} value={tipo}>
                                                     {tipo}
                                                 </SelectItem>
@@ -481,7 +481,7 @@ export default function RegistoCirurgicoEdit({
                                                                             <SelectValue placeholder="Selecione a função" />
                                                                         </SelectTrigger>
                                                                         <SelectContent>
-                                                                            {enums.funcoes.map((f) => (
+                                                                            {(enums?.funcoes || []).map((f) => (
                                                                                 <SelectItem key={f} value={f}>
                                                                                     {f}
                                                                                 </SelectItem>
@@ -546,7 +546,7 @@ export default function RegistoCirurgicoEdit({
                                                                         </SelectTrigger>
                                                                         <SelectContent>
                                                                             <SelectItem value="none">Nenhum</SelectItem>
-                                                                            {enums.clavien.map((c) => (
+                                                                            {(enums?.clavien || []).map((c) => (
                                                                                 <SelectItem key={c} value={c}>
                                                                                     {c}
                                                                                 </SelectItem>

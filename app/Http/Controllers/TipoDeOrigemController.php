@@ -14,7 +14,7 @@ class TipoDeOrigemController extends Controller
     public function index()
     {
         $tipos = TipoDeOrigem::orderBy('nome')->paginate(15);
-        return Inertia::render('TiposDeOrigem/Index', [
+        return Inertia::render('tipos-de-origem/index', [
             'tipos' => $tipos
         ]);
     }
@@ -24,7 +24,7 @@ class TipoDeOrigemController extends Controller
      */
     public function create()
     {
-        return Inertia::render('TiposDeOrigem/Create');
+        return Inertia::render('tipos-de-origem/create');
     }
 
     /**
@@ -47,7 +47,7 @@ class TipoDeOrigemController extends Controller
      */
     public function show(TipoDeOrigem $tipoDeOrigem)
     {
-        return Inertia::render('TiposDeOrigem/Show', [
+        return Inertia::render('tipos-de-origem/show', [
             'tipo' => $tipoDeOrigem
         ]);
     }
@@ -57,7 +57,7 @@ class TipoDeOrigemController extends Controller
      */
     public function edit(TipoDeOrigem $tipoDeOrigem)
     {
-        return Inertia::render('TiposDeOrigem/Edit', [
+        return Inertia::render('tipos-de-origem/edit', [
             'tipo' => $tipoDeOrigem
         ]);
     }

@@ -6,6 +6,7 @@ use App\Models\Diagnostico;
 use App\Models\Area;
 use App\Http\Requests\StoreDiagnosticoRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class DiagnosticoController extends Controller
@@ -15,11 +16,12 @@ class DiagnosticoController extends Controller
      */
     public function index()
     {
-        $diagnosticos = Diagnostico::with('areaRelation:id,nome')
+        $diagnosticos = Diagnostico::where('user_id', auth()->id())
+            ->with('areaRelation:id,nome')
             ->withCount('cirurgias')
             ->orderBy('nome')
             ->paginate(15);
-        return Inertia::render('Diagnosticos/Index', [
+        return Inertia::render('diagnosticos/index', [
             'diagnosticos' => $diagnosticos
         ]);
     }
@@ -29,8 +31,9 @@ class DiagnosticoController extends Controller
      */
     public function create()
     {
-        $areas = Area::orderBy('nome')->get();
-        return Inertia::render('Diagnosticos/Create', [
+        Gate::authorize('create', Diagnostico::class);
+        $areas = Area::where('user_id', auth()->id())->orderBy('nome')->get();
+        return Inertia::render('diagnosticos/create', [
             'areas' => $areas
         ]);
     }
@@ -40,7 +43,9 @@ class DiagnosticoController extends Controller
      */
     public function store(StoreDiagnosticoRequest $request)
     {
+        Gate::authorize('create', Diagnostico::class);
         $validated = $request->validated();
+        $validated['user_id'] = auth()->id();
 
         Diagnostico::create($validated);
 
@@ -53,8 +58,9 @@ class DiagnosticoController extends Controller
      */
     public function show(Diagnostico $diagnostico)
     {
+        Gate::authorize('view', $diagnostico);
         $diagnostico->load('areaRelation', 'cirurgias');
-        return Inertia::render('Diagnosticos/Show', [
+        return Inertia::render('diagnosticos/show', [
             'diagnostico' => $diagnostico
         ]);
     }
@@ -64,8 +70,9 @@ class DiagnosticoController extends Controller
      */
     public function edit(Diagnostico $diagnostico)
     {
-        $areas = Area::orderBy('nome')->get();
-        return Inertia::render('Diagnosticos/Edit', [
+        Gate::authorize('update', $diagnostico);
+        $areas = Area::where('user_id', auth()->id())->orderBy('nome')->get();
+        return Inertia::render('diagnosticos/edit', [
             'diagnostico' => $diagnostico,
             'areas' => $areas
         ]);
@@ -76,6 +83,7 @@ class DiagnosticoController extends Controller
      */
     public function update(StoreDiagnosticoRequest $request, Diagnostico $diagnostico)
     {
+        Gate::authorize('update', $diagnostico);
         $validated = $request->validated();
 
         $diagnostico->update($validated);
@@ -89,6 +97,7 @@ class DiagnosticoController extends Controller
      */
     public function destroy(Diagnostico $diagnostico)
     {
+        Gate::authorize('delete', $diagnostico);
         $diagnostico->delete();
 
         return redirect()->route('diagnosticos.index')

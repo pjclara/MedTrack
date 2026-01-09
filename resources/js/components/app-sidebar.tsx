@@ -13,13 +13,13 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, FileText, Activity, GraduationCap, Award } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, FileText, GraduationCap, Award, Settings, Layers, Activity, ClipboardList } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: dashboard(),
+        href: dashboard().url,
         icon: LayoutGrid,
     },
     {
@@ -33,11 +33,6 @@ const mainNavItems: NavItem[] = [
         icon: FileText,
     },
     {
-        title: 'Cirurgias',
-        href: '/cirurgias',
-        icon: Activity,
-    },
-    {
         title: 'Atividade Científica',
         href: '/atividades-cientificas',
         icon: GraduationCap,
@@ -46,6 +41,24 @@ const mainNavItems: NavItem[] = [
         title: 'Formações',
         href: '/formacoes',
         icon: Award,
+    },
+];
+
+const adminNavItems: NavItem[] = [
+    {
+        title: 'Áreas',
+        href: '/areas',
+        icon: Layers,
+    },
+    {
+        title: 'Diagnósticos',
+        href: '/diagnosticos',
+        icon: ClipboardList,
+    },
+    {
+        title: 'Procedimentos',
+        href: '/procedimentos',
+        icon: Activity,
     },
 ];
 
@@ -58,7 +71,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href={dashboard().url} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
@@ -67,7 +80,8 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={mainNavItems} title="Plataforma" />
+                <NavMain items={adminNavItems} title="Administração" />
             </SidebarContent>
 
             <SidebarFooter>

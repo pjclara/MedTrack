@@ -15,7 +15,7 @@ class UtenteController extends Controller
      */
     public function index()
     {
-        $utentes = Utente::withCount('registoCirurgicos')
+        $utentes = Utente::withCount('registosCirurgicos')
             ->orderBy('nome')
             ->paginate(15);
         return Inertia::render('utentes/index', [
@@ -50,7 +50,7 @@ class UtenteController extends Controller
     public function show(Utente $utente)
     {
         $utente->load([
-            'registoCirurgicos' => function ($query) {
+            'registosCirurgicos' => function ($query) {
                 $query->with(['tipoDeCirurgia', 'cirurgias'])
                     ->orderBy('data_cirurgia', 'desc');
             }

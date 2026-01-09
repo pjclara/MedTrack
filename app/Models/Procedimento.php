@@ -13,9 +13,18 @@ class Procedimento extends Model
         'nome',
         'area',
         'descricao',
+        'user_id',
     ];
 
     protected $guarded = ['id'];
+
+    /**
+     * Relação com o utilizador
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Relação com área

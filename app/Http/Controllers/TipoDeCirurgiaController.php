@@ -14,7 +14,7 @@ class TipoDeCirurgiaController extends Controller
     public function index()
     {
         $tipos = TipoDeCirurgia::orderBy('nome')->paginate(15);
-        return Inertia::render('TiposDeCirurgia/Index', [
+        return Inertia::render('tipos-de-cirurgia/index', [
             'tipos' => $tipos
         ]);
     }
@@ -24,7 +24,7 @@ class TipoDeCirurgiaController extends Controller
      */
     public function create()
     {
-        return Inertia::render('TiposDeCirurgia/Create');
+        return Inertia::render('tipos-de-cirurgia/create');
     }
 
     /**
@@ -47,7 +47,7 @@ class TipoDeCirurgiaController extends Controller
      */
     public function show(TipoDeCirurgia $tipoDeCirurgia)
     {
-        return Inertia::render('TiposDeCirurgia/Show', [
+        return Inertia::render('tipos-de-cirurgia/show', [
             'tipo' => $tipoDeCirurgia
         ]);
     }
@@ -57,7 +57,7 @@ class TipoDeCirurgiaController extends Controller
      */
     public function edit(TipoDeCirurgia $tipoDeCirurgia)
     {
-        return Inertia::render('TiposDeCirurgia/Edit', [
+        return Inertia::render('tipos-de-cirurgia/edit', [
             'tipo' => $tipoDeCirurgia
         ]);
     }

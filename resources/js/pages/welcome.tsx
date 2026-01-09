@@ -33,7 +33,7 @@ export default function Welcome({
                         <div className="flex items-center gap-3">
                             {auth.user ? (
                                 <Link
-                                    href={dashboard()}
+                                    href={dashboard().url}
                                     className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
                                 >
                                     Dashboard
@@ -41,14 +41,14 @@ export default function Welcome({
                             ) : (
                                 <>
                                     <Link
-                                        href={login()}
+                                        href={login().url}
                                         className="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
                                     >
                                         Entrar
                                     </Link>
                                     {canRegister && (
                                         <Link
-                                            href={register()}
+                                            href={register().url}
                                             className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
                                         >
                                             Registar
@@ -81,7 +81,7 @@ export default function Welcome({
                             <div className="flex flex-wrap gap-4">
                                 {auth.user ? (
                                     <Link
-                                        href={dashboard()}
+                                        href={dashboard().url}
                                         className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-8 py-4 text-base font-semibold text-white shadow-lg transition-all hover:bg-emerald-700 hover:shadow-xl"
                                     >
                                         Aceder ao Dashboard
@@ -90,14 +90,14 @@ export default function Welcome({
                                 ) : (
                                     <>
                                         <Link
-                                            href={register()}
+                                            href={register().url}
                                             className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-8 py-4 text-base font-semibold text-white shadow-lg transition-all hover:bg-emerald-700 hover:shadow-xl"
                                         >
                                             Começar Agora
                                             <Activity className="h-5 w-5" />
                                         </Link>
                                         <Link
-                                            href={login()}
+                                            href={login().url}
                                             className="inline-flex items-center gap-2 rounded-lg border-2 border-gray-300 bg-white px-8 py-4 text-base font-semibold text-gray-700 transition-all hover:border-gray-400 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:border-gray-500 dark:hover:bg-gray-700"
                                         >
                                             Já tenho conta

@@ -6,6 +6,7 @@ use App\Models\Area;
 use App\Http\Requests\StoreAreaRequest;
 use App\Http\Requests\UpdateAreaRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class AreaController extends Controller
@@ -15,8 +16,10 @@ class AreaController extends Controller
      */
     public function index()
     {
-        $areas = Area::orderBy('nome')->paginate(15);
-        return Inertia::render('Areas/Index', [
+        $areas = Area::where('user_id', auth()->id())
+            ->orderBy('nome')
+            ->paginate(15);
+        return Inertia::render('areas/index', [
             'areas' => $areas
         ]);
     }
@@ -26,7 +29,8 @@ class AreaController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Areas/Create');
+        Gate::authorize('create', Area::class);
+        return Inertia::render('areas/create');
     }
 
     /**
@@ -34,7 +38,9 @@ class AreaController extends Controller
      */
     public function store(StoreAreaRequest $request)
     {
+        Gate::authorize('create', Area::class);
         $validated = $request->validated();
+        $validated['user_id'] = auth()->id();
 
         Area::create($validated);
 
@@ -47,8 +53,9 @@ class AreaController extends Controller
      */
     public function show(Area $area)
     {
+        Gate::authorize('view', $area);
         $area->load('diagnosticos', 'procedimentos');
-        return Inertia::render('Areas/Show', [
+        return Inertia::render('areas/show', [
             'area' => $area
         ]);
     }
@@ -58,7 +65,8 @@ class AreaController extends Controller
      */
     public function edit(Area $area)
     {
-        return Inertia::render('Areas/Edit', [
+        Gate::authorize('update', $area);
+        return Inertia::render('areas/edit', [
             'area' => $area
         ]);
     }
@@ -68,6 +76,7 @@ class AreaController extends Controller
      */
     public function update(UpdateAreaRequest $request, Area $area)
     {
+        Gate::authorize('update', $area);
         $validated = $request->validated();
 
         $area->update($validated);
@@ -81,6 +90,7 @@ class AreaController extends Controller
      */
     public function destroy(Area $area)
     {
+        Gate::authorize('delete', $area);
         $area->delete();
 
         return redirect()->route('areas.index')

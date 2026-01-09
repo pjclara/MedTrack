@@ -12,9 +12,18 @@ class Area extends Model
     protected $fillable = [
         'nome',
         'descricao',
+        'user_id',
     ];
 
     protected $guarded = ['id'];
+
+    /**
+     * Relação com o utilizador
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Relação com diagnósticos

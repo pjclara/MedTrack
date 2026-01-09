@@ -1,7 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'react-toastify';
 import { Separator } from '@/components/ui/separator';
@@ -168,7 +168,7 @@ export default function UtenteShow({ utente }: UtenteShowProps) {
                             <Separator />
                             <div>
                                 <p className="text-sm font-medium text-muted-foreground">Registado em</p>
-                                <p className="text-lg">{formatDate(utente.created_at)}</p>
+                                <p className="text-lg">{formatDateToPT(utente.created_at)}</p>
                             </div>
                         </CardContent>
                     </Card>
