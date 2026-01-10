@@ -49,6 +49,10 @@ class DiagnosticoController extends Controller
 
         Diagnostico::create($validated);
 
+        if ($request->header('X-Inertia-Modal-Redirect-Back')) {
+            return redirect()->back()->with('success', 'Diagnóstico criado com sucesso.');
+        }
+
         return redirect()->route('diagnosticos.index')
             ->with('success', 'Diagnóstico criado com sucesso.');
     }

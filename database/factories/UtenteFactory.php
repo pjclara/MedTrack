@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\SexoEnum;
 use App\Models\Utente;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +20,8 @@ class UtenteFactory extends Factory
             'nome' => fake()->name(),
             'data_nascimento' => fake()->dateTimeBetween('-80 years', '-18 years'),
             'sexo' => fake()->randomElement(SexoEnum::cases())->value,
-            'processo' => fake()->unique()->numberBetween(100000, 999999),
+            'processo' => fake()->unique()->numberBetween(1000000, 9999999),
+            'user_id' => User::factory(),
         ];
     }
 }

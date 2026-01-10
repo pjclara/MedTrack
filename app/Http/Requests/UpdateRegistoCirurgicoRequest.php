@@ -21,12 +21,14 @@ class UpdateRegistoCirurgicoRequest extends FormRequest
         return [
             // Utente data
             'utente.id' => 'nullable|exists:utentes,id',
-            'utente.nome' => 'required|string|max:255',
+            'utente.nome' => 'nullable|string|max:255',
             'utente.processo' => 'required|max:50',
             'utente.data_nascimento' => 'required|date',
             'utente.sexo' => ['required', Rule::enum(SexoEnum::class)],
 
             // Registo data
+            'registo.hospital' => 'required|string|max:255',
+            'registo.area_cirurgica' => 'required|string|max:255',
             'registo.data_cirurgia' => 'required|date',
             'registo.tipo_de_cirurgia_id' => 'required|exists:tipo_de_cirurgias,id',
             'registo.tipo_de_origem_id' => 'required|exists:tipo_de_origems,id',
@@ -49,7 +51,6 @@ class UpdateRegistoCirurgicoRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'utente.nome.required' => 'O nome do utente é obrigatório.',
             'utente.processo.required' => 'O número de processo é obrigatório.',
             'utente.data_nascimento.required' => 'A data de nascimento é obrigatória.',
             'utente.sexo.required' => 'O sexo é obrigatório.',

@@ -20,7 +20,7 @@ class RegistoCirurgicoControllerTest extends TestCase
     public function test_index_displays_registos_list(): void
     {
         $user = User::factory()->create();
-        RegistoCirurgico::factory()->count(4)->create();
+        RegistoCirurgico::factory()->count(4)->create(['user_id' => $user->id]);
 
         $response = $this->actingAs($user)->get(route('registos-cirurgicos.index'));
 
@@ -39,11 +39,11 @@ class RegistoCirurgicoControllerTest extends TestCase
     public function test_store_creates_new_registo(): void
     {
         $user = User::factory()->create();
-        $utente = Utente::factory()->create();
+        $utente = Utente::factory()->create(['user_id' => $user->id]);
         $tipo = TipoDeCirurgia::factory()->create();
         $tipoOrigem = \App\Models\TipoDeOrigem::factory()->create();
-        $diagnostico = \App\Models\Diagnostico::factory()->create();
-        $procedimento = \App\Models\Procedimento::factory()->create();
+        $diagnostico = \App\Models\Diagnostico::factory()->create(['user_id' => $user->id]);
+        $procedimento = \App\Models\Procedimento::factory()->create(['user_id' => $user->id]);
 
         $data = [
             'utente' => [
@@ -54,6 +54,8 @@ class RegistoCirurgicoControllerTest extends TestCase
                 'sexo' => $utente->sexo->value,
             ],
             'registo' => [
+                'hospital' => 'Hospital Teste',
+                'area_cirurgica' => 'Cirurgia Geral',
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
@@ -85,17 +87,18 @@ class RegistoCirurgicoControllerTest extends TestCase
         $this->assertDatabaseHas('registo_cirurgicos', [
             'utente_id' => $utente->id,
             'tipo_de_abordagem' => TipoAbordagemEnum::LAPAROSCOPICA->value,
+            'user_id' => $user->id,
         ]);
     }
 
     public function test_store_validates_tipo_abordagem_enum(): void
     {
         $user = User::factory()->create();
-        $utente = Utente::factory()->create();
+        $utente = Utente::factory()->create(['user_id' => $user->id]);
         $tipo = TipoDeCirurgia::factory()->create();
         $tipoOrigem = \App\Models\TipoDeOrigem::factory()->create();
-        $diagnostico = \App\Models\Diagnostico::factory()->create();
-        $procedimento = \App\Models\Procedimento::factory()->create();
+        $diagnostico = \App\Models\Diagnostico::factory()->create(['user_id' => $user->id]);
+        $procedimento = \App\Models\Procedimento::factory()->create(['user_id' => $user->id]);
 
         $data = [
             'utente' => [
@@ -105,8 +108,8 @@ class RegistoCirurgicoControllerTest extends TestCase
                 'data_nascimento' => $utente->data_nascimento->format('Y-m-d'),
                 'sexo' => $utente->sexo->value,
             ],
-            'registo' => [
-                'data_cirurgia' => '2025-12-19',
+            'registo' => [                'hospital' => 'Hospital Teste',
+                'area_cirurgica' => 'Cirurgia Geral',                'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
                 'tipo_de_abordagem' => 'abordagem_invalida',
@@ -154,6 +157,8 @@ class RegistoCirurgicoControllerTest extends TestCase
                 'sexo' => $registo->utente->sexo,
             ],
             'registo' => [
+                'hospital' => 'Hospital Atualizado',
+                'area_cirurgica' => 'Cirurgia Vascular',
                 'data_cirurgia' => '2025-12-20',
                 'tipo_de_cirurgia_id' => $registo->tipo_de_cirurgia_id,
                 'tipo_de_origem_id' => $registo->tipo_de_origem_id,
@@ -163,10 +168,10 @@ class RegistoCirurgicoControllerTest extends TestCase
             ],
             'diagnosticos' => [
                 [
-                    'diagnostico_id' => Diagnostico::factory()->create()->id,
+                    'diagnostico_id' => Diagnostico::factory()->create(['user_id' => $user->id])->id,
                     'procedimentos' => [
                         [
-                            'procedimento_id' => Procedimento::factory()->create()->id,
+                            'procedimento_id' => Procedimento::factory()->create(['user_id' => $user->id])->id,
                             'funcao' => FuncaoCirurgiaoEnum::CIRURGIAO_PRINCIPAL->value,
                         ]
                     ]

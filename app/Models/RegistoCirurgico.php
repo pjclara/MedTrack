@@ -13,6 +13,8 @@ class RegistoCirurgico extends Model
     protected $fillable = [
         'user_id',
         'utente_id',
+        'hospital',
+        'area_cirurgica',
         'data_cirurgia',
         'tipo_de_cirurgia_id',
         'tipo_de_origem_id',

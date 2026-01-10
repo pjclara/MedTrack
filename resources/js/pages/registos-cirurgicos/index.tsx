@@ -64,6 +64,7 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                         <TableHead>Data</TableHead>
                                         <TableHead>Utente</TableHead>
                                         <TableHead>Tipo Cirurgia</TableHead>
+                                        <TableHead>Hospital</TableHead>
                                         <TableHead>Abordagem</TableHead>
                                         <TableHead className="text-right">Ações</TableHead>
                                     </TableRow>
@@ -71,7 +72,7 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                 <TableBody>
                                     {registos.data.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={5} className="text-center text-muted-foreground">
+                                            <TableCell colSpan={6} className="text-center text-muted-foreground">
                                                 Nenhum registo encontrado
                                             </TableCell>
                                         </TableRow>
@@ -92,6 +93,9 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                                 </TableCell>
                                                 <TableCell>
                                                     {registo.tipo_de_cirurgia?.nome || '-'}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {registo.hospital || '-'}
                                                 </TableCell>
                                                 <TableCell>
                                                     <Badge variant="outline">

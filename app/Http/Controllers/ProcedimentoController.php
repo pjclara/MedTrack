@@ -49,6 +49,10 @@ class ProcedimentoController extends Controller
 
         Procedimento::create($validated);
 
+        if ($request->header('X-Inertia-Modal-Redirect-Back')) {
+            return redirect()->back()->with('success', 'Procedimento criado com sucesso.');
+        }
+
         return redirect()->route('procedimentos.index')
             ->with('success', 'Procedimento criado com sucesso.');
     }

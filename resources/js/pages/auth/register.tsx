@@ -7,6 +7,13 @@ import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
 
@@ -59,12 +66,57 @@ export default function Register() {
                             </div>
 
                             <div className="grid gap-2">
+                                <Label htmlFor="hospital_de_origem">Hospital de Origem</Label>
+                                <Select name="hospital_de_origem">
+                                    <SelectTrigger tabIndex={3}>
+                                        <SelectValue placeholder="Selecione o hospital" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="Hospital de Santa Maria">Hospital de Santa Maria</SelectItem>
+                                        <SelectItem value="Hospital de São João">Hospital de São João</SelectItem>
+                                        <SelectItem value="Hospital de Santo António">Hospital de Santo António</SelectItem>
+                                        <SelectItem value="Centro Hospitalar e Universitário de Coimbra">CHUC (Coimbra)</SelectItem>
+                                        <SelectItem value="Hospital de Braga">Hospital de Braga</SelectItem>
+                                        <SelectItem value="Hospital de Vila Real">Hospital de Vila Real</SelectItem>
+                                        <SelectItem value="Hospital de Évora">Hospital de Évora</SelectItem>
+                                        <SelectItem value="Hospital de Faro">Hospital de Faro</SelectItem>
+                                        <SelectItem value="Hospital CUF">Hospital CUF</SelectItem>
+                                        <SelectItem value="Hospital da Luz">Hospital da Luz</SelectItem>
+                                        <SelectItem value="Outro">Outro</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <InputError message={errors.hospital_de_origem} />
+                            </div>
+
+                            <div className="grid gap-2">
+                                <Label htmlFor="area_cirurgica">Área Cirúrgica</Label>
+                                <Select name="area_cirurgica">
+                                    <SelectTrigger tabIndex={4}>
+                                        <SelectValue placeholder="Selecione a área" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="Cirurgia Geral">Cirurgia Geral</SelectItem>
+                                        <SelectItem value="Cirurgia Vascular">Cirurgia Vascular</SelectItem>
+                                        <SelectItem value="Cirurgia Cardiotorácica">Cirurgia Cardiotorácica</SelectItem>
+                                        <SelectItem value="Cirurgia Pediátrica">Cirurgia Pediátrica</SelectItem>
+                                        <SelectItem value="Cirurgia Plástica">Cirurgia Plástica</SelectItem>
+                                        <SelectItem value="Neurocirurgia">Neurocirurgia</SelectItem>
+                                        <SelectItem value="Urologia">Urologia</SelectItem>
+                                        <SelectItem value="Ginecologia-Obstetrícia">Ginecologia-Obstetrícia</SelectItem>
+                                        <SelectItem value="Ortopedia">Ortopedia</SelectItem>
+                                        <SelectItem value="Outra">Outra</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <InputError message={errors.area_cirurgica} />
+                            </div>
+
+                            <div className="grid gap-2">
                                 <Label htmlFor="password">Palavra-passe</Label>
                                 <Input
                                     id="password"
                                     type="password"
                                     required
-                                    tabIndex={3}
+                                    tabIndex={5}
                                     autoComplete="new-password"
                                     name="password"
                                     placeholder="Palavra-passe"
@@ -80,7 +132,7 @@ export default function Register() {
                                     id="password_confirmation"
                                     type="password"
                                     required
-                                    tabIndex={4}
+                                    tabIndex={6}
                                     autoComplete="new-password"
                                     name="password_confirmation"
                                     placeholder="Confirmar palavra-passe"
@@ -93,7 +145,7 @@ export default function Register() {
                             <Button
                                 type="submit"
                                 className="mt-2 w-full bg-emerald-600 hover:bg-emerald-700"
-                                tabIndex={5}
+                                tabIndex={7}
                                 data-test="register-user-button"
                             >
                                 {processing && <Spinner />}

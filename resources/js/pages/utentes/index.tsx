@@ -101,7 +101,7 @@ export default function UtenteIndex({ utentes }: UtenteIndexProps) {
                                                 <TableCell className="font-medium">
                                                     #{utente.processo}
                                                 </TableCell>
-                                                <TableCell>{utente.nome}</TableCell>
+                                                <TableCell>{utente.nome || <span className="text-muted-foreground italic">Sem nome</span>}</TableCell>
                                                 <TableCell>
                                                     <Badge variant={getSexoBadgeVariant(utente.sexo)}>
                                                         {utente.sexo}

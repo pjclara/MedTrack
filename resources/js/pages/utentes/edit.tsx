@@ -80,7 +80,7 @@ export default function UtenteEdit({ utente }: UtenteEditProps) {
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
                                     <Label htmlFor="nome">
-                                        Nome Completo <span className="text-destructive">*</span>
+                                        Nome Completo
                                     </Label>
                                     <Input
                                         id="nome"

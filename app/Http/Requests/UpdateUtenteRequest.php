@@ -26,7 +26,7 @@ class UpdateUtenteRequest extends FormRequest
         $utenteId = $this->route('utente')->id;
         
         return [
-            'nome' => 'required|string|max:255',
+            'nome' => 'nullable|string|max:255',
             'data_nascimento' => 'required|date|before:today',
             'sexo' => ['required', Rule::enum(SexoEnum::class)],
             'processo' => 'required|integer|unique:utentes,processo,' . $utenteId . '|min:1',
@@ -41,7 +41,6 @@ class UpdateUtenteRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'nome.required' => 'O nome é obrigatório.',
             'data_nascimento.required' => 'A data de nascimento é obrigatória.',
             'data_nascimento.before' => 'A data de nascimento deve ser anterior a hoje.',
             'sexo.required' => 'O sexo é obrigatório.',

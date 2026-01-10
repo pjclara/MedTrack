@@ -47,7 +47,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function ProcedimentoCreate({ areas }: ProcedimentoCreateProps) {
     const { data, setData, post, processing, errors } = useForm({
         nome: '',
-        area_id: '',
+        area: '',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -79,24 +79,24 @@ export default function ProcedimentoCreate({ areas }: ProcedimentoCreateProps) {
                     <form onSubmit={handleSubmit}>
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="area_id">Área de Especialidade</Label>
+                                <Label htmlFor="area">Área de Especialidade</Label>
                                 <Select 
-                                    value={data.area_id} 
-                                    onValueChange={(value) => setData('area_id', value)}
+                                    value={data.area} 
+                                    onValueChange={(value) => setData('area', value)}
                                 >
-                                    <SelectTrigger id="area_id" className={errors.area_id ? 'border-destructive' : ''}>
+                                    <SelectTrigger id="area" className={errors.area ? 'border-destructive' : ''}>
                                         <SelectValue placeholder="Selecione uma área" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {areas.map((area) => (
-                                            <SelectItem key={area.id} value={area.id.toString()}>
+                                        {(areas || []).map((area) => (
+                                            <SelectItem key={area.id} value={area.nome}>
                                                 {area.nome}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                {errors.area_id && (
-                                    <p className="text-sm text-destructive">{errors.area_id}</p>
+                                {errors.area && (
+                                    <p className="text-sm text-destructive">{errors.area}</p>
                                 )}
                             </div>
 

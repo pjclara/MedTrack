@@ -24,8 +24,8 @@ class RegistoCirurgicoWizardTest extends TestCase
         $user = User::factory()->create();
         $tipo = TipoDeCirurgia::factory()->create();
         $tipoOrigem = TipoDeOrigem::factory()->create();
-        $diagnostico = Diagnostico::factory()->create();
-        $procedimento = Procedimento::factory()->create();
+        $diagnostico = Diagnostico::factory()->create(['user_id' => $user->id]);
+        $procedimento = Procedimento::factory()->create(['user_id' => $user->id]);
 
         $data = [
             'utente' => [
@@ -35,6 +35,8 @@ class RegistoCirurgicoWizardTest extends TestCase
                 'sexo' => 'Masculino',
             ],
             'registo' => [
+                'hospital' => 'Hospital Teste',
+                'area_cirurgica' => 'Cirurgia Geral',
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
@@ -62,23 +64,25 @@ class RegistoCirurgicoWizardTest extends TestCase
         $this->assertDatabaseHas('utentes', [
             'nome' => 'João Silva',
             'processo' => 54321,
+            'user_id' => $user->id,
         ]);
 
-        $utente = Utente::where('processo', 54321)->first();
+        $utente = Utente::where('processo', 54321)->where('user_id', $user->id)->first();
         $this->assertDatabaseHas('registo_cirurgicos', [
             'utente_id' => $utente->id,
             'ambulatorio' => true,
+            'user_id' => $user->id,
         ]);
     }
 
     public function test_store_updates_existing_utente_when_id_provided(): void
     {
         $user = User::factory()->create();
-        $utente = Utente::factory()->create(['nome' => 'Nome Antigo']);
+        $utente = Utente::factory()->create(['nome' => 'Nome Antigo', 'user_id' => $user->id]);
         $tipo = TipoDeCirurgia::factory()->create();
         $tipoOrigem = TipoDeOrigem::factory()->create();
-        $diagnostico = Diagnostico::factory()->create();
-        $procedimento = Procedimento::factory()->create();
+        $diagnostico = Diagnostico::factory()->create(['user_id' => $user->id]);
+        $procedimento = Procedimento::factory()->create(['user_id' => $user->id]);
 
         $data = [
             'utente' => [
@@ -89,6 +93,8 @@ class RegistoCirurgicoWizardTest extends TestCase
                 'sexo' => $utente->sexo->value,
             ],
             'registo' => [
+                'hospital' => 'Hospital Teste',
+                'area_cirurgica' => 'Cirurgia Geral',
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
@@ -121,14 +127,14 @@ class RegistoCirurgicoWizardTest extends TestCase
     public function test_store_creates_multiple_diagnosticos_and_procedimentos(): void
     {
         $user = User::factory()->create();
-        $utente = Utente::factory()->create();
+        $utente = Utente::factory()->create(['user_id' => $user->id]);
         $tipo = TipoDeCirurgia::factory()->create();
         $tipoOrigem = TipoDeOrigem::factory()->create();
-        $diagnostico1 = Diagnostico::factory()->create();
-        $diagnostico2 = Diagnostico::factory()->create();
-        $procedimento1 = Procedimento::factory()->create();
-        $procedimento2 = Procedimento::factory()->create();
-        $procedimento3 = Procedimento::factory()->create();
+        $diagnostico1 = Diagnostico::factory()->create(['user_id' => $user->id]);
+        $diagnostico2 = Diagnostico::factory()->create(['user_id' => $user->id]);
+        $procedimento1 = Procedimento::factory()->create(['user_id' => $user->id]);
+        $procedimento2 = Procedimento::factory()->create(['user_id' => $user->id]);
+        $procedimento3 = Procedimento::factory()->create(['user_id' => $user->id]);
 
         $data = [
             'utente' => [
@@ -139,6 +145,8 @@ class RegistoCirurgicoWizardTest extends TestCase
                 'sexo' => $utente->sexo->value,
             ],
             'registo' => [
+                'hospital' => 'Hospital Teste',
+                'area_cirurgica' => 'Cirurgia Geral',
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
@@ -197,11 +205,11 @@ class RegistoCirurgicoWizardTest extends TestCase
     public function test_store_saves_optional_clavien_dindo_and_anatomia_patologica(): void
     {
         $user = User::factory()->create();
-        $utente = Utente::factory()->create();
+        $utente = Utente::factory()->create(['user_id' => $user->id]);
         $tipo = TipoDeCirurgia::factory()->create();
         $tipoOrigem = TipoDeOrigem::factory()->create();
-        $diagnostico = Diagnostico::factory()->create();
-        $procedimento = Procedimento::factory()->create();
+        $diagnostico = Diagnostico::factory()->create(['user_id' => $user->id]);
+        $procedimento = Procedimento::factory()->create(['user_id' => $user->id]);
 
         $data = [
             'utente' => [
@@ -212,6 +220,8 @@ class RegistoCirurgicoWizardTest extends TestCase
                 'sexo' => $utente->sexo->value,
             ],
             'registo' => [
+                'hospital' => 'Hospital Teste',
+                'area_cirurgica' => 'Cirurgia Geral',
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
@@ -251,8 +261,8 @@ class RegistoCirurgicoWizardTest extends TestCase
         $user = User::factory()->create();
         $tipo = TipoDeCirurgia::factory()->create();
         $tipoOrigem = TipoDeOrigem::factory()->create();
-        $diagnostico = Diagnostico::factory()->create();
-        $procedimento = Procedimento::factory()->create();
+        $diagnostico = Diagnostico::factory()->create(['user_id' => $user->id]);
+        $procedimento = Procedimento::factory()->create(['user_id' => $user->id]);
 
         $data = [
             'utente' => [
@@ -282,10 +292,11 @@ class RegistoCirurgicoWizardTest extends TestCase
         $response = $this->actingAs($user)->post(route('registos-cirurgicos.store'), $data);
 
         $response->assertSessionHasErrors([
-            'utente.nome',
             'utente.processo',
             'utente.data_nascimento',
             'utente.sexo',
+            'registo.hospital',
+            'registo.area_cirurgica',
         ]);
     }
 
@@ -305,6 +316,8 @@ class RegistoCirurgicoWizardTest extends TestCase
                 'sexo' => $utente->sexo->value,
             ],
             'registo' => [
+                'hospital' => 'Hospital Teste',
+                'area_cirurgica' => 'Cirurgia Geral',
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
@@ -336,6 +349,8 @@ class RegistoCirurgicoWizardTest extends TestCase
                 'sexo' => $utente->sexo->value,
             ],
             'registo' => [
+                'hospital' => 'Hospital Teste',
+                'area_cirurgica' => 'Cirurgia Geral',
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,

@@ -17,7 +17,7 @@ test('utente index displays users utentes', function () {
     /** @var User $user */
     $user = $this->user;
     $this->actingAs($user);
-    Utente::factory()->count(3)->create();
+    Utente::factory()->count(3)->create(['user_id' => $user->id]);
 
     $response = $this->get(route('utentes.index'));
 
@@ -44,15 +44,18 @@ test('utente can be created with valid data', function () {
     $response = $this->post(route('utentes.store'), $data);
 
     $response->assertRedirect(route('utentes.index'));
-    $this->assertDatabaseHas('utentes', ['processo' => 12345]);
+    $this->assertDatabaseHas('utentes', [
+        'processo' => 12345,
+        'user_id' => $user->id
+    ]);
 });
 
-test('utente creation fails with duplicate processo', function () {
+test('utente creation fails with duplicate processo for same user', function () {
     /** @var TestCase $this */
     /** @var User $user */
     $user = $this->user;
     $this->actingAs($user);
-    Utente::factory()->create(['processo' => 555]);
+    Utente::factory()->create(['processo' => 555, 'user_id' => $user->id]);
 
     $data = [
         'nome' => 'Outro Nome',
@@ -71,7 +74,7 @@ test('utente can be updated', function () {
     /** @var User $user */
     $user = $this->user;
     $this->actingAs($user);
-    $utente = Utente::factory()->create(['nome' => 'Nome Antigo']);
+    $utente = Utente::factory()->create(['nome' => 'Nome Antigo', 'user_id' => $user->id]);
 
     $response = $this->put(route('utentes.update', $utente), [
         'nome' => 'Nome Novo',
@@ -89,7 +92,7 @@ test('utente can be deleted', function () {
     /** @var User $user */
     $user = $this->user;
     $this->actingAs($user);
-    $utente = Utente::factory()->create();
+    $utente = Utente::factory()->create(['user_id' => $user->id]);
 
     $response = $this->delete(route('utentes.destroy', $utente));
 

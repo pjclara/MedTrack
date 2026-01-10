@@ -15,7 +15,7 @@ class UtenteControllerTest extends TestCase
     public function test_index_displays_utentes_list(): void
     {
         $user = User::factory()->create();
-        Utente::factory()->count(3)->create();
+        Utente::factory()->count(3)->create(['user_id' => $user->id]);
 
         $response = $this->actingAs($user)->get(route('utentes.index'));
 
@@ -59,7 +59,7 @@ class UtenteControllerTest extends TestCase
         
         $response = $this->actingAs($user)->post(route('utentes.store'), []);
 
-        $response->assertSessionHasErrors(['nome', 'data_nascimento', 'sexo', 'processo']);
+        $response->assertSessionHasErrors(['data_nascimento', 'sexo', 'processo']);
     }
 
     public function test_store_validates_sexo_enum(): void
@@ -81,7 +81,7 @@ class UtenteControllerTest extends TestCase
     public function test_show_displays_utente_details(): void
     {
         $user = User::factory()->create();
-        $utente = Utente::factory()->create();
+        $utente = Utente::factory()->create(['user_id' => $user->id]);
 
         $response = $this->actingAs($user)->get(route('utentes.show', $utente));
 
@@ -91,7 +91,7 @@ class UtenteControllerTest extends TestCase
     public function test_edit_displays_utente_edit_form(): void
     {
         $user = User::factory()->create();
-        $utente = Utente::factory()->create();
+        $utente = Utente::factory()->create(['user_id' => $user->id]);
 
         $response = $this->actingAs($user)->get(route('utentes.edit', $utente));
 
@@ -101,7 +101,7 @@ class UtenteControllerTest extends TestCase
     public function test_update_modifies_existing_utente(): void
     {
         $user = User::factory()->create();
-        $utente = Utente::factory()->create();
+        $utente = Utente::factory()->create(['user_id' => $user->id]);
 
         $data = [
             'nome' => 'Maria Santos Atualizada',
@@ -118,13 +118,14 @@ class UtenteControllerTest extends TestCase
         $this->assertDatabaseHas('utentes', [
             'id' => $utente->id,
             'nome' => 'Maria Santos Atualizada',
+            'user_id' => $user->id,
         ]);
     }
 
     public function test_destroy_deletes_utente(): void
     {
         $user = User::factory()->create();
-        $utente = Utente::factory()->create();
+        $utente = Utente::factory()->create(['user_id' => $user->id]);
 
         $response = $this->actingAs($user)->delete(route('utentes.destroy', $utente));
 

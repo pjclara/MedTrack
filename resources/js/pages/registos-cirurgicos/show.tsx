@@ -63,14 +63,14 @@ export default function RegistoCirurgicoShow({ registo }: RegistoCirurgicoShowPr
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Registo Cirúrgico - ${formatDate(registo.data)}`} />
+            <Head title={`Registo Cirúrgico - ${formatDate(registo.data_cirurgia)}`} />
 
             <div className="flex flex-col gap-4 p-6">
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-3xl font-bold tracking-tight">Registo Cirúrgico</h1>
                         <p className="text-muted-foreground">
-                            {formatDate(registo.data)}
+                            {formatDate(registo.data_cirurgia)}
                         </p>
                     </div>
                     <div className="flex gap-2">
@@ -161,8 +161,22 @@ export default function RegistoCirurgicoShow({ registo }: RegistoCirurgicoShowPr
                         <CardContent className="space-y-4">
                             <div>
                                 <p className="text-sm font-medium text-muted-foreground">Data</p>
-                                <p className="text-lg">{formatDate(registo.data)}</p>
+                                <p className="text-lg">{formatDate(registo.data_cirurgia)}</p>
                             </div>
+
+                            {registo.hospital && (
+                                <div>
+                                    <p className="text-sm font-medium text-muted-foreground">Hospital</p>
+                                    <p className="text-lg">{registo.hospital}</p>
+                                </div>
+                            )}
+
+                            {registo.area_cirurgica && (
+                                <div>
+                                    <p className="text-sm font-medium text-muted-foreground">Área Cirúrgica</p>
+                                    <p className="text-lg">{registo.area_cirurgica}</p>
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
                 </div>

@@ -28,7 +28,7 @@ class StoreRegistoCirurgicoRequest extends FormRequest
     {
         return [
             'utente.id' => ['nullable', 'exists:utentes,id'],
-            'utente.nome' => 'required|string|max:255',
+            'utente.nome' => 'nullable|string|max:255',
             'utente.processo' => [
                 'required',
                 'integer',
@@ -37,6 +37,8 @@ class StoreRegistoCirurgicoRequest extends FormRequest
             'utente.data_nascimento' => 'required|date',
             'utente.sexo' => ['required', Rule::enum(SexoEnum::class)],
 
+            'registo.hospital' => 'required|string|max:255',
+            'registo.area_cirurgica' => 'required|string|max:255',
             'registo.data_cirurgia' => 'required|date',
             'registo.tipo_de_cirurgia_id' => 'required|exists:tipo_de_cirurgias,id',
             'registo.tipo_de_origem_id' => 'required|exists:tipo_de_origems,id',
@@ -63,7 +65,6 @@ class StoreRegistoCirurgicoRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'utente.nome.required' => 'O nome do utente é obrigatório.',
             'utente.processo.required' => 'O nº de processo é obrigatório.',
             'utente.processo.unique' => 'Já existe um utente com este nº de processo.',
             'utente.data_nascimento.required' => 'A data de nascimento é obrigatória.',

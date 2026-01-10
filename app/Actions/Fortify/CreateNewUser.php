@@ -28,12 +28,16 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'password' => $this->passwordRules(),
+            'hospital_de_origem' => ['nullable', 'string', 'max:255'],
+            'area_cirurgica' => ['nullable', 'string', 'max:255'],
         ])->validate();
 
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => $input['password'],
+            'hospital_de_origem' => $input['hospital_de_origem'] ?? null,
+            'area_cirurgica' => $input['area_cirurgica'] ?? null,
         ]);
     }
 }

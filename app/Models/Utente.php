@@ -15,6 +15,7 @@ class Utente extends Model
         'data_nascimento',
         'sexo',
         'processo',
+        'user_id',
     ];
 
     protected $guarded = ['id'];
@@ -23,6 +24,14 @@ class Utente extends Model
         'data_nascimento' => 'date',
         'sexo' => SexoEnum::class,
     ];
+
+    /**
+     * Relação com o utilizador que registou o utente
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Relação com registos cirúrgicos

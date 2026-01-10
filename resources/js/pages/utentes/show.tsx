@@ -69,12 +69,12 @@ export default function UtenteShow({ utente }: UtenteShowProps) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Utente - ${utente.nome}`} />
+            <Head title={`Utente - ${utente.nome || 'Sem Nome'}`} />
 
             <div className="flex flex-col gap-4 p-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">{utente.nome}</h1>
+                        <h1 className="text-3xl font-bold tracking-tight">{utente.nome || 'Sem Nome'}</h1>
                         <p className="text-muted-foreground">
                             Processo #{utente.processo}
                         </p>

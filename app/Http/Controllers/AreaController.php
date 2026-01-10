@@ -44,6 +44,10 @@ class AreaController extends Controller
 
         Area::create($validated);
 
+        if ($request->header('X-Inertia-Modal-Redirect-Back')) {
+            return redirect()->back()->with('success', 'Área criada com sucesso.');
+        }
+
         return redirect()->route('areas.index')
             ->with('success', 'Área criada com sucesso.');
     }

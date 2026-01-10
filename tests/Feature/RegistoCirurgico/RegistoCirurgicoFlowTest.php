@@ -48,6 +48,8 @@ test('authenticated users can create a surgical record with a new utente', funct
             'sexo' => SexoEnum::MASCULINO->value,
         ],
         'registo' => [
+            'hospital' => 'Hospital Teste',
+            'area_cirurgica' => 'Cirurgia Geral',
             'data_cirurgia' => now()->format('Y-m-d'),
             'tipo_de_cirurgia_id' => $tipoCirurgia->id,
             'tipo_de_origem_id' => $tipoOrigem->id,
@@ -57,10 +59,10 @@ test('authenticated users can create a surgical record with a new utente', funct
         ],
         'diagnosticos' => [
             [
-                'diagnostico_id' => \App\Models\Diagnostico::factory()->create()->id,
+                'diagnostico_id' => \App\Models\Diagnostico::factory()->create(['user_id' => $user->id])->id,
                 'procedimentos' => [
                     [
-                        'procedimento_id' => \App\Models\Procedimento::factory()->create()->id,
+                        'procedimento_id' => \App\Models\Procedimento::factory()->create(['user_id' => $user->id])->id,
                         'funcao' => \App\Enums\FuncaoCirurgiaoEnum::CIRURGIAO_PRINCIPAL->value,
                     ]
                 ]
@@ -90,7 +92,7 @@ test('validation errors are handled when creating a record', function () {
         'registo' => []
     ]);
 
-    $response->assertSessionHasErrors(['utente.nome', 'registo.data_cirurgia']);
+    $response->assertSessionHasErrors(['utente.processo', 'registo.data_cirurgia']);
 });
 
 test('users can only see their own surgical records', function () {

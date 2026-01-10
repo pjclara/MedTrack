@@ -10,10 +10,18 @@ test('new users can register', function () {
     $response = $this->post(route('register.store'), [
         'name' => 'Test User',
         'email' => 'test@example.com',
+        'hospital_de_origem' => 'Hospital Central',
+        'area_cirurgica' => 'Cirurgia Geral',
         'password' => 'password',
         'password_confirmation' => 'password',
     ]);
 
     $this->assertAuthenticated();
     $response->assertRedirect(route('dashboard', absolute: false));
+
+    $this->assertDatabaseHas('users', [
+        'email' => 'test@example.com',
+        'hospital_de_origem' => 'Hospital Central',
+        'area_cirurgica' => 'Cirurgia Geral',
+    ]);
 });

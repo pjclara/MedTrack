@@ -14,7 +14,7 @@ class UtenteSearchTest extends TestCase
     public function test_find_by_processo_returns_utente_when_exists(): void
     {
         $user = User::factory()->create();
-        $utente = Utente::factory()->create(['processo' => 12345]);
+        $utente = Utente::factory()->create(['processo' => 12345, 'user_id' => $user->id]);
 
         $response = $this->actingAs($user)->get('/api/utentes/processo/12345');
 

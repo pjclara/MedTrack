@@ -27,6 +27,9 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+
+            'hospital_de_origem' => ['nullable', 'string', 'max:255'],
+            'area_cirurgica' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

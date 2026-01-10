@@ -22,6 +22,8 @@ class RegistoCirurgicoFactory extends Factory
         return [
             'user_id' => User::factory(),
             'utente_id' => Utente::factory(),
+            'hospital' => fake()->company() . ' Hospital',
+            'area_cirurgica' => fake()->randomElement(['Cirurgia Geral', 'Cirurgia Vascular', 'Cirurgia Cardiotorácica', 'Neurocirurgia']),
             'data_cirurgia' => fake()->dateTimeBetween('-2 years', 'now'),
             'tipo_de_cirurgia_id' => TipoDeCirurgia::factory(),
             'tipo_de_origem_id' => TipoDeOrigem::factory(),
