@@ -230,19 +230,26 @@ export default function RegistoCirurgicoShow({ registo }: RegistoCirurgicoShowPr
                                     <TableHeader>
                                         <TableRow>
                                             <TableHead>Diagnóstico</TableHead>
+                                            <TableHead>Tipo</TableHead>
                                             <TableHead>Procedimento</TableHead>
-                                            <TableHead>Abordagem</TableHead>
                                             <TableHead>Função</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
                                         {registo.cirurgias.map((cirurgia) => (
                                             <TableRow key={cirurgia.id}>
-                                                <TableCell>
-                                                    {cirurgia.diagnostico?.descricao || '-'}
+                                                <TableCell className="font-medium">
+                                                    {cirurgia.diagnostico?.nome || '-'}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {cirurgia.procedimento?.descricao || '-'}
+                                                    {cirurgia.tipo && (
+                                                        <Badge variant={cirurgia.tipo === 'Maligno' ? 'destructive' : 'secondary'}>
+                                                            {cirurgia.tipo}
+                                                        </Badge>
+                                                    )}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {cirurgia.procedimento?.nome || '-'}
                                                 </TableCell>
                                                 <TableCell>
                                                     {cirurgia.tipo_de_abordagem ? (

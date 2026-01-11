@@ -113,6 +113,7 @@ export function QuickAddDiagnostico({
     const [open, setOpen] = useState(false);
     const [nome, setNome] = useState('');
     const [area, setArea] = useState('');
+    const [tipo, setTipo] = useState('');
     const [descricao, setDescricao] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -120,7 +121,7 @@ export function QuickAddDiagnostico({
         e.preventDefault();
         setLoading(true);
 
-        router.post('/diagnosticos', { nome, area, descricao }, {
+        router.post('/diagnosticos', { nome, area, tipo, descricao }, {
             preserveState: true,
             preserveScroll: true,
             headers: {
@@ -131,8 +132,9 @@ export function QuickAddDiagnostico({
                 setOpen(false);
                 setNome('');
                 setArea('');
+                setTipo('');
                 setDescricao('');
-                if (onCreated) onCreated({ nome, area });
+                if (onCreated) onCreated({ nome, area, tipo });
             },
             onFinish: () => setLoading(false),
         });
@@ -178,6 +180,18 @@ export function QuickAddDiagnostico({
                                         {a.nome}
                                     </SelectItem>
                                 ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="diag-tipo">Tipo de Diagnóstico</Label>
+                        <Select value={tipo} onValueChange={setTipo}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Selecione o tipo" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="Benigno">Benigno</SelectItem>
+                                <SelectItem value="Maligno">Maligno</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>

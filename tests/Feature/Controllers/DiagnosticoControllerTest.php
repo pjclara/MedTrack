@@ -30,6 +30,7 @@ class DiagnosticoControllerTest extends TestCase
         $data = [
             'nome' => 'Apendicite Aguda ' . uniqid(),
             'area' => $area->nome,
+            'tipo' => 'Benigno',
             'descricao' => 'Descrição do diagnóstico',
         ];
 
@@ -41,6 +42,7 @@ class DiagnosticoControllerTest extends TestCase
         $this->assertDatabaseHas('diagnosticos', [
             'nome' => $data['nome'],
             'area' => $area->nome,
+            'tipo' => 'Benigno',
             'user_id' => $user->id,
         ]);
     }

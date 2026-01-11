@@ -48,6 +48,7 @@ class StoreRegistoCirurgicoRequest extends FormRequest
 
             'diagnosticos' => 'required|array|min:1',
             'diagnosticos.*.diagnostico_id' => 'required|exists:diagnosticos,id',
+            'diagnosticos.*.tipo' => 'nullable|string',
             'diagnosticos.*.procedimentos' => 'required|array|min:1',
             'diagnosticos.*.procedimentos.*.procedimento_id' => 'required|exists:procedimentos,id',
             'diagnosticos.*.procedimentos.*.funcao' => ['required', Rule::enum(FuncaoCirurgiaoEnum::class)],

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Diagnostico;
 use App\Models\Area;
+use App\Enums\TipoDiagnosticoEnum;
 use App\Http\Requests\StoreDiagnosticoRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -17,7 +18,6 @@ class DiagnosticoController extends Controller
     public function index()
     {
         $diagnosticos = Diagnostico::where('user_id', auth()->id())
-            ->with('areaRelation:id,nome')
             ->withCount('cirurgias')
             ->orderBy('nome')
             ->paginate(15);
@@ -34,7 +34,8 @@ class DiagnosticoController extends Controller
         Gate::authorize('create', Diagnostico::class);
         $areas = Area::where('user_id', auth()->id())->orderBy('nome')->get();
         return Inertia::render('diagnosticos/create', [
-            'areas' => $areas
+            'areas' => $areas,
+            'tipos' => TipoDiagnosticoEnum::values()
         ]);
     }
 
@@ -78,7 +79,8 @@ class DiagnosticoController extends Controller
         $areas = Area::where('user_id', auth()->id())->orderBy('nome')->get();
         return Inertia::render('diagnosticos/edit', [
             'diagnostico' => $diagnostico,
-            'areas' => $areas
+            'areas' => $areas,
+            'tipos' => TipoDiagnosticoEnum::values()
         ]);
     }
 

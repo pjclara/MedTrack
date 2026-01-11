@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { BreadcrumbItem } from '@/types';
+import { BreadcrumbItem, Area, Procedimento } from '@/types';
 import { Button } from '@/components/ui/button';
 import { 
     Card, 
@@ -19,17 +19,6 @@ import {
     SelectTrigger, 
     SelectValue 
 } from '@/components/ui/select';
-
-interface Area {
-    id: number;
-    nome: string;
-}
-
-interface Procedimento {
-    id: number;
-    nome: string;
-    area: string;
-}
 
 interface ProcedimentoEditProps {
     procedimento: Procedimento;

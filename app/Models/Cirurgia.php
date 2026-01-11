@@ -15,6 +15,7 @@ class Cirurgia extends Model
         'registo_cirurgico_id',
         'diagnostico_id',
         'procedimento_id',
+        'tipo',
         'funcao',
         'clavien-dindo',
         'anatomia_patologica',

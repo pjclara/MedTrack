@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { BreadcrumbItem } from '@/types';
+import { BreadcrumbItem, Area } from '@/types';
 import { Button } from '@/components/ui/button';
 import { 
     Card, 
@@ -20,13 +20,9 @@ import {
     SelectValue 
 } from '@/components/ui/select';
 
-interface Area {
-    id: number;
-    nome: string;
-}
-
 interface DiagnosticoCreateProps {
     areas: Area[];
+    tipos: string[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -44,10 +40,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function DiagnosticoCreate({ areas }: DiagnosticoCreateProps) {
+export default function DiagnosticoCreate({ areas, tipos }: DiagnosticoCreateProps) {
     const { data, setData, post, processing, errors } = useForm({
         nome: '',
         area: '',
+        tipo: '',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -97,6 +94,28 @@ export default function DiagnosticoCreate({ areas }: DiagnosticoCreateProps) {
                                 </Select>
                                 {errors.area && (
                                     <p className="text-sm text-destructive">{errors.area}</p>
+                                )}
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="tipo">Classificação</Label>
+                                <Select 
+                                    value={data.tipo} 
+                                    onValueChange={(value) => setData('tipo', value)}
+                                >
+                                    <SelectTrigger id="tipo" className={errors.tipo ? 'border-destructive' : ''}>
+                                        <SelectValue placeholder="Selecione o tipo (Benigno/Maligno)" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {(tipos || []).map((tipo) => (
+                                            <SelectItem key={tipo} value={tipo}>
+                                                {tipo}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                {errors.tipo && (
+                                    <p className="text-sm text-destructive">{errors.tipo}</p>
                                 )}
                             </div>
 

@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
-import { BreadcrumbItem } from '@/types';
+import { BreadcrumbItem, Procedimento, PaginatedData } from '@/types';
 import { 
     Table, 
     TableBody, 
@@ -19,26 +19,8 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
-interface Procedimento {
-    id: number;
-    nome: string;
-    area_id: number;
-    area_relation?: {
-        id: number;
-        nome: string;
-    };
-    cirurgias_count?: number;
-}
-
-interface Pagination {
-    data: Procedimento[];
-    current_page: number;
-    last_page: number;
-    links: any[];
-}
-
 interface ProcedimentoIndexProps {
-    procedimentos: Pagination;
+    procedimentos: PaginatedData<Procedimento>;
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -109,7 +91,7 @@ export default function ProcedimentoIndex({ procedimentos }: ProcedimentoIndexPr
                                                     {procedimento.nome}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {procedimento.area_relation?.nome || 'N/A'}
+                                                    {procedimento.area || 'N/A'}
                                                 </TableCell>
                                                 <TableCell className="text-center">
                                                     {procedimento.cirurgias_count || 0}

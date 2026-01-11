@@ -16,6 +16,7 @@ class StoreDiagnosticoRequest extends FormRequest
         return [
             'nome' => 'required|string|max:255',
             'area' => 'required|string|max:255|exists:areas,nome',
+            'tipo' => 'nullable|string|max:255',
             'descricao' => 'nullable|string|max:1000',
         ];
     }

@@ -37,6 +37,7 @@ export interface Cirurgia {
     procedimento_id: number;
     funcao: 'Cirurgião Principal' | 'Cirurgião Assistente' | 'Residente' | 'Interno';
     clavien_dindo?: 'I' | 'II' | 'IIIa' | 'IIIb' | 'IVa' | 'IVb' | 'V';
+    tipo?: string;
     anatomia_patologica?: string;
     observacoes?: string;
     created_at: string;
@@ -49,6 +50,7 @@ export interface Diagnostico {
     id: number;
     nome: string;
     area: string;
+    tipo?: string;
     descricao?: string;
     created_at: string;
     updated_at: string;

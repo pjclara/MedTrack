@@ -17,7 +17,6 @@ class ProcedimentoController extends Controller
     public function index()
     {
         $procedimentos = Procedimento::where('user_id', auth()->id())
-            ->with('areaRelation:id,nome')
             ->withCount('cirurgias')
             ->orderBy('nome')
             ->paginate(15);

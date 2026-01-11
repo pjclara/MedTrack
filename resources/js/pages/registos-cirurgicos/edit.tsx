@@ -56,6 +56,7 @@ interface RegistoCirurgicoEditProps {
         funcoes: string[];
         clavien: string[];
         tipo_de_abordagem: string[];
+        tipo_diagnostico: string[];
     };
 }
 
@@ -88,8 +89,18 @@ interface ProcedimentoData {
 
 interface DiagnosticoData {
     diagnostico_id: string;
+    tipo: string;
     procedimentos: ProcedimentoData[];
 }
+
+const stepNames = [
+    'Utente',
+    'Registo Cirúrgico',
+    'Diagnósticos',
+    'Intervenções',
+    'Dados Adicionais',
+    'Revisão e Confirmação'
+];
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
@@ -128,10 +139,17 @@ export default function RegistoCirurgicoEdit({
         newIds.forEach(id => {
             updated.push({
                 diagnostico_id: id,
+                tipo: '',
                 procedimentos: [{ procedimento_id: '', funcao: '', clavien_dindo: '', anatomia_patologica: '', observacoes: '' }]
             });
         });
         
+        setDiagnosticosList(updated);
+    };
+
+    const updateDiagnosticoTipo = (index: number, tipo: string) => {
+        const updated = [...diagnosticosList];
+        updated[index].tipo = tipo;
         setDiagnosticosList(updated);
     };
 
@@ -204,22 +222,37 @@ export default function RegistoCirurgicoEdit({
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-3xl font-bold tracking-tight">Editar Registo Cirúrgico</h1>
-                        <p className="text-muted-foreground">
-                            Passo {step} de 6
+                        <p className="text-muted-foreground font-medium">
+                            {stepNames[step - 1]}
                         </p>
                     </div>
                 </div>
 
                 {/* Progress Indicator */}
-                <div className="flex items-center gap-2">
-                    {[1, 2, 3, 4, 5, 6].map((s) => (
-                        <div key={s} className="flex items-center flex-1">
-                            <Badge variant={step >= s ? "default" : "outline"} className="w-full justify-center">
-                                {s}
-                            </Badge>
-                            {s < 6 && <Separator className="flex-1" />}
-                        </div>
-                    ))}
+                <div className="flex flex-col gap-2">
+                    <div className="flex gap-2">
+                        {stepNames.map((name, index) => {
+                            const s = index + 1;
+                            return (
+                                <button 
+                                    key={s} 
+                                    type="button"
+                                    onClick={() => setStep(s)}
+                                    className="flex-1 flex flex-col gap-2 items-center group transition-all"
+                                >
+                                    <div
+                                        className={`h-2 w-full rounded transition-colors ${s <= step ? 'bg-primary' : 'bg-muted'} group-hover:opacity-80`}
+                                        title={name}
+                                    />
+                                    <span 
+                                        className={`text-[10px] uppercase tracking-wider font-semibold hidden md:block text-center transition-colors ${s === step ? 'text-primary' : 'text-muted-foreground/50 group-hover:text-muted-foreground'}`}
+                                    >
+                                        {name}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
 
                 <form onSubmit={handleSubmit}>
@@ -227,7 +260,7 @@ export default function RegistoCirurgicoEdit({
                     {step === 1 && (
                         <Card>
                             <CardHeader>
-                                <CardTitle>Dados do Utente</CardTitle>
+                                <CardTitle>{stepNames[0]}</CardTitle>
                                 <CardDescription>Informações do utente</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
@@ -295,7 +328,7 @@ export default function RegistoCirurgicoEdit({
                     {step === 2 && (
                         <Card>
                             <CardHeader>
-                                <CardTitle>Dados do Registo</CardTitle>
+                                <CardTitle>{stepNames[1]}</CardTitle>
                                 <CardDescription>Informações da cirurgia</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
@@ -467,7 +500,7 @@ export default function RegistoCirurgicoEdit({
                     {step === 3 && (
                         <Card>
                             <CardHeader>
-                                <CardTitle>Diagnósticos</CardTitle>
+                                <CardTitle>{stepNames[2]}</CardTitle>
                                 <CardDescription>Selecione os diagnósticos (pode selecionar múltiplos)</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
@@ -486,10 +519,31 @@ export default function RegistoCirurgicoEdit({
                                     />
                                 </div>
                                 {diagnosticosList.length > 0 && (
-                                    <div className="mt-4 p-4 bg-muted rounded-lg">
-                                        <p className="text-sm text-muted-foreground">
-                                            {diagnosticosList.length} diagnóstico{diagnosticosList.length !== 1 ? 's' : ''} selecionado{diagnosticosList.length !== 1 ? 's' : ''}
-                                        </p>
+                                    <div className="space-y-4 pt-4">
+                                        <h3 className="text-sm font-medium">Classificação dos Diagnósticos</h3>
+                                        {diagnosticosList.map((d, index) => {
+                                            const diagnosisName = diagnosticos.find(diag => diag.id.toString() === d.diagnostico_id)?.nome;
+                                            return (
+                                                <div key={d.diagnostico_id} className="grid grid-cols-2 gap-4 items-center p-3 border rounded-md">
+                                                    <span className="text-sm">{diagnosisName}</span>
+                                                    <Select
+                                                        value={d.tipo}
+                                                        onValueChange={(value) => updateDiagnosticoTipo(index, value)}
+                                                    >
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="Tipo (Benigno/Maligno)" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {(enums?.tipo_diagnostico || []).map((tipo) => (
+                                                                <SelectItem key={tipo} value={tipo}>
+                                                                    {tipo}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 )}
                             </CardContent>
@@ -500,7 +554,7 @@ export default function RegistoCirurgicoEdit({
                     {step === 4 && (
                         <Card>
                             <CardHeader>
-                                <CardTitle>Procedimentos</CardTitle>
+                                <CardTitle>{stepNames[3]}</CardTitle>
                                 <CardDescription>Adicione procedimentos para cada diagnóstico</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-6">
@@ -592,7 +646,7 @@ export default function RegistoCirurgicoEdit({
                     {step === 5 && (
                         <Card>
                             <CardHeader>
-                                <CardTitle>Dados Adicionais</CardTitle>
+                                <CardTitle>{stepNames[4]}</CardTitle>
                                 <CardDescription>Informações opcionais sobre cada procedimento</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-6">
@@ -667,7 +721,7 @@ export default function RegistoCirurgicoEdit({
                     {step === 6 && (
                         <Card>
                             <CardHeader>
-                                <CardTitle>Revisão</CardTitle>
+                                <CardTitle>{stepNames[5]}</CardTitle>
                                 <CardDescription>Revise todos os dados antes de guardar</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-6">
@@ -703,7 +757,14 @@ export default function RegistoCirurgicoEdit({
                                         const diagnosticoNome = diagnosticos.find(d => d.id.toString() === diag.diagnostico_id)?.nome;
                                         return (
                                             <div key={diagIndex} className="mb-4">
-                                                <p className="font-medium text-sm mb-1">{diagnosticoNome}</p>
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <p className="font-medium text-sm">{diagnosticoNome}</p>
+                                                    {diag.tipo && (
+                                                        <Badge variant={diag.tipo === 'Maligno' ? 'destructive' : 'secondary'} className="text-[10px] h-4">
+                                                            {diag.tipo}
+                                                        </Badge>
+                                                    )}
+                                                </div>
                                                 <ul className="list-disc list-inside text-sm space-y-1 ml-4">
                                                     {diag.procedimentos.map((proc, procIndex) => {
                                                         const procedimentoNome = procedimentos.find(p => p.id.toString() === proc.procedimento_id)?.nome;

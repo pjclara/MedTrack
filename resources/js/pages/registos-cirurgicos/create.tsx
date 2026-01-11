@@ -33,6 +33,7 @@ interface RegistoCirurgicoCreateProps {
         sexo: string[];
         funcoes: string[];
         clavien: string[];
+        tipo_diagnostico: string[];
     };
 }
 
@@ -65,8 +66,18 @@ interface ProcedimentoData {
 
 interface DiagnosticoData {
     diagnostico_id: string;
+    tipo: string;
     procedimentos: ProcedimentoData[];
 }
+
+const stepNames = [
+    'Utente',
+    'Registo Cirúrgico',
+    'Diagnósticos',
+    'Intervenções',
+    'Dados Adicionais',
+    'Revisão e Confirmação'
+];
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
@@ -106,7 +117,7 @@ export default function RegistoCirurgicoCreate({
     });
 
     const [diagnosticosList, setDiagnosticosList] = useState<DiagnosticoData[]>([
-        { diagnostico_id: '', procedimentos: [{ procedimento_id: '', funcao: '', clavien_dindo: '', anatomia_patologica: '', observacoes: '' }] }
+        { diagnostico_id: '', tipo: '', procedimentos: [{ procedimento_id: '', funcao: '', clavien_dindo: '', anatomia_patologica: '', observacoes: '' }] }
     ]);
 
     const { post, processing, errors } = useForm();
@@ -133,7 +144,7 @@ export default function RegistoCirurgicoCreate({
     const addDiagnostico = () => {
         setDiagnosticosList([
             ...diagnosticosList,
-            { diagnostico_id: '', procedimentos: [{ procedimento_id: '', funcao: '', clavien_dindo: '', anatomia_patologica: '', observacoes: '' }] }
+            { diagnostico_id: '', tipo: '', procedimentos: [{ procedimento_id: '', funcao: '', clavien_dindo: '', anatomia_patologica: '', observacoes: '' }] }
         ]);
     };
 
@@ -214,20 +225,32 @@ export default function RegistoCirurgicoCreate({
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-3xl font-bold tracking-tight">Criar Registo Cirúrgico</h1>
-                        <p className="text-muted-foreground">
-                            Passo {step} de 6
+                        <p className="text-muted-foreground font-medium">
+                            {stepNames[step - 1]}
                         </p>
                     </div>
                 </div>
 
                 {/* Progress */}
-                <div className="flex gap-2">
-                    {[1, 2, 3, 4, 5, 6].map((s) => (
-                        <div
-                            key={s}
-                            className={`h-2 flex-1 rounded ${s <= step ? 'bg-primary' : 'bg-muted'}`}
-                        />
-                    ))}
+                <div className="flex flex-col gap-2">
+                    <div className="flex gap-2">
+                        {stepNames.map((name, index) => {
+                            const s = index + 1;
+                            return (
+                                <div key={s} className="flex-1 flex flex-col gap-2 items-center">
+                                    <div
+                                        className={`h-2 w-full rounded transition-colors ${s <= step ? 'bg-primary' : 'bg-muted'}`}
+                                        title={name}
+                                    />
+                                    <span 
+                                        className={`text-[10px] uppercase tracking-wider font-semibold hidden md:block text-center ${s === step ? 'text-primary' : 'text-muted-foreground/50'}`}
+                                    >
+                                        {name}
+                                    </span>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
 
                 <form onSubmit={handleSubmit}>
@@ -235,7 +258,7 @@ export default function RegistoCirurgicoCreate({
                     {step === 1 && (
                         <Card>
                             <CardHeader>
-                                <CardTitle>Passo 1 – Utente</CardTitle>
+                                <CardTitle>{stepNames[0]}</CardTitle>
                                 <CardDescription>
                                     Procure pelo nº de processo ou crie um novo utente
                                 </CardDescription>
@@ -248,7 +271,10 @@ export default function RegistoCirurgicoCreate({
                                             id="search_processo"
                                             type="number"
                                             value={searchProcesso}
-                                            onChange={(e) => setSearchProcesso(e.target.value)}
+                                            onChange={(e) => {
+                                                setSearchProcesso(e.target.value);
+                                                setUtenteFound(null);
+                                            }}
                                             placeholder="Digite o nº de processo"
                                         />
                                     </div>
@@ -263,77 +289,79 @@ export default function RegistoCirurgicoCreate({
                                 </div>
 
                                 {utenteFound !== null && (
-                                    <div className="rounded-md border p-4">
-                                        {utenteFound ? (
-                                            <p className="text-sm text-green-600 font-medium">
-                                                ✓ Utente encontrado
-                                            </p>
-                                        ) : (
-                                            <p className="text-sm text-orange-600 font-medium">
-                                                ⚠ Utente não encontrado. Preencha os dados abaixo para criar.
-                                            </p>
-                                        )}
-                                    </div>
+                                    <>
+                                        <div className="rounded-md border p-4">
+                                            {utenteFound ? (
+                                                <p className="text-sm text-green-600 font-medium">
+                                                    ✓ Utente encontrado
+                                                </p>
+                                            ) : (
+                                                <p className="text-sm text-orange-600 font-medium">
+                                                    ⚠ Utente não encontrado. Preencha os dados abaixo para criar.
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <Separator />
+
+                                        <div className="grid gap-4 md:grid-cols-2">
+                                            <div className="space-y-2">
+                                                <Label htmlFor="nome">
+                                                    Nome
+                                                </Label>
+                                                <Input
+                                                    id="nome"
+                                                    value={utenteData.nome}
+                                                    onChange={(e) => setUtenteData({ ...utenteData, nome: e.target.value })}
+                                                    placeholder="Nome completo"
+                                                />
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label htmlFor="processo">
+                                                    Nº Processo <span className="text-destructive">*</span>
+                                                </Label>
+                                                <Input
+                                                    id="processo"
+                                                    type="number"
+                                                    value={utenteData.processo}
+                                                    onChange={(e) => setUtenteData({ ...utenteData, processo: e.target.value })}
+                                                />
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label htmlFor="data_nascimento">
+                                                    Data de Nascimento <span className="text-destructive">*</span>
+                                                </Label>
+                                                <Input
+                                                    id="data_nascimento"
+                                                    type="date"
+                                                    value={utenteData.data_nascimento}
+                                                    onChange={(e) => setUtenteData({ ...utenteData, data_nascimento: e.target.value })}
+                                                />
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label htmlFor="sexo">
+                                                    Sexo <span className="text-destructive">*</span>
+                                                </Label>
+                                                <Select
+                                                    value={utenteData.sexo}
+                                                    onValueChange={(value) => setUtenteData({ ...utenteData, sexo: value })}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Selecione" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {(enums?.sexo || []).map((s) => (
+                                                            <SelectItem key={s} value={s}>{s}</SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        </div>
+                                    </>
                                 )}
-
-                                <Separator />
-
-                                <div className="grid gap-4 md:grid-cols-2">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="nome">
-                                            Nome
-                                        </Label>
-                                        <Input
-                                            id="nome"
-                                            value={utenteData.nome}
-                                            onChange={(e) => setUtenteData({ ...utenteData, nome: e.target.value })}
-                                            placeholder="Nome completo"
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="processo">
-                                            Nº Processo <span className="text-destructive">*</span>
-                                        </Label>
-                                        <Input
-                                            id="processo"
-                                            type="number"
-                                            value={utenteData.processo}
-                                            onChange={(e) => setUtenteData({ ...utenteData, processo: e.target.value })}
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="data_nascimento">
-                                            Data de Nascimento <span className="text-destructive">*</span>
-                                        </Label>
-                                        <Input
-                                            id="data_nascimento"
-                                            type="date"
-                                            value={utenteData.data_nascimento}
-                                            onChange={(e) => setUtenteData({ ...utenteData, data_nascimento: e.target.value })}
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="sexo">
-                                            Sexo <span className="text-destructive">*</span>
-                                        </Label>
-                                        <Select
-                                            value={utenteData.sexo}
-                                            onValueChange={(value) => setUtenteData({ ...utenteData, sexo: value })}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Selecione" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {(enums?.sexo || []).map((s) => (
-                                                    <SelectItem key={s} value={s}>{s}</SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                </div>
                             </CardContent>
                         </Card>
                     )}
@@ -342,7 +370,7 @@ export default function RegistoCirurgicoCreate({
                     {step === 2 && (
                         <Card>
                             <CardHeader>
-                                <CardTitle>Passo 2 – Registo Cirúrgico</CardTitle>
+                                <CardTitle>{stepNames[1]}</CardTitle>
                                 <CardDescription>
                                     Dados da cirurgia
                                 </CardDescription>
@@ -517,7 +545,7 @@ export default function RegistoCirurgicoCreate({
                     {step === 3 && (
                         <Card>
                             <CardHeader>
-                                <CardTitle>Passo 3 – Diagnósticos</CardTitle>
+                                <CardTitle>{stepNames[2]}</CardTitle>
                                 <CardDescription>
                                     Adicione os diagnósticos da cirurgia
                                 </CardDescription>
@@ -548,21 +576,45 @@ export default function RegistoCirurgicoCreate({
                                             )}
                                             </div>
                                         </div>
-                                        <Select
-                                            value={diag.diagnostico_id}
-                                            onValueChange={(value) => updateDiagnostico(index, 'diagnostico_id', value)}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Selecione o diagnóstico" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {diagnosticos.map((d) => (
-                                                    <SelectItem key={d.id} value={d.id.toString()}>
-                                                        {d.nome}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                        <div className="grid gap-4 md:grid-cols-2">
+                                            <div className="space-y-2">
+                                                <Label>Diagnóstico <span className="text-destructive">*</span></Label>
+                                                <Select
+                                                    value={diag.diagnostico_id}
+                                                    onValueChange={(value) => updateDiagnostico(index, 'diagnostico_id', value)}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Selecione o diagnóstico" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {diagnosticos.map((d) => (
+                                                            <SelectItem key={d.id} value={d.id.toString()}>
+                                                                {d.nome}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label>Tipo de Diagnóstico</Label>
+                                                <Select
+                                                    value={diag.tipo}
+                                                    onValueChange={(value) => updateDiagnostico(index, 'tipo', value)}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Selecione o tipo" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {(enums?.tipo_diagnostico || []).map((tipo) => (
+                                                            <SelectItem key={tipo} value={tipo}>
+                                                                {tipo}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        </div>
                                     </div>
                                 ))}
 
@@ -583,7 +635,7 @@ export default function RegistoCirurgicoCreate({
                     {step === 4 && (
                         <Card>
                             <CardHeader>
-                                <CardTitle>Passo 4 – Intervenções / Procedimentos</CardTitle>
+                                <CardTitle>{stepNames[3]}</CardTitle>
                                 <CardDescription>
                                     Adicione os procedimentos para cada diagnóstico
                                 </CardDescription>
@@ -681,7 +733,7 @@ export default function RegistoCirurgicoCreate({
                     {step === 5 && (
                         <Card>
                             <CardHeader>
-                                <CardTitle>Passo 5 – Dados Adicionais da Cirurgia</CardTitle>
+                                <CardTitle>{stepNames[4]}</CardTitle>
                                 <CardDescription>
                                     Informações complementares (opcional)
                                 </CardDescription>
@@ -755,7 +807,7 @@ export default function RegistoCirurgicoCreate({
                     {step === 6 && (
                         <Card>
                             <CardHeader>
-                                <CardTitle>Passo 6 – Revisão e Confirmação</CardTitle>
+                                <CardTitle>{stepNames[5]}</CardTitle>
                                 <CardDescription>
                                     Revise todos os dados antes de confirmar
                                 </CardDescription>
@@ -793,7 +845,14 @@ export default function RegistoCirurgicoCreate({
                                             const diagNome = diagnosticos.find(d => d.id.toString() === diag.diagnostico_id)?.nome;
                                             return (
                                                 <div key={diagIndex} className="rounded-md border p-4 space-y-2">
-                                                    <p className="font-medium">Diagnóstico {diagIndex + 1}: {diagNome}</p>
+                                                    <div className="flex items-center gap-2">
+                                                        <p className="font-medium">Diagnóstico {diagIndex + 1}: {diagNome}</p>
+                                                        {diag.tipo && (
+                                                            <Badge variant={diag.tipo === 'Maligno' ? 'destructive' : 'secondary'} className="text-[10px] h-5">
+                                                                {diag.tipo}
+                                                            </Badge>
+                                                        )}
+                                                    </div>
                                                     <div className="pl-4 space-y-2">
                                                         {diag.procedimentos.map((proc, procIndex) => {
                                                             const procNome = procedimentos.find(p => p.id.toString() === proc.procedimento_id)?.nome;

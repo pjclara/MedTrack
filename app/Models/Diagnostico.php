@@ -12,6 +12,7 @@ class Diagnostico extends Model
     protected $fillable = [
         'nome',
         'area',
+        'tipo',
         'descricao',
         'user_id',
     ];

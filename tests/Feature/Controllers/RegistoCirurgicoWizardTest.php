@@ -369,4 +369,54 @@ class RegistoCirurgicoWizardTest extends TestCase
 
         $response->assertSessionHasErrors(['diagnosticos.0.procedimentos']);
     }
+
+    public function test_store_saves_diagnostico_tipo(): void
+    {
+        $user = User::factory()->create();
+        $utente = Utente::factory()->create(['user_id' => $user->id]);
+        $tipo = TipoDeCirurgia::factory()->create();
+        $tipoOrigem = TipoDeOrigem::factory()->create();
+        $diagnostico = Diagnostico::factory()->create(['user_id' => $user->id]);
+        $procedimento = Procedimento::factory()->create(['user_id' => $user->id]);
+
+        $data = [
+            'utente' => [
+                'id' => (string) $utente->id,
+                'nome' => $utente->nome,
+                'processo' => (string) $utente->processo,
+                'data_nascimento' => $utente->data_nascimento->format('Y-m-d'),
+                'sexo' => $utente->sexo->value,
+            ],
+            'registo' => [
+                'hospital' => 'Hospital Teste',
+                'area_cirurgica' => 'Cirurgia Geral',
+                'data_cirurgia' => '2025-12-19',
+                'tipo_de_cirurgia_id' => (string) $tipo->id,
+                'tipo_de_origem_id' => (string) $tipoOrigem->id,
+                'tipo_de_abordagem' => TipoAbordagemEnum::LAPAROSCOPICA->value,
+                'ambulatorio' => false,
+            ],
+            'diagnosticos' => [
+                [
+                    'diagnostico_id' => (string) $diagnostico->id,
+                    'tipo' => 'Maligno',
+                    'procedimentos' => [
+                        [
+                            'procedimento_id' => (string) $procedimento->id,
+                            'funcao' => FuncaoCirurgiaoEnum::CIRURGIAO_PRINCIPAL->value,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $response = $this->actingAs($user)->post(route('registos-cirurgicos.store'), $data);
+
+        $response->assertRedirect(route('registos-cirurgicos.index'));
+
+        $this->assertDatabaseHas('cirurgias', [
+            'diagnostico_id' => $diagnostico->id,
+            'tipo' => 'Maligno',
+        ]);
+    }
 }

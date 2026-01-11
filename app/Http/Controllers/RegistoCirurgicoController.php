@@ -13,6 +13,7 @@ use App\Http\Requests\StoreRegistoCirurgicoRequest;
 use App\Http\Requests\UpdateRegistoCirurgicoRequest;
 use Illuminate\Support\Facades\DB;
 use App\Enums\TipoAbordagemEnum;
+use App\Enums\TipoDiagnosticoEnum;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Inertia\Inertia;
 
@@ -59,6 +60,7 @@ class RegistoCirurgicoController extends Controller
                 'funcoes' => config('medfolio.funcao_options'),
                 'clavien' => config('medfolio.clavien_dindo_options'),
                 'tipo_de_abordagem' => TipoAbordagemEnum::values(),
+                'tipo_diagnostico' => TipoDiagnosticoEnum::values(),
             ],
         ]);
     }
@@ -111,6 +113,7 @@ class RegistoCirurgicoController extends Controller
                 foreach ($diagnostico['procedimentos'] as $procedimento) {
                     $registo->cirurgias()->create([
                         'diagnostico_id' => $diagnostico['diagnostico_id'],
+                        'tipo' => $diagnostico['tipo'] ?? null,
                         'procedimento_id' => $procedimento['procedimento_id'],
                         'funcao' => $procedimento['funcao'],
                         'clavien-dindo' => $procedimento['clavien_dindo'] ?? null,
@@ -169,6 +172,7 @@ class RegistoCirurgicoController extends Controller
             if (!isset($diagnosticosMap[$diagId])) {
                 $diagnosticosMap[$diagId] = [
                     'diagnostico_id' => (string) $diagId,
+                    'tipo' => $cirurgia->tipo ?? '',
                     'procedimentos' => []
                 ];
             }
@@ -213,6 +217,7 @@ class RegistoCirurgicoController extends Controller
                 'funcoes' => config('medfolio.funcao_options'),
                 'clavien' => config('medfolio.clavien_dindo_options'),
                 'tipo_de_abordagem' => TipoAbordagemEnum::values(),
+                'tipo_diagnostico' => TipoDiagnosticoEnum::values(),
             ],
         ]);
     }
@@ -260,6 +265,7 @@ class RegistoCirurgicoController extends Controller
                 foreach ($diagnostico['procedimentos'] as $procedimento) {
                     $registo->cirurgias()->create([
                         'diagnostico_id' => $diagnostico['diagnostico_id'],
+                        'tipo' => $diagnostico['tipo'] ?? null,
                         'procedimento_id' => $procedimento['procedimento_id'],
                         'funcao' => $procedimento['funcao'],
                         'clavien-dindo' => $procedimento['clavien_dindo'] ?? null,

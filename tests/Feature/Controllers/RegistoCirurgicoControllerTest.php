@@ -66,6 +66,7 @@ class RegistoCirurgicoControllerTest extends TestCase
             'diagnosticos' => [
                 [
                     'diagnostico_id' => (string) $diagnostico->id,
+                    'tipo' => 'Maligno',
                     'procedimentos' => [
                         [
                             'procedimento_id' => (string) $procedimento->id,
@@ -88,6 +89,11 @@ class RegistoCirurgicoControllerTest extends TestCase
             'utente_id' => $utente->id,
             'tipo_de_abordagem' => TipoAbordagemEnum::LAPAROSCOPICA->value,
             'user_id' => $user->id,
+        ]);
+
+        $this->assertDatabaseHas('cirurgias', [
+            'diagnostico_id' => $diagnostico->id,
+            'tipo' => 'Maligno',
         ]);
     }
 

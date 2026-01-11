@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
-import { BreadcrumbItem } from '@/types';
+import { BreadcrumbItem, Diagnostico, PaginatedData } from '@/types';
 import { 
     Table, 
     TableBody, 
@@ -19,26 +19,8 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
-interface Diagnostico {
-    id: number;
-    nome: string;
-    area_id: number;
-    area_relation?: {
-        id: number;
-        nome: string;
-    };
-    cirurgias_count?: number;
-}
-
-interface Pagination {
-    data: Diagnostico[];
-    current_page: number;
-    last_page: number;
-    links: any[];
-}
-
 interface DiagnosticoIndexProps {
-    diagnosticos: Pagination;
+    diagnosticos: PaginatedData<Diagnostico>;
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -91,6 +73,7 @@ export default function DiagnosticoIndex({ diagnosticos }: DiagnosticoIndexProps
                                     <TableRow>
                                         <TableHead>Nome</TableHead>
                                         <TableHead>Área</TableHead>
+                                        <TableHead>Tipo</TableHead>
                                         <TableHead className="text-center w-[150px]">Cirurgias</TableHead>
                                         <TableHead className="text-right w-[150px]">Ações</TableHead>
                                     </TableRow>
@@ -98,7 +81,7 @@ export default function DiagnosticoIndex({ diagnosticos }: DiagnosticoIndexProps
                                 <TableBody>
                                     {diagnosticos.data.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={4} className="h-24 text-center">
+                                            <TableCell colSpan={5} className="h-24 text-center">
                                                 Nenhum diagnóstico encontrado.
                                             </TableCell>
                                         </TableRow>
@@ -109,10 +92,14 @@ export default function DiagnosticoIndex({ diagnosticos }: DiagnosticoIndexProps
                                                     {diagnostico.nome}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {diagnostico.area_relation?.nome || 'N/A'}
+                                                    {diagnostico.area || 'N/A'}
                                                 </TableCell>
-                                                <TableCell className="text-center">
-                                                    {diagnostico.cirurgias_count || 0}
+                                                <TableCell>
+                                                    {diagnostico.tipo ? (
+                                                        <span className={diagnostico.tipo === 'Maligno' ? 'text-red-600 font-medium' : 'text-blue-600 font-medium'}>
+                                                            {diagnostico.tipo}
+                                                        </span>
+                                                    ) : '-'}
                                                 </TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">
