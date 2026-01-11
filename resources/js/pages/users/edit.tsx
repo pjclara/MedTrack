@@ -11,10 +11,19 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { ArrowLeft, Save } from 'lucide-react';
 
 interface UserEditProps {
     user: User;
+    hospitals: { nome: string }[];
+    especialidades: { nome: string }[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -23,7 +32,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Editar', href: '#' },
 ];
 
-export default function UserEdit({ user }: UserEditProps) {
+export default function UserEdit({ user, hospitals, especialidades }: UserEditProps) {
     const { data, setData, put, processing, errors } = useForm({
         name: user.name,
         email: user.email,
@@ -118,12 +127,21 @@ export default function UserEdit({ user }: UserEditProps) {
 
                             <div className="space-y-2">
                                 <Label htmlFor="hospital_de_origem">Hospital de Origem</Label>
-                                <Input 
-                                    id="hospital_de_origem" 
+                                <Select 
                                     value={data.hospital_de_origem} 
-                                    onChange={(e) => setData('hospital_de_origem', e.target.value)}
-                                    placeholder="Ex: Hospital de São João"
-                                />
+                                    onValueChange={(value) => setData('hospital_de_origem', value)}
+                                >
+                                    <SelectTrigger id="hospital_de_origem" className={errors.hospital_de_origem ? 'border-destructive' : ''}>
+                                        <SelectValue placeholder="Selecione um hospital" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {hospitals.map((hospital) => (
+                                            <SelectItem key={hospital.nome} value={hospital.nome}>
+                                                {hospital.nome}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                                 {errors.hospital_de_origem && (
                                     <p className="text-sm text-destructive">{errors.hospital_de_origem}</p>
                                 )}
@@ -131,12 +149,21 @@ export default function UserEdit({ user }: UserEditProps) {
 
                             <div className="space-y-2">
                                 <Label htmlFor="especialidade">Especialidade</Label>
-                                <Input 
-                                    id="especialidade" 
+                                <Select 
                                     value={data.especialidade} 
-                                    onChange={(e) => setData('especialidade', e.target.value)}
-                                    placeholder="Ex: Cirurgia Geral"
-                                />
+                                    onValueChange={(value) => setData('especialidade', value)}
+                                >
+                                    <SelectTrigger id="especialidade" className={errors.especialidade ? 'border-destructive' : ''}>
+                                        <SelectValue placeholder="Selecione uma especialidade" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {especialidades.map((especialidade) => (
+                                            <SelectItem key={especialidade.nome} value={especialidade.nome}>
+                                                {especialidade.nome}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                                 {errors.especialidade && (
                                     <p className="text-sm text-destructive">{errors.especialidade}</p>
                                 )}

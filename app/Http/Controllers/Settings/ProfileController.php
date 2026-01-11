@@ -23,8 +23,8 @@ class ProfileController extends Controller
         return Inertia::render('settings/profile', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => $request->session()->get('status'),
-            'hospitals' => Hospital::where('user_id', $request->user()->id)->get(),
-            'especialidades' => Especialidade::where('user_id', $request->user()->id)->get(),
+            'hospitals' => Hospital::where('user_id', $request->user()->id)->select('nome')->distinct()->orderBy('nome')->get(),
+            'especialidades' => Especialidade::where('user_id', $request->user()->id)->select('nome')->distinct()->orderBy('nome')->get(),
         ]);
     }
 

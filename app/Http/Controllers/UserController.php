@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Hospital;
+use App\Models\Especialidade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -28,7 +30,10 @@ class UserController extends Controller
      */
     public function create()
     {
-        return Inertia::render('users/create');
+        return Inertia::render('users/create', [
+            'hospitals' => Hospital::select('nome')->distinct()->orderBy('nome')->get(),
+            'especialidades' => Especialidade::select('nome')->distinct()->orderBy('nome')->get(),
+        ]);
     }
 
     /**
@@ -58,7 +63,9 @@ class UserController extends Controller
     public function edit(User $user)
     {
         return Inertia::render('users/edit', [
-            'user' => $user
+            'user' => $user,
+            'hospitals' => Hospital::select('nome')->distinct()->orderBy('nome')->get(),
+            'especialidades' => Especialidade::select('nome')->distinct()->orderBy('nome')->get(),
         ]);
     }
 

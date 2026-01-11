@@ -112,7 +112,7 @@ export default function Profile({
                                         <SelectContent>
                                             {hospitals.length > 0 ? (
                                                 hospitals.map((h) => (
-                                                    <SelectItem key={h.id} value={h.nome}>{h.nome}</SelectItem>
+                                                    <SelectItem key={h.nome} value={h.nome}>{h.nome}</SelectItem>
                                                 ))
                                             ) : (
                                                 <SelectItem value="none" disabled>Nenhum hospital registado</SelectItem>
@@ -136,7 +136,7 @@ export default function Profile({
                                         <SelectContent>
                                             {especialidades.length > 0 ? (
                                                 especialidades.map((e) => (
-                                                    <SelectItem key={e.id} value={e.nome}>{e.nome}</SelectItem>
+                                                    <SelectItem key={e.nome} value={e.nome}>{e.nome}</SelectItem>
                                                 ))
                                             ) : (
                                                 <SelectItem value="none" disabled>Nenhuma especialidade registada</SelectItem>
