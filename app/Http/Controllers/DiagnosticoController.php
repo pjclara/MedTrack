@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Diagnostico;
-use App\Models\Area;
+use App\Models\Especialidade;
 use App\Enums\TipoDiagnosticoEnum;
 use App\Http\Requests\StoreDiagnosticoRequest;
 use Illuminate\Http\Request;
@@ -32,9 +32,9 @@ class DiagnosticoController extends Controller
     public function create()
     {
         Gate::authorize('create', Diagnostico::class);
-        $areas = Area::where('user_id', auth()->id())->orderBy('nome')->get();
+        $especialidades = Especialidade::where('user_id', auth()->id())->orderBy('nome')->get();
         return Inertia::render('diagnosticos/create', [
-            'areas' => $areas,
+            'especialidades' => $especialidades,
             'tipos' => TipoDiagnosticoEnum::values()
         ]);
     }
@@ -76,10 +76,10 @@ class DiagnosticoController extends Controller
     public function edit(Diagnostico $diagnostico)
     {
         Gate::authorize('update', $diagnostico);
-        $areas = Area::where('user_id', auth()->id())->orderBy('nome')->get();
+        $especialidades = Especialidade::where('user_id', auth()->id())->orderBy('nome')->get();
         return Inertia::render('diagnosticos/edit', [
             'diagnostico' => $diagnostico,
-            'areas' => $areas,
+            'especialidades' => $especialidades,
             'tipos' => TipoDiagnosticoEnum::values()
         ]);
     }

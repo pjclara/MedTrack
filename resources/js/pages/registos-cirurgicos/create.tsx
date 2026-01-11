@@ -17,9 +17,9 @@ import {
 } from '@/components/ui/select';
 import { ArrowLeft, ArrowRight, Save, Plus, Trash2, Search } from 'lucide-react';
 import { type BreadcrumbItem, type SharedData } from '@/types';
-import { type TipoDeCirurgia, type TipoDeOrigem, type Diagnostico, type Procedimento, type Area } from '@/types/models';
+import { type TipoDeCirurgia, type TipoDeOrigem, type Diagnostico, type Procedimento, type Especialidade, type Hospital } from '@/types/models';
 import { useState, FormEventHandler, useEffect } from 'react';
-import { QuickAddDiagnostico, QuickAddProcedimento, QuickAddArea } from '@/components/quick-add/QuickAddDialogs';
+import { QuickAddDiagnostico, QuickAddProcedimento, QuickAddEspecialidade } from '@/components/quick-add/QuickAddDialogs';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 
@@ -28,7 +28,8 @@ interface RegistoCirurgicoCreateProps {
     tiposDeOrigem: TipoDeOrigem[];
     diagnosticos: Diagnostico[];
     procedimentos: Procedimento[];
-    areas: Area[];
+    especialidades: Especialidade[];
+    hospitals: Hospital[];
     enums: {
         sexo: string[];
         funcoes: string[];
@@ -47,7 +48,7 @@ interface UtenteData {
 
 interface RegistoData {
     hospital: string;
-    area_cirurgica: string;
+    especialidade: string;
     data_cirurgia: string;
     tipo_de_cirurgia_id: string;
     tipo_de_origem_id: string;
@@ -90,8 +91,9 @@ export default function RegistoCirurgicoCreate({
     tiposDeOrigem = [],
     diagnosticos = [],
     procedimentos = [],
-    areas = [],
-    enums = { sexo: [], funcoes: [], clavien: [] },
+    especialidades = [],
+    hospitals = [],
+    enums = { sexo: [], funcoes: [], clavien: [], tipo_diagnostico: [] },
 }: RegistoCirurgicoCreateProps) {
     const { auth } = usePage<SharedData>().props;
     const [step, setStep] = useState(1);
@@ -107,7 +109,7 @@ export default function RegistoCirurgicoCreate({
 
     const [registoData, setRegistoData] = useState<RegistoData>({
         hospital: auth.user.hospital_de_origem || '',
-        area_cirurgica: auth.user.area_cirurgica || '',
+        especialidade: auth.user.especialidade || '',
         data_cirurgia: '',
         tipo_de_cirurgia_id: '',
         tipo_de_origem_id: '',
@@ -207,7 +209,7 @@ export default function RegistoCirurgicoCreate({
             case 1:
                 return utenteData.processo && utenteData.data_nascimento && utenteData.sexo;
             case 2:
-                return registoData.hospital && registoData.area_cirurgica && registoData.data_cirurgia && registoData.tipo_de_cirurgia_id && registoData.tipo_de_origem_id && registoData.tipo_de_abordagem;
+                return registoData.hospital && registoData.especialidade && registoData.data_cirurgia && registoData.tipo_de_cirurgia_id && registoData.tipo_de_origem_id && registoData.tipo_de_abordagem;
             case 3:
                 return diagnosticosList.every(d => d.diagnostico_id);
             case 4:
@@ -322,6 +324,7 @@ export default function RegistoCirurgicoCreate({
                                                     Nº Processo <span className="text-destructive">*</span>
                                                 </Label>
                                                 <Input
+                                                    disabled
                                                     id="processo"
                                                     type="number"
                                                     value={utenteData.processo}
@@ -379,64 +382,49 @@ export default function RegistoCirurgicoCreate({
                                 <div className="grid gap-4 md:grid-cols-2">
                                     <div className="space-y-2">
                                         <Label htmlFor="hospital">
-                                            Hospital <span className="text-destructive">*</span>
+                                            Hospital de Origem <span className="text-destructive">*</span>
                                         </Label>
                                         <Select
                                             value={registoData.hospital}
                                             onValueChange={(value) => setRegistoData({ ...registoData, hospital: value })}
                                         >
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Selecione o hospital" />
+                                                <SelectValue placeholder="Selecione o hospital de origem" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="Hospital de Santa Maria">Hospital de Santa Maria</SelectItem>
-                                                <SelectItem value="Hospital de São João">Hospital de São João</SelectItem>
-                                                <SelectItem value="Hospital de Santo António">Hospital de Santo António</SelectItem>
-                                                <SelectItem value="Centro Hospitalar e Universitário de Coimbra">CHUC (Coimbra)</SelectItem>
-                                                <SelectItem value="Hospital de Braga">Hospital de Braga</SelectItem>
-                                                <SelectItem value="Hospital de Vila Real">Hospital de Vila Real</SelectItem>
-                                                <SelectItem value="Hospital de Évora">Hospital de Évora</SelectItem>
-                                                <SelectItem value="Hospital de Faro">Hospital de Faro</SelectItem>
-                                                <SelectItem value="Hospital CUF">Hospital CUF</SelectItem>
-                                                <SelectItem value="Hospital da Luz">Hospital da Luz</SelectItem>
-                                                <SelectItem value="Outro">Outro</SelectItem>
+                                                {hospitals.length > 0 ? (
+                                                    hospitals.map((h) => (
+                                                        <SelectItem key={h.id} value={h.nome}>{h.nome}</SelectItem>
+                                                    ))
+                                                ) : (
+                                                    <SelectItem value="none" disabled>Nenhum hospital registado</SelectItem>
+                                                )}
                                             </SelectContent>
                                         </Select>
                                     </div>
 
                                     <div className="space-y-2">
                                         <div className="flex items-center justify-between">
-                                            <Label htmlFor="area_cirurgica">
-                                                Área Cirúrgica <span className="text-destructive">*</span>
+                                            <Label htmlFor="especialidade">
+                                                Especialidade <span className="text-destructive">*</span>
                                             </Label>
-                                            <QuickAddArea onCreated={(newArea) => setRegistoData({ ...registoData, area_cirurgica: newArea.nome })} />
+                                            <QuickAddEspecialidade onCreated={(newEspecialidade) => setRegistoData({ ...registoData, especialidade: newEspecialidade.nome })} />
                                         </div>
                                         <Select
-                                            value={registoData.area_cirurgica}
-                                            onValueChange={(value) => setRegistoData({ ...registoData, area_cirurgica: value })}
+                                            value={registoData.especialidade}
+                                            onValueChange={(value) => setRegistoData({ ...registoData, especialidade: value })}
                                         >
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Selecione a área" />
+                                                <SelectValue placeholder="Selecione a especialidade" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {areas.length > 0 && (
-                                                    <>
-                                                        {areas.map((a) => (
-                                                            <SelectItem key={a.id} value={a.nome}>{a.nome}</SelectItem>
-                                                        ))}
-                                                        <Separator className="my-1" />
-                                                    </>
+                                                {especialidades.length > 0 ? (
+                                                    especialidades.map((a) => (
+                                                        <SelectItem key={a.id} value={a.nome}>{a.nome}</SelectItem>
+                                                    ))
+                                                ) : (
+                                                    <SelectItem value="none" disabled>Nenhuma especialidade registada</SelectItem>
                                                 )}
-                                                <SelectItem value="Cirurgia Geral">Cirurgia Geral</SelectItem>
-                                                <SelectItem value="Cirurgia Vascular">Cirurgia Vascular</SelectItem>
-                                                <SelectItem value="Cirurgia Cardiotorácica">Cirurgia Cardiotorácica</SelectItem>
-                                                <SelectItem value="Cirurgia Pediátrica">Cirurgia Pediátrica</SelectItem>
-                                                <SelectItem value="Cirurgia Plástica">Cirurgia Plástica</SelectItem>
-                                                <SelectItem value="Neurocirurgia">Neurocirurgia</SelectItem>
-                                                <SelectItem value="Urologia">Urologia</SelectItem>
-                                                <SelectItem value="Ginecologia-Obstetrícia">Ginecologia-Obstetrícia</SelectItem>
-                                                <SelectItem value="Ortopedia">Ortopedia</SelectItem>
-                                                <SelectItem value="Outra">Outra</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
@@ -557,7 +545,7 @@ export default function RegistoCirurgicoCreate({
                                             <Label>Diagnóstico {index + 1}</Label>
                                             <div className="flex gap-2">
                                                 <QuickAddDiagnostico 
-                                                    areas={areas} 
+                                                    especialidades={especialidades} 
                                                     onCreated={(newDiag) => {
                                                         // O Inertia refresca as props automaticamente
                                                         // Mas para selecionar o novo item, podemos ter de procurar na lista atualizada
@@ -656,7 +644,7 @@ export default function RegistoCirurgicoCreate({
                                                         <Label>Intervenção {procIndex + 1}</Label>
                                                         <div className="flex gap-2">
                                                             <QuickAddProcedimento 
-                                                                areas={areas}
+                                                                especialidades={especialidades}
                                                             />
                                                             {diag.procedimentos.length > 1 && (
                                                             <Button
@@ -883,7 +871,7 @@ export default function RegistoCirurgicoCreate({
                     )}
 
                     {/* Navigation */}
-                    <div className="flex justify-between">
+                    <div className="flex justify-between pt-3">
                         <Button
                             type="button"
                             variant="outline"

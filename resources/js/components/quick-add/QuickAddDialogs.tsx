@@ -23,12 +23,12 @@ import {
 } from '@/components/ui/select';
 import { toast } from 'react-toastify';
 
-interface Area {
+interface Especialidade {
     id: number;
     nome: string;
 }
 
-export function QuickAddArea({ onCreated }: { onCreated?: (area: any) => void }) {
+export function QuickAddEspecialidade({ onCreated }: { onCreated?: (especialidade: any) => void }) {
     const [open, setOpen] = useState(false);
     const [nome, setNome] = useState('');
     const [descricao, setDescricao] = useState('');
@@ -38,14 +38,14 @@ export function QuickAddArea({ onCreated }: { onCreated?: (area: any) => void })
         e.preventDefault();
         setLoading(true);
 
-        router.post('/areas', { nome, descricao }, {
+        router.post('/especialidades', { nome, descricao }, {
             preserveState: true,
             preserveScroll: true,
             headers: {
                 'X-Inertia-Modal-Redirect-Back': 'true',
             },
             onSuccess: () => {
-                toast.success('Área criada com sucesso');
+                toast.success('Especialidade criada com sucesso');
                 setOpen(false);
                 setNome('');
                 setDescricao('');
@@ -59,21 +59,21 @@ export function QuickAddArea({ onCreated }: { onCreated?: (area: any) => void })
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline" size="sm" type="button">
-                    <Plus className="h-4 w-4 mr-1" /> Especialidade/Área
+                    <Plus className="h-4 w-4 mr-1" /> Especialidade
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Criar Nova Área / Especialidade</DialogTitle>
+                    <DialogTitle>Criar Nova Especialidade</DialogTitle>
                     <DialogDescription>
-                        Adicione uma nova área cirúrgica à sua lista.
+                        Adicione uma nova especialidade à sua lista.
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
-                        <Label htmlFor="area-nome">Nome</Label>
+                        <Label htmlFor="especialidade-nome">Nome</Label>
                         <Input
-                            id="area-nome"
+                            id="especialidade-nome"
                             value={nome}
                             onChange={(e) => setNome(e.target.value)}
                             placeholder="Ex: Cirurgia Geral"
@@ -81,12 +81,12 @@ export function QuickAddArea({ onCreated }: { onCreated?: (area: any) => void })
                         />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="area-desc">Descrição (Opcional)</Label>
+                        <Label htmlFor="especialidade-desc">Descrição (Opcional)</Label>
                         <Textarea
-                            id="area-desc"
+                            id="especialidade-desc"
                             value={descricao}
                             onChange={(e) => setDescricao(e.target.value)}
-                            placeholder="Breve descrição da área..."
+                            placeholder="Breve descrição da especialidade..."
                         />
                     </div>
                     <DialogFooter>
@@ -94,7 +94,7 @@ export function QuickAddArea({ onCreated }: { onCreated?: (area: any) => void })
                             Cancelar
                         </Button>
                         <Button type="submit" disabled={loading || !nome}>
-                            {loading ? 'A criar...' : 'Criar Área'}
+                            {loading ? 'A criar...' : 'Criar Especialidade'}
                         </Button>
                     </DialogFooter>
                 </form>
@@ -104,10 +104,10 @@ export function QuickAddArea({ onCreated }: { onCreated?: (area: any) => void })
 }
 
 export function QuickAddDiagnostico({ 
-    areas, 
+    especialidades, 
     onCreated 
 }: { 
-    areas: Area[], 
+    especialidades: Especialidade[], 
     onCreated?: (diag: any) => void 
 }) {
     const [open, setOpen] = useState(false);
@@ -167,15 +167,15 @@ export function QuickAddDiagnostico({
                     </div>
                     <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                            <Label htmlFor="diag-area">Área / Especialidade</Label>
-                            <QuickAddArea onCreated={(newArea) => setArea(newArea.nome)} />
+                            <Label htmlFor="diag-area">Especialidade</Label>
+                            <QuickAddEspecialidade onCreated={(newArea) => setArea(newArea.nome)} />
                         </div>
                         <Select value={area} onValueChange={setArea}>
                             <SelectTrigger>
-                                <SelectValue placeholder="Selecione a área" />
+                                <SelectValue placeholder="Selecione a especialidade" />
                             </SelectTrigger>
                             <SelectContent>
-                                {areas.map((a) => (
+                                {especialidades.map((a) => (
                                     <SelectItem key={a.id} value={a.nome}>
                                         {a.nome}
                                     </SelectItem>
@@ -219,10 +219,10 @@ export function QuickAddDiagnostico({
 }
 
 export function QuickAddProcedimento({ 
-    areas, 
+    especialidades, 
     onCreated 
 }: { 
-    areas: Area[], 
+    especialidades: Especialidade[], 
     onCreated?: (proc: any) => void 
 }) {
     const [open, setOpen] = useState(false);
@@ -280,15 +280,15 @@ export function QuickAddProcedimento({
                     </div>
                     <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                            <Label htmlFor="proc-area">Área / Especialidade</Label>
-                            <QuickAddArea onCreated={(newArea) => setArea(newArea.nome)} />
+                            <Label htmlFor="proc-area">Especialidade</Label>
+                            <QuickAddEspecialidade onCreated={(newArea) => setArea(newArea.nome)} />
                         </div>
                         <Select value={area} onValueChange={setArea}>
                             <SelectTrigger>
-                                <SelectValue placeholder="Selecione a área" />
+                                <SelectValue placeholder="Selecione a especialidade" />
                             </SelectTrigger>
                             <SelectContent>
-                                {areas.map((a) => (
+                                {especialidades.map((a) => (
                                     <SelectItem key={a.id} value={a.nome}>
                                         {a.nome}
                                     </SelectItem>

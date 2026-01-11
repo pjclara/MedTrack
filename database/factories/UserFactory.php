@@ -29,7 +29,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'hospital_de_origem' => fake()->company() . ' Hospital',
-            'area_cirurgica' => fake()->randomElement(['Cirurgia Geral', 'Cirurgia Vascular', 'Cirurgia Cardiotorácica', 'Neurocirurgia']),
+            'especialidade' => fake()->randomElement(['Cirurgia Geral', 'Cirurgia Vascular', 'Cirurgia Cardiotorácica', 'Neurocirurgia']),
             'remember_token' => Str::random(10),
             'two_factor_secret' => Str::random(10),
             'two_factor_recovery_codes' => Str::random(10),

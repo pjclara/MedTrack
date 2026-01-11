@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\User;
-use App\Models\Area;
+use App\Models\Especialidade;
 use App\Models\TipoDeCirurgia;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -55,10 +55,10 @@ test('essential seeded data can be accessed', function () {
     // but the test confirms the models and tables are correctly mapped.
     
     // Create one of each to verify model/table integrity
-    Area::factory()->create();
+    Especialidade::factory()->create();
     TipoDeCirurgia::factory()->create();
 
-    $this->assertGreaterThan(0, Area::count());
+    $this->assertGreaterThan(0, Especialidade::count());
     $this->assertGreaterThan(0, TipoDeCirurgia::count());
 });
 

@@ -3,7 +3,7 @@
 namespace Tests\Feature\Controllers;
 
 use App\Models\Diagnostico;
-use App\Models\Area;
+use App\Models\Especialidade;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -25,11 +25,11 @@ class DiagnosticoControllerTest extends TestCase
     public function test_store_creates_new_diagnostico(): void
     {
         $user = User::factory()->create();
-        $area = Area::factory()->create(['user_id' => $user->id]);
+        $especialidade = Especialidade::factory()->create(['user_id' => $user->id]);
         
         $data = [
             'nome' => 'Apendicite Aguda ' . uniqid(),
-            'area' => $area->nome,
+            'especialidade' => $especialidade->nome,
             'tipo' => 'Benigno',
             'descricao' => 'Descrição do diagnóstico',
         ];
@@ -41,7 +41,7 @@ class DiagnosticoControllerTest extends TestCase
 
         $this->assertDatabaseHas('diagnosticos', [
             'nome' => $data['nome'],
-            'area' => $area->nome,
+            'especialidade' => $especialidade->nome,
             'tipo' => 'Benigno',
             'user_id' => $user->id,
         ]);
@@ -50,11 +50,11 @@ class DiagnosticoControllerTest extends TestCase
     public function test_store_redirects_back_with_modal_header(): void
     {
         $user = User::factory()->create();
-        $area = Area::factory()->create(['user_id' => $user->id]);
+        $especialidade = Especialidade::factory()->create(['user_id' => $user->id]);
         
         $data = [
             'nome' => 'Modal Diagnostico ' . uniqid(),
-            'area' => $area->nome,
+            'especialidade' => $especialidade->nome,
         ];
 
         $response = $this->actingAs($user)

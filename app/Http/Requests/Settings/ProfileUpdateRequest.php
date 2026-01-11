@@ -29,7 +29,7 @@ class ProfileUpdateRequest extends FormRequest
             ],
 
             'hospital_de_origem' => ['nullable', 'string', 'max:255'],
-            'area_cirurgica' => ['nullable', 'string', 'max:255'],
+            'especialidade' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

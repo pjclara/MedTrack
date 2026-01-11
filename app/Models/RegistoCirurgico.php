@@ -14,7 +14,7 @@ class RegistoCirurgico extends Model
         'user_id',
         'utente_id',
         'hospital',
-        'area_cirurgica',
+        'especialidade',
         'data_cirurgia',
         'tipo_de_cirurgia_id',
         'tipo_de_origem_id',

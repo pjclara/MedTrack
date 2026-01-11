@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Procedimento;
-use App\Models\Area;
+use App\Models\Especialidade;
 use App\Http\Requests\StoreProcedimentoRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -31,9 +31,9 @@ class ProcedimentoController extends Controller
     public function create()
     {
         Gate::authorize('create', Procedimento::class);
-        $areas = Area::where('user_id', auth()->id())->orderBy('nome')->get();
+        $especialidades = Especialidade::where('user_id', auth()->id())->orderBy('nome')->get();
         return Inertia::render('procedimentos/create', [
-            'areas' => $areas
+            'especialidades' => $especialidades
         ]);
     }
 
@@ -74,10 +74,10 @@ class ProcedimentoController extends Controller
     public function edit(Procedimento $procedimento)
     {
         Gate::authorize('update', $procedimento);
-        $areas = Area::where('user_id', auth()->id())->orderBy('nome')->get();
+        $especialidades = Especialidade::where('user_id', auth()->id())->orderBy('nome')->get();
         return Inertia::render('procedimentos/edit', [
             'procedimento' => $procedimento,
-            'areas' => $areas
+            'especialidades' => $especialidades
         ]);
     }
 

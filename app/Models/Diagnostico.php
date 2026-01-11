@@ -11,7 +11,7 @@ class Diagnostico extends Model
 
     protected $fillable = [
         'nome',
-        'area',
+        'especialidade',
         'tipo',
         'descricao',
         'user_id',
@@ -28,11 +28,11 @@ class Diagnostico extends Model
     }
 
     /**
-     * Relação com área
+     * Relação com especialidade
      */
-    public function areaRelation()
+    public function especialidadeRelation()
     {
-        return $this->belongsTo(Area::class, 'area', 'nome');
+        return $this->belongsTo(Especialidade::class, 'especialidade', 'nome');
     }
 
     /**

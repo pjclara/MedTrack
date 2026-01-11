@@ -36,7 +36,7 @@ class RegistoCirurgicoWizardTest extends TestCase
             ],
             'registo' => [
                 'hospital' => 'Hospital Teste',
-                'area_cirurgica' => 'Cirurgia Geral',
+                'especialidade' => 'Cirurgia Geral',
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
@@ -94,7 +94,7 @@ class RegistoCirurgicoWizardTest extends TestCase
             ],
             'registo' => [
                 'hospital' => 'Hospital Teste',
-                'area_cirurgica' => 'Cirurgia Geral',
+                'especialidade' => 'Cirurgia Geral',
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
@@ -146,7 +146,7 @@ class RegistoCirurgicoWizardTest extends TestCase
             ],
             'registo' => [
                 'hospital' => 'Hospital Teste',
-                'area_cirurgica' => 'Cirurgia Geral',
+                'especialidade' => 'Cirurgia Geral',
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
@@ -221,7 +221,7 @@ class RegistoCirurgicoWizardTest extends TestCase
             ],
             'registo' => [
                 'hospital' => 'Hospital Teste',
-                'area_cirurgica' => 'Cirurgia Geral',
+                'especialidade' => 'Cirurgia Geral',
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
@@ -296,7 +296,7 @@ class RegistoCirurgicoWizardTest extends TestCase
             'utente.data_nascimento',
             'utente.sexo',
             'registo.hospital',
-            'registo.area_cirurgica',
+            'registo.especialidade',
         ]);
     }
 
@@ -317,7 +317,7 @@ class RegistoCirurgicoWizardTest extends TestCase
             ],
             'registo' => [
                 'hospital' => 'Hospital Teste',
-                'area_cirurgica' => 'Cirurgia Geral',
+                'especialidade' => 'Cirurgia Geral',
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
@@ -350,7 +350,7 @@ class RegistoCirurgicoWizardTest extends TestCase
             ],
             'registo' => [
                 'hospital' => 'Hospital Teste',
-                'area_cirurgica' => 'Cirurgia Geral',
+                'especialidade' => 'Cirurgia Geral',
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
@@ -389,7 +389,7 @@ class RegistoCirurgicoWizardTest extends TestCase
             ],
             'registo' => [
                 'hospital' => 'Hospital Teste',
-                'area_cirurgica' => 'Cirurgia Geral',
+                'especialidade' => 'Cirurgia Geral',
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,

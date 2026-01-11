@@ -12,11 +12,12 @@ import { FormEventHandler } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Tabelas de Apoio', href: '#' },
+    { title: 'Administração', href: '#' },
+    { title: 'Especialidades', href: '/especialidades' },
     { title: 'Novo', href: '#' },
 ];
 
-export default function AreaCreate() {
+export default function EspecialidadeCreate() {
     const { data, setData, post, processing, errors } = useForm({
         nome: '',
         descricao: '',
@@ -24,21 +25,21 @@ export default function AreaCreate() {
 
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
-        post('/areas', {
-            onSuccess: () => toast.success('Área criada com sucesso!'),
+        post('/especialidades', {
+            onSuccess: () => toast.success('Especialidade criada com sucesso!'),
         });
     };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Nova Área" />
+            <Head title="Nova Especialidade" />
 
             <div className="flex flex-col gap-4 p-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Nova Área</h1>
+                        <h1 className="text-3xl font-bold tracking-tight">Nova Especialidade</h1>
                         <p className="text-muted-foreground">
-                            Adicione uma nova área de especialidade
+                            Adicione uma nova especialidade cirúrgica
                         </p>
                     </div>
                 </div>
@@ -46,7 +47,7 @@ export default function AreaCreate() {
                 <form onSubmit={handleSubmit} className="max-w-2xl">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Dados da Área</CardTitle>
+                            <CardTitle>Dados da Especialidade</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
@@ -76,13 +77,13 @@ export default function AreaCreate() {
                     </Card>
 
                     <div className="mt-4 flex justify-between">
-                        <Button type="button" variant="outline" onClick={() => router.visit('/areas')}>
+                        <Button type="button" variant="outline" onClick={() => router.visit('/especialidades')}>
                             <ArrowLeft className="mr-2 h-4 w-4" />
                             Cancelar
                         </Button>
                         <Button type="submit" disabled={processing} className="bg-emerald-600 hover:bg-emerald-700">
                             <Save className="mr-2 h-4 w-4" />
-                            Guardar Área
+                            Guardar Especialidade
                         </Button>
                     </div>
                 </form>

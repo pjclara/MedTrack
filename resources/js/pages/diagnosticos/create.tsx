@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { BreadcrumbItem, Area } from '@/types';
+import { BreadcrumbItem, Especialidade } from '@/types';
 import { Button } from '@/components/ui/button';
 import { 
     Card, 
@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/select';
 
 interface DiagnosticoCreateProps {
-    areas: Area[];
+    especialidades: Especialidade[];
     tipos: string[];
 }
 
@@ -40,10 +40,10 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function DiagnosticoCreate({ areas, tipos }: DiagnosticoCreateProps) {
+export default function DiagnosticoCreate({ especialidades, tipos }: DiagnosticoCreateProps) {
     const { data, setData, post, processing, errors } = useForm({
         nome: '',
-        area: '',
+        especialidade: '',
         tipo: '',
     });
 
@@ -76,24 +76,24 @@ export default function DiagnosticoCreate({ areas, tipos }: DiagnosticoCreatePro
                     <form onSubmit={handleSubmit}>
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="area">Área de Especialidade</Label>
+                                <Label htmlFor="especialidade">Especialidade</Label>
                                 <Select 
-                                    value={data.area} 
-                                    onValueChange={(value) => setData('area', value)}
+                                    value={data.especialidade} 
+                                    onValueChange={(value) => setData('especialidade', value)}
                                 >
-                                    <SelectTrigger id="area" className={errors.area ? 'border-destructive' : ''}>
-                                        <SelectValue placeholder="Selecione uma área" />
+                                    <SelectTrigger id="especialidade" className={errors.especialidade ? 'border-destructive' : ''}>
+                                        <SelectValue placeholder="Selecione uma especialidade" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {(areas || []).map((area) => (
-                                            <SelectItem key={area.id} value={area.nome}>
-                                                {area.nome}
+                                        {(especialidades || []).map((especialidade) => (
+                                            <SelectItem key={especialidade.id} value={especialidade.nome}>
+                                                {especialidade.nome}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                {errors.area && (
-                                    <p className="text-sm text-destructive">{errors.area}</p>
+                                {errors.especialidade && (
+                                    <p className="text-sm text-destructive">{errors.especialidade}</p>
                                 )}
                             </div>
 

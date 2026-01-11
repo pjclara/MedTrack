@@ -37,7 +37,7 @@ export interface User {
     avatar?: string;
     email_verified_at: string | null;
     hospital_de_origem: string | null;
-    area_cirurgica: string | null;
+    especialidade: string | null;
     two_factor_enabled?: boolean;
     created_at: string;
     updated_at: string;

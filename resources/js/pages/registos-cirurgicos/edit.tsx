@@ -18,9 +18,9 @@ import {
 } from '@/components/ui/select';
 import { ArrowLeft, ArrowRight, Save, Plus, Trash2 } from 'lucide-react';
 import { type BreadcrumbItem } from '@/types';
-import { type TipoDeCirurgia, type TipoDeOrigem, type Diagnostico, type Procedimento, type Area } from '@/types/models';
+import { type TipoDeCirurgia, type TipoDeOrigem, type Diagnostico, type Procedimento, type Especialidade, type Hospital } from '@/types/models';
 import { useState, FormEventHandler, useEffect } from 'react';
-import { QuickAddDiagnostico, QuickAddProcedimento, QuickAddArea } from '@/components/quick-add/QuickAddDialogs';
+import { QuickAddDiagnostico, QuickAddProcedimento, QuickAddEspecialidade } from '@/components/quick-add/QuickAddDialogs';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 
@@ -36,7 +36,7 @@ interface RegistoCirurgicoEditProps {
         };
         registo: {
             hospital: string;
-            area_cirurgica: string;
+            especialidade: string;
             data_cirurgia: string;
             tipo_de_cirurgia_id: string;
             tipo_de_origem_id: any;
@@ -50,7 +50,8 @@ interface RegistoCirurgicoEditProps {
     tiposDeOrigem: TipoDeOrigem[];
     diagnosticos: Diagnostico[];
     procedimentos: Procedimento[];
-    areas: Area[];
+    especialidades: Especialidade[];
+    hospitals: Hospital[];
     enums: {
         sexo: string[];
         funcoes: string[];
@@ -70,7 +71,7 @@ interface UtenteData {
 
 interface RegistoData {
     hospital: string;
-    area_cirurgica: string;
+    especialidade: string;
     data_cirurgia: string;
     tipo_de_cirurgia_id: string;
     tipo_de_origem_id: string;
@@ -114,8 +115,7 @@ export default function RegistoCirurgicoEdit({
     tiposDeOrigem = [],
     diagnosticos = [],
     procedimentos = [],
-    areas = [],
-    enums = { sexo: [], funcoes: [], clavien: [], tipo_de_abordagem: [] },
+    especialidades = [],    hospitals = [],    enums = { sexo: [], funcoes: [], clavien: [], tipo_de_abordagem: [], tipo_diagnostico: [] },
 }: RegistoCirurgicoEditProps) {
     const [step, setStep] = useState(1);
 
@@ -204,7 +204,7 @@ export default function RegistoCirurgicoEdit({
             case 1:
                 return utenteData.processo && utenteData.data_nascimento && utenteData.sexo;
             case 2:
-                return registoData.hospital && registoData.area_cirurgica && registoData.data_cirurgia && registoData.tipo_de_cirurgia_id && registoData.tipo_de_origem_id && registoData.tipo_de_abordagem;
+                return registoData.hospital && registoData.especialidade && registoData.data_cirurgia && registoData.tipo_de_cirurgia_id && registoData.tipo_de_origem_id && registoData.tipo_de_abordagem;
             case 3:
                 return diagnosticosList.length > 0;
             case 4:
@@ -334,64 +334,49 @@ export default function RegistoCirurgicoEdit({
                             <CardContent className="space-y-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="hospital">
-                                        Hospital <span className="text-destructive">*</span>
+                                        Hospital de Origem <span className="text-destructive">*</span>
                                     </Label>
                                     <Select
                                         value={registoData.hospital}
                                         onValueChange={(value) => setRegistoData({ ...registoData, hospital: value })}
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Selecione o hospital" />
+                                            <SelectValue placeholder="Selecione o hospital de origem" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="Hospital de Santa Maria">Hospital de Santa Maria</SelectItem>
-                                            <SelectItem value="Hospital de São João">Hospital de São João</SelectItem>
-                                            <SelectItem value="Hospital de Santo António">Hospital de Santo António</SelectItem>
-                                            <SelectItem value="Centro Hospitalar e Universitário de Coimbra">CHUC (Coimbra)</SelectItem>
-                                            <SelectItem value="Hospital de Braga">Hospital de Braga</SelectItem>
-                                            <SelectItem value="Hospital de Vila Real">Hospital de Vila Real</SelectItem>
-                                            <SelectItem value="Hospital de Évora">Hospital de Évora</SelectItem>
-                                            <SelectItem value="Hospital de Faro">Hospital de Faro</SelectItem>
-                                            <SelectItem value="Hospital CUF">Hospital CUF</SelectItem>
-                                            <SelectItem value="Hospital da Luz">Hospital da Luz</SelectItem>
-                                            <SelectItem value="Outro">Outro</SelectItem>
+                                            {hospitals.length > 0 ? (
+                                                hospitals.map((h) => (
+                                                    <SelectItem key={h.id} value={h.nome}>{h.nome}</SelectItem>
+                                                ))
+                                            ) : (
+                                                <SelectItem value="none" disabled>Nenhum hospital registado</SelectItem>
+                                            )}
                                         </SelectContent>
                                     </Select>
                                 </div>
 
                                 <div className="space-y-2">
                                     <div className="flex items-center justify-between">
-                                        <Label htmlFor="area_cirurgica">
-                                            Área Cirúrgica <span className="text-destructive">*</span>
+                                        <Label htmlFor="especialidade">
+                                            Especialidade <span className="text-destructive">*</span>
                                         </Label>
-                                        <QuickAddArea onCreated={(newArea) => setRegistoData({ ...registoData, area_cirurgica: newArea.nome })} />
+                                        <QuickAddEspecialidade onCreated={(newEspecialidade) => setRegistoData({ ...registoData, especialidade: newEspecialidade.nome })} />
                                     </div>
                                     <Select
-                                        value={registoData.area_cirurgica}
-                                        onValueChange={(value) => setRegistoData({ ...registoData, area_cirurgica: value })}
+                                        value={registoData.especialidade}
+                                        onValueChange={(value) => setRegistoData({ ...registoData, especialidade: value })}
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Selecione a área" />
+                                            <SelectValue placeholder="Selecione a especialidade" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {areas.length > 0 && (
-                                                <>
-                                                    {areas.map((a) => (
-                                                        <SelectItem key={a.id} value={a.nome}>{a.nome}</SelectItem>
-                                                    ))}
-                                                    <Separator className="my-1" />
-                                                </>
+                                            {especialidades.length > 0 ? (
+                                                especialidades.map((a) => (
+                                                    <SelectItem key={a.id} value={a.nome}>{a.nome}</SelectItem>
+                                                ))
+                                            ) : (
+                                                <SelectItem value="none" disabled>Nenhuma especialidade registada</SelectItem>
                                             )}
-                                            <SelectItem value="Cirurgia Geral">Cirurgia Geral</SelectItem>
-                                            <SelectItem value="Cirurgia Vascular">Cirurgia Vascular</SelectItem>
-                                            <SelectItem value="Cirurgia Cardiotorácica">Cirurgia Cardiotorácica</SelectItem>
-                                            <SelectItem value="Cirurgia Pediátrica">Cirurgia Pediátrica</SelectItem>
-                                            <SelectItem value="Cirurgia Plástica">Cirurgia Plástica</SelectItem>
-                                            <SelectItem value="Neurocirurgia">Neurocirurgia</SelectItem>
-                                            <SelectItem value="Urologia">Urologia</SelectItem>
-                                            <SelectItem value="Ginecologia-Obstetrícia">Ginecologia-Obstetrícia</SelectItem>
-                                            <SelectItem value="Ortopedia">Ortopedia</SelectItem>
-                                            <SelectItem value="Outra">Outra</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -509,7 +494,7 @@ export default function RegistoCirurgicoEdit({
                                         <Label>
                                             Diagnósticos <span className="text-destructive">*</span>
                                         </Label>
-                                        <QuickAddDiagnostico areas={areas} />
+                                        <QuickAddDiagnostico especialidades={especialidades} />
                                     </div>
                                     <CustomMultiSelect
                                         value={diagnosticosList.map(d => ({ value: d.diagnostico_id, label: diagnosticos.find(diag => diag.id.toString() === d.diagnostico_id)?.nome || '' }))}
@@ -590,7 +575,7 @@ export default function RegistoCirurgicoEdit({
                                                                         <Label>
                                                                             Procedimento <span className="text-destructive">*</span>
                                                                         </Label>
-                                                                        <QuickAddProcedimento areas={areas} />
+                                                                        <QuickAddProcedimento especialidades={especialidades} />
                                                                     </div>
                                                                     <CustomSelect
                                                                         value={procedimentos.filter(p => p.id.toString() === proc.procedimento_id).map(p => ({ value: p.id.toString(), label: p.nome }))[0]}

@@ -38,7 +38,7 @@ class StoreRegistoCirurgicoRequest extends FormRequest
             'utente.sexo' => ['required', Rule::enum(SexoEnum::class)],
 
             'registo.hospital' => 'required|string|max:255',
-            'registo.area_cirurgica' => 'required|string|max:255',
+            'registo.especialidade' => 'required|string|max:255',
             'registo.data_cirurgia' => 'required|date',
             'registo.tipo_de_cirurgia_id' => 'required|exists:tipo_de_cirurgias,id',
             'registo.tipo_de_origem_id' => 'required|exists:tipo_de_origems,id',

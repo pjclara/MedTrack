@@ -21,7 +21,7 @@ test('profile information can be updated', function () {
             'name' => 'Test User',
             'email' => 'test@example.com',
             'hospital_de_origem' => 'Hospital Central',
-            'area_cirurgica' => 'Cirurgia Geral',
+            'especialidade' => 'Cirurgia Geral',
         ]);
 
     $response
@@ -33,7 +33,7 @@ test('profile information can be updated', function () {
     expect($user->name)->toBe('Test User');
     expect($user->email)->toBe('test@example.com');
     expect($user->hospital_de_origem)->toBe('Hospital Central');
-    expect($user->area_cirurgica)->toBe('Cirurgia Geral');
+    expect($user->especialidade)->toBe('Cirurgia Geral');
     expect($user->email_verified_at)->toBeNull();
 });
 

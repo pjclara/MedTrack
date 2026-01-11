@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { BreadcrumbItem, Area, Procedimento } from '@/types';
+import { BreadcrumbItem, Especialidade, Procedimento } from '@/types';
 import { Button } from '@/components/ui/button';
 import { 
     Card, 
@@ -22,7 +22,7 @@ import {
 
 interface ProcedimentoEditProps {
     procedimento: Procedimento;
-    areas: Area[];
+    especialidades: Especialidade[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -40,10 +40,10 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function ProcedimentoEdit({ procedimento, areas }: ProcedimentoEditProps) {
+export default function ProcedimentoEdit({ procedimento, especialidades }: ProcedimentoEditProps) {
     const { data, setData, patch, processing, errors } = useForm({
         nome: procedimento.nome,
-        area: procedimento.area || '',
+        especialidade: procedimento.especialidade || '',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -60,7 +60,7 @@ export default function ProcedimentoEdit({ procedimento, areas }: ProcedimentoEd
                     <Button variant="ghost" asChild className="pl-0 hover:bg-transparent">
                         <Link href="/procedimentos">
                             <ArrowLeft className="mr-2 h-4 w-4" />
-                            Voltar para a lista
+                            Voltara para a lista
                         </Link>
                     </Button>
                 </div>
@@ -75,24 +75,24 @@ export default function ProcedimentoEdit({ procedimento, areas }: ProcedimentoEd
                     <form onSubmit={handleSubmit}>
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="area">Área de Especialidade</Label>
+                                <Label htmlFor="especialidade">Especialidade</Label>
                                 <Select 
-                                    value={data.area} 
-                                    onValueChange={(value) => setData('area', value)}
+                                    value={data.especialidade} 
+                                    onValueChange={(value) => setData('especialidade', value)}
                                 >
-                                    <SelectTrigger id="area" className={errors.area ? 'border-destructive' : ''}>
-                                        <SelectValue placeholder="Selecione uma área" />
+                                    <SelectTrigger id="especialidade" className={errors.especialidade ? 'border-destructive' : ''}>
+                                        <SelectValue placeholder="Selecione uma especialidade" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {(areas || []).map((area) => (
-                                            <SelectItem key={area.id} value={area.nome}>
-                                                {area.nome}
+                                        {(especialidades || []).map((especialidade) => (
+                                            <SelectItem key={especialidade.id} value={especialidade.nome}>
+                                                {especialidade.nome}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                {errors.area && (
-                                    <p className="text-sm text-destructive">{errors.area}</p>
+                                {errors.especialidade && (
+                                    <p className="text-sm text-destructive">{errors.especialidade}</p>
                                 )}
                             </div>
 

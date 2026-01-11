@@ -6,7 +6,8 @@ use Laravel\Fortify\Features;
 use App\Http\Controllers\UtenteController;
 use App\Http\Controllers\TipoDeCirurgiaController;
 use App\Http\Controllers\TipoDeOrigemController;
-use App\Http\Controllers\AreaController;
+use App\Http\Controllers\EspecialidadeController;
+use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\DiagnosticoController;
 use App\Http\Controllers\ProcedimentoController;
 use App\Http\Controllers\RegistoCirurgicoController;
@@ -61,7 +62,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('api.utentes.processo');
     Route::resource('tipos-de-cirurgia', TipoDeCirurgiaController::class);
     Route::resource('tipos-de-origem', TipoDeOrigemController::class);
-    Route::resource('areas', AreaController::class);
+    Route::resource('especialidades', EspecialidadeController::class);
+    Route::resource('hospitals', HospitalController::class);
     Route::resource('diagnosticos', DiagnosticoController::class);
     Route::resource('procedimentos', ProcedimentoController::class);
     Route::resource('registos-cirurgicos', RegistoCirurgicoController::class)

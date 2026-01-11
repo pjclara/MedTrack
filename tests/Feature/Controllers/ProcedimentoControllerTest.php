@@ -3,7 +3,7 @@
 namespace Tests\Feature\Controllers;
 
 use App\Models\Procedimento;
-use App\Models\Area;
+use App\Models\Especialidade;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -25,11 +25,11 @@ class ProcedimentoControllerTest extends TestCase
     public function test_store_creates_new_procedimento(): void
     {
         $user = User::factory()->create();
-        $area = Area::factory()->create(['user_id' => $user->id]);
+        $especialidade = Especialidade::factory()->create(['user_id' => $user->id]);
         
         $data = [
             'nome' => 'Apendicectomia ' . uniqid(),
-            'area' => $area->nome,
+            'especialidade' => $especialidade->nome,
             'descricao' => 'Descrição do procedimento',
         ];
 
@@ -40,7 +40,7 @@ class ProcedimentoControllerTest extends TestCase
 
         $this->assertDatabaseHas('procedimentos', [
             'nome' => $data['nome'],
-            'area' => $area->nome,
+            'especialidade' => $especialidade->nome,
             'user_id' => $user->id,
         ]);
     }
@@ -48,11 +48,11 @@ class ProcedimentoControllerTest extends TestCase
     public function test_store_redirects_back_with_modal_header(): void
     {
         $user = User::factory()->create();
-        $area = Area::factory()->create(['user_id' => $user->id]);
+        $especialidade = Especialidade::factory()->create(['user_id' => $user->id]);
         
         $data = [
             'nome' => 'Modal Procedimento ' . uniqid(),
-            'area' => $area->nome,
+            'especialidade' => $especialidade->nome,
         ];
 
         $response = $this->actingAs($user)

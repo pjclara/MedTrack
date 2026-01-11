@@ -55,7 +55,7 @@ class RegistoCirurgicoControllerTest extends TestCase
             ],
             'registo' => [
                 'hospital' => 'Hospital Teste',
-                'area_cirurgica' => 'Cirurgia Geral',
+                'especialidade' => 'Cirurgia Geral',
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
@@ -115,7 +115,7 @@ class RegistoCirurgicoControllerTest extends TestCase
                 'sexo' => $utente->sexo->value,
             ],
             'registo' => [                'hospital' => 'Hospital Teste',
-                'area_cirurgica' => 'Cirurgia Geral',                'data_cirurgia' => '2025-12-19',
+                'especialidade' => 'Cirurgia Geral',                'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
                 'tipo_de_abordagem' => 'abordagem_invalida',
@@ -164,7 +164,7 @@ class RegistoCirurgicoControllerTest extends TestCase
             ],
             'registo' => [
                 'hospital' => 'Hospital Atualizado',
-                'area_cirurgica' => 'Cirurgia Vascular',
+                'especialidade' => 'Cirurgia Vascular',
                 'data_cirurgia' => '2025-12-20',
                 'tipo_de_cirurgia_id' => $registo->tipo_de_cirurgia_id,
                 'tipo_de_origem_id' => $registo->tipo_de_origem_id,

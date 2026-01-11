@@ -23,7 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'hospital_de_origem',
-        'area_cirurgica',
+        'especialidade',
     ];
 
     /**

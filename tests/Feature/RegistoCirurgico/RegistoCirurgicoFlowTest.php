@@ -49,7 +49,7 @@ test('authenticated users can create a surgical record with a new utente', funct
         ],
         'registo' => [
             'hospital' => 'Hospital Teste',
-            'area_cirurgica' => 'Cirurgia Geral',
+            'especialidade' => 'Cirurgia Geral',
             'data_cirurgia' => now()->format('Y-m-d'),
             'tipo_de_cirurgia_id' => $tipoCirurgia->id,
             'tipo_de_origem_id' => $tipoOrigem->id,

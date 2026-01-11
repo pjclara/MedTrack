@@ -11,7 +11,7 @@ class Procedimento extends Model
 
     protected $fillable = [
         'nome',
-        'area',
+        'especialidade',
         'descricao',
         'user_id',
     ];
@@ -27,11 +27,11 @@ class Procedimento extends Model
     }
 
     /**
-     * Relação com área
+     * Relação com especialidade
      */
-    public function areaRelation()
+    public function especialidadeRelation()
     {
-        return $this->belongsTo(Area::class, 'area', 'nome');
+        return $this->belongsTo(Especialidade::class, 'especialidade', 'nome');
     }
 
     /**

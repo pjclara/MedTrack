@@ -72,7 +72,7 @@ export default function DiagnosticoIndex({ diagnosticos }: DiagnosticoIndexProps
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>Nome</TableHead>
-                                        <TableHead>Área</TableHead>
+                                        <TableHead>Especialidade</TableHead>
                                         <TableHead>Tipo</TableHead>
                                         <TableHead className="text-center w-[150px]">Cirurgias</TableHead>
                                         <TableHead className="text-right w-[150px]">Ações</TableHead>
@@ -92,7 +92,7 @@ export default function DiagnosticoIndex({ diagnosticos }: DiagnosticoIndexProps
                                                     {diagnostico.nome}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {diagnostico.area || 'N/A'}
+                                                    {diagnostico.especialidade || 'N/A'}
                                                 </TableCell>
                                                 <TableCell>
                                                     {diagnostico.tipo ? (

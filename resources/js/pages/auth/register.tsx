@@ -66,51 +66,6 @@ export default function Register() {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="hospital_de_origem">Hospital de Origem</Label>
-                                <Select name="hospital_de_origem">
-                                    <SelectTrigger tabIndex={3}>
-                                        <SelectValue placeholder="Selecione o hospital" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="Hospital de Santa Maria">Hospital de Santa Maria</SelectItem>
-                                        <SelectItem value="Hospital de São João">Hospital de São João</SelectItem>
-                                        <SelectItem value="Hospital de Santo António">Hospital de Santo António</SelectItem>
-                                        <SelectItem value="Centro Hospitalar e Universitário de Coimbra">CHUC (Coimbra)</SelectItem>
-                                        <SelectItem value="Hospital de Braga">Hospital de Braga</SelectItem>
-                                        <SelectItem value="Hospital de Vila Real">Hospital de Vila Real</SelectItem>
-                                        <SelectItem value="Hospital de Évora">Hospital de Évora</SelectItem>
-                                        <SelectItem value="Hospital de Faro">Hospital de Faro</SelectItem>
-                                        <SelectItem value="Hospital CUF">Hospital CUF</SelectItem>
-                                        <SelectItem value="Hospital da Luz">Hospital da Luz</SelectItem>
-                                        <SelectItem value="Outro">Outro</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <InputError message={errors.hospital_de_origem} />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="area_cirurgica">Área Cirúrgica</Label>
-                                <Select name="area_cirurgica">
-                                    <SelectTrigger tabIndex={4}>
-                                        <SelectValue placeholder="Selecione a área" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="Cirurgia Geral">Cirurgia Geral</SelectItem>
-                                        <SelectItem value="Cirurgia Vascular">Cirurgia Vascular</SelectItem>
-                                        <SelectItem value="Cirurgia Cardiotorácica">Cirurgia Cardiotorácica</SelectItem>
-                                        <SelectItem value="Cirurgia Pediátrica">Cirurgia Pediátrica</SelectItem>
-                                        <SelectItem value="Cirurgia Plástica">Cirurgia Plástica</SelectItem>
-                                        <SelectItem value="Neurocirurgia">Neurocirurgia</SelectItem>
-                                        <SelectItem value="Urologia">Urologia</SelectItem>
-                                        <SelectItem value="Ginecologia-Obstetrícia">Ginecologia-Obstetrícia</SelectItem>
-                                        <SelectItem value="Ortopedia">Ortopedia</SelectItem>
-                                        <SelectItem value="Outra">Outra</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <InputError message={errors.area_cirurgica} />
-                            </div>
-
-                            <div className="grid gap-2">
                                 <Label htmlFor="password">Palavra-passe</Label>
                                 <Input
                                     id="password"

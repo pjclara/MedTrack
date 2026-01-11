@@ -13,49 +13,55 @@ import {
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { type BreadcrumbItem } from '@/types';
 import { type PaginatedData } from '@/types/models';
+import { router } from '@inertiajs/react';
 
-interface Area {
+interface Hospital {
     id: number;
     nome: string;
-    descricao?: string;
 }
 
-interface AreaIndexProps {
-    areas: PaginatedData<Area>;
+interface HospitalIndexProps {
+    hospitals: PaginatedData<Hospital>;
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Tabelas de Apoio', href: '#' },
-    { title: 'Áreas', href: '/areas' },
+    { title: 'Administração', href: '#' },
+    { title: 'Hospitais de Origem', href: '/hospitals' },
 ];
 
-export default function AreaIndex({ areas }: AreaIndexProps) {
+export default function HospitalIndex({ hospitals }: HospitalIndexProps) {
+    const deleteHospital = (id: number) => {
+        if (confirm('Tem a certeza que deseja remover este hospital?')) {
+            router.delete(`/hospitals/${id}`);
+        }
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Áreas" />
+            <Head title="Hospitais de Origem" />
 
             <div className="flex flex-col gap-4 p-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Áreas</h1>
+                        <h1 className="text-3xl font-bold tracking-tight">Hospitais de Origem</h1>
                         <p className="text-muted-foreground">
-                            Gestão de áreas de especialidade
+                            Gestão de hospitais de origem para os registos cirúrgicos
                         </p>
                     </div>
-                    <Link href="/areas/create">
+                    <Link href="/hospitals/create">
                         <Button className="bg-emerald-600 hover:bg-emerald-700">
                             <PlusCircle className="mr-2 h-4 w-4" />
-                            Nova Área
+                            Novo Hospital de Origem
                         </Button>
                     </Link>
                 </div>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Lista de Áreas</CardTitle>
+                        <CardTitle>Hospitais de Origem</CardTitle>
                         <CardDescription>
-                            Total de {areas.total} áreas registadas
+                            Total de {hospitals.total} instituições registadas
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -64,30 +70,33 @@ export default function AreaIndex({ areas }: AreaIndexProps) {
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>Nome</TableHead>
-                                        <TableHead>Descrição</TableHead>
                                         <TableHead className="text-right">Ações</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {areas.data.length === 0 ? (
+                                    {hospitals.data.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={3} className="text-center text-muted-foreground py-10">
-                                                Nenhuma área encontrada
+                                            <TableCell colSpan={2} className="text-center text-muted-foreground py-10">
+                                                Nenhum hospital encontrado
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        areas.data.map((area) => (
-                                            <TableRow key={area.id}>
-                                                <TableCell className="font-medium">{area.nome}</TableCell>
-                                                <TableCell>{area.descricao || '-'}</TableCell>
+                                        hospitals.data.map((hospital) => (
+                                            <TableRow key={hospital.id}>
+                                                <TableCell className="font-medium">{hospital.nome}</TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">
-                                                        <Link href={`/areas/${area.id}/edit`}>
+                                                        <Link href={`/hospitals/${hospital.id}/edit`}>
                                                             <Button variant="ghost" size="icon">
                                                                 <Edit className="h-4 w-4" />
                                                             </Button>
                                                         </Link>
-                                                        <Button variant="ghost" size="icon" className="text-destructive">
+                                                        <Button 
+                                                            variant="ghost" 
+                                                            size="icon" 
+                                                            className="text-destructive"
+                                                            onClick={() => deleteHospital(hospital.id)}
+                                                        >
                                                             <Trash2 className="h-4 w-4" />
                                                         </Button>
                                                     </div>

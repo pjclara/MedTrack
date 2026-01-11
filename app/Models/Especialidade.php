@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Area extends Model
+class Especialidade extends Model
 {
     use HasFactory;
+
+    protected $table = 'especialidades';
 
     protected $fillable = [
         'nome',
@@ -30,7 +32,7 @@ class Area extends Model
      */
     public function diagnosticos()
     {
-        return $this->hasMany(Diagnostico::class, 'area', 'nome');
+        return $this->hasMany(Diagnostico::class, 'especialidade', 'nome');
     }
 
     /**
@@ -38,7 +40,7 @@ class Area extends Model
      */
     public function procedimentos()
     {
-        return $this->hasMany(Procedimento::class, 'area', 'nome');
+        return $this->hasMany(Procedimento::class, 'especialidade', 'nome');
     }
 
     /**

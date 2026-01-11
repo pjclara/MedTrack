@@ -72,7 +72,7 @@ export default function ProcedimentoIndex({ procedimentos }: ProcedimentoIndexPr
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>Nome</TableHead>
-                                        <TableHead>Área</TableHead>
+                                        <TableHead>Especialidade</TableHead>
                                         <TableHead className="text-center w-[150px]">Cirurgias</TableHead>
                                         <TableHead className="text-right w-[150px]">Ações</TableHead>
                                     </TableRow>
@@ -91,7 +91,7 @@ export default function ProcedimentoIndex({ procedimentos }: ProcedimentoIndexPr
                                                     {procedimento.nome}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {procedimento.area || 'N/A'}
+                                                    {procedimento.especialidade || 'N/A'}
                                                 </TableCell>
                                                 <TableCell className="text-center">
                                                     {procedimento.cirurgias_count || 0}

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Settings;
 
+use App\Models\Hospital;
+use App\Models\Especialidade;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -21,6 +23,8 @@ class ProfileController extends Controller
         return Inertia::render('settings/profile', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => $request->session()->get('status'),
+            'hospitals' => Hospital::where('user_id', $request->user()->id)->get(),
+            'especialidades' => Especialidade::where('user_id', $request->user()->id)->get(),
         ]);
     }
 

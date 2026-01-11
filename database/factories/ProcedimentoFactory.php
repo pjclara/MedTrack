@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Procedimento;
-use App\Models\Area;
+use App\Models\Especialidade;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +18,7 @@ class ProcedimentoFactory extends Factory
     {
         return [
             'nome' => fake()->unique()->words(3, true),
-            'area' => Area::factory(),
+            'especialidade' => Especialidade::factory(),
             'descricao' => fake()->sentence(),
             'user_id' => User::factory(),
         ];

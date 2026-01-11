@@ -2,16 +2,16 @@
 
 namespace Database\Factories;
 
-use App\Models\Area;
+use App\Models\Especialidade;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Area>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Especialidade>
  */
-class AreaFactory extends Factory
+class EspecialidadeFactory extends Factory
 {
-    protected $model = Area::class;
+    protected $model = Especialidade::class;
 
     public function definition(): array
     {

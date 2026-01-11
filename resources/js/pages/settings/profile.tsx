@@ -1,6 +1,7 @@
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import { send } from '@/routes/verification';
 import { type BreadcrumbItem, type SharedData } from '@/types';
+import { type Hospital, type Especialidade } from '@/types/models';
 import { Transition } from '@headlessui/react';
 import { Form, Head, Link, usePage } from '@inertiajs/react';
 
@@ -31,9 +32,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function Profile({
     mustVerifyEmail,
     status,
+    hospitals = [],
+    especialidades = [],
 }: {
     mustVerifyEmail: boolean;
     status?: string;
+    hospitals?: Hospital[];
+    especialidades?: Especialidade[];
 }) {
     const { auth } = usePage<SharedData>().props;
 
@@ -45,7 +50,7 @@ export default function Profile({
                 <div className="space-y-6">
                     <HeadingSmall
                         title="Informações do perfil"
-                        description="Atualize o seu nome, email, hospital e área cirúrgica"
+                        description="Atualize o seu nome, email, hospital e especialidade"
                     />
 
                     <Form
@@ -104,17 +109,13 @@ export default function Profile({
                                             <SelectValue placeholder="Selecione o hospital" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="Hospital de Santa Maria">Hospital de Santa Maria</SelectItem>
-                                            <SelectItem value="Hospital de São João">Hospital de São João</SelectItem>
-                                            <SelectItem value="Hospital de Santo António">Hospital de Santo António</SelectItem>
-                                            <SelectItem value="Centro Hospitalar e Universitário de Coimbra">CHUC (Coimbra)</SelectItem>
-                                            <SelectItem value="Hospital de Braga">Hospital de Braga</SelectItem>
-                                            <SelectItem value="Hospital de Vila Real">Hospital de Vila Real</SelectItem>
-                                            <SelectItem value="Hospital de Évora">Hospital de Évora</SelectItem>
-                                            <SelectItem value="Hospital de Faro">Hospital de Faro</SelectItem>
-                                            <SelectItem value="Hospital CUF">Hospital CUF</SelectItem>
-                                            <SelectItem value="Hospital da Luz">Hospital da Luz</SelectItem>
-                                            <SelectItem value="Outro">Outro</SelectItem>
+                                            {hospitals.length > 0 ? (
+                                                hospitals.map((h) => (
+                                                    <SelectItem key={h.id} value={h.nome}>{h.nome}</SelectItem>
+                                                ))
+                                            ) : (
+                                                <SelectItem value="none" disabled>Nenhum hospital registado</SelectItem>
+                                            )}
                                         </SelectContent>
                                     </Select>
 
@@ -125,29 +126,26 @@ export default function Profile({
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="area_cirurgica">Área Cirúrgica</Label>
+                                    <Label htmlFor="especialidade">Especialidade</Label>
 
-                                    <Select name="area_cirurgica" defaultValue={auth.user.area_cirurgica || ''}>
+                                    <Select name="especialidade" defaultValue={auth.user.especialidade || ''}>
                                         <SelectTrigger className="mt-1 w-full">
-                                            <SelectValue placeholder="Selecione a área" />
+                                            <SelectValue placeholder="Selecione a especialidade" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="Cirurgia Geral">Cirurgia Geral</SelectItem>
-                                            <SelectItem value="Cirurgia Vascular">Cirurgia Vascular</SelectItem>
-                                            <SelectItem value="Cirurgia Cardiotorácica">Cirurgia Cardiotorácica</SelectItem>
-                                            <SelectItem value="Cirurgia Pediátrica">Cirurgia Pediátrica</SelectItem>
-                                            <SelectItem value="Cirurgia Plástica">Cirurgia Plástica</SelectItem>
-                                            <SelectItem value="Neurocirurgia">Neurocirurgia</SelectItem>
-                                            <SelectItem value="Urologia">Urologia</SelectItem>
-                                            <SelectItem value="Ginecologia-Obstetrícia">Ginecologia-Obstetrícia</SelectItem>
-                                            <SelectItem value="Ortopedia">Ortopedia</SelectItem>
-                                            <SelectItem value="Outra">Outra</SelectItem>
+                                            {especialidades.length > 0 ? (
+                                                especialidades.map((e) => (
+                                                    <SelectItem key={e.id} value={e.nome}>{e.nome}</SelectItem>
+                                                ))
+                                            ) : (
+                                                <SelectItem value="none" disabled>Nenhuma especialidade registada</SelectItem>
+                                            )}
                                         </SelectContent>
                                     </Select>
 
                                     <InputError
                                         className="mt-2"
-                                        message={errors.area_cirurgica}
+                                        message={errors.especialidade}
                                     />
                                 </div>
 

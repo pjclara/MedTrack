@@ -8,7 +8,8 @@ use App\Models\TipoDeCirurgia;
 use App\Models\TipoDeOrigem;
 use App\Models\Diagnostico;
 use App\Models\Procedimento;
-use App\Models\Area;
+use App\Models\Especialidade;
+use App\Models\Hospital;
 use App\Http\Requests\StoreRegistoCirurgicoRequest;
 use App\Http\Requests\UpdateRegistoCirurgicoRequest;
 use Illuminate\Support\Facades\DB;
@@ -54,7 +55,8 @@ class RegistoCirurgicoController extends Controller
             'tiposDeOrigem' => TipoDeOrigem::orderBy('nome')->get(['id', 'nome']),
             'diagnosticos' => Diagnostico::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'procedimentos' => Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
-            'areas' => Area::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
+            'especialidades' => Especialidade::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
+            'hospitals' => Hospital::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'enums' => [
                 'sexo' => config('medfolio.sexo_options'),
                 'funcoes' => config('medfolio.funcao_options'),
@@ -99,7 +101,7 @@ class RegistoCirurgicoController extends Controller
             $registo = $utente->registosCirurgicos()->create([
                 'user_id' => auth()->id(),
                 'hospital' => $registoData['hospital'] ?? null,
-                'area_cirurgica' => $registoData['area_cirurgica'] ?? null,
+                'especialidade' => $registoData['especialidade'] ?? null,
                 'data_cirurgia' => $registoData['data_cirurgia'],
                 'tipo_de_cirurgia_id' => $registoData['tipo_de_cirurgia_id'],
                 'tipo_de_origem_id' => $registoData['tipo_de_origem_id'],
@@ -197,7 +199,7 @@ class RegistoCirurgicoController extends Controller
                 ],
                 'registo' => [
                     'hospital' => $registo->hospital,
-                    'area_cirurgica' => $registo->area_cirurgica,
+                    'especialidade' => $registo->especialidade,
                     'data_cirurgia' => $registo->data_cirurgia?->format('Y-m-d'),
                     'tipo_de_cirurgia_id' => (string) $registo->tipo_de_cirurgia_id,
                     'tipo_de_origem_id' => (string) ($registo->tipo_de_origem_id ?? ''),
@@ -211,7 +213,8 @@ class RegistoCirurgicoController extends Controller
             'tiposDeOrigem' => TipoDeOrigem::orderBy('nome')->get(['id', 'nome']),
             'diagnosticos' => Diagnostico::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'procedimentos' => Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
-            'areas' => Area::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
+            'especialidades' => Especialidade::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
+            'hospitals' => Hospital::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'enums' => [
                 'sexo' => config('medfolio.sexo_options'),
                 'funcoes' => config('medfolio.funcao_options'),
@@ -248,7 +251,7 @@ class RegistoCirurgicoController extends Controller
             $registoData = $payload['registo'];
             $registo->update([
                 'hospital' => $registoData['hospital'] ?? null,
-                'area_cirurgica' => $registoData['area_cirurgica'] ?? null,
+                'especialidade' => $registoData['especialidade'] ?? null,
                 'data_cirurgia' => $registoData['data_cirurgia'],
                 'tipo_de_cirurgia_id' => $registoData['tipo_de_cirurgia_id'],
                 'tipo_de_origem_id' => $registoData['tipo_de_origem_id'],

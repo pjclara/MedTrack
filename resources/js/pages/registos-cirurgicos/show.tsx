@@ -171,10 +171,10 @@ export default function RegistoCirurgicoShow({ registo }: RegistoCirurgicoShowPr
                                 </div>
                             )}
 
-                            {registo.area_cirurgica && (
+                            {registo.especialidade && (
                                 <div>
-                                    <p className="text-sm font-medium text-muted-foreground">Área Cirúrgica</p>
-                                    <p className="text-lg">{registo.area_cirurgica}</p>
+                                    <p className="text-sm font-medium text-muted-foreground">Especialidade</p>
+                                    <p className="text-lg">{registo.especialidade}</p>
                                 </div>
                             )}
                         </CardContent>

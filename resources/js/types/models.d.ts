@@ -1,3 +1,10 @@
+export interface Hospital {
+    id: number;
+    nome: string;
+    created_at: string;
+    updated_at: string;
+}
+
 export interface Utente {
     id: number;
     nome: string;
@@ -13,7 +20,7 @@ export interface RegistoCirurgico {
     id: number;
     utente_id: number;
     hospital?: string;
-    area_cirurgica?: string;
+    especialidade?: string;
     data_cirurgia: string;
     tipo_de_cirurgia_id: number;
     tipo_de_origem_id?: number;
@@ -49,7 +56,7 @@ export interface Cirurgia {
 export interface Diagnostico {
     id: number;
     nome: string;
-    area: string;
+    especialidade: string;
     tipo?: string;
     descricao?: string;
     created_at: string;
@@ -59,13 +66,13 @@ export interface Diagnostico {
 export interface Procedimento {
     id: number;
     nome: string;
-    area: string;
+    especialidade: string;
     descricao?: string;
     created_at: string;
     updated_at: string;
 }
 
-export interface Area {
+export interface Especialidade {
     id: number;
     nome: string;
     created_at: string;

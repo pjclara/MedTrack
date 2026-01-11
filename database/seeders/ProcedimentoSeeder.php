@@ -14,55 +14,55 @@ class ProcedimentoSeeder extends Seeder
     {
         $procedimentos = [
             // Cirurgia Geral
-            ['nome' => 'Apendicectomia', 'area' => 'Cirurgia Geral', 'descricao' => 'Remoção cirúrgica do apêndice'],
-            ['nome' => 'Colecistectomia', 'area' => 'Cirurgia Geral', 'descricao' => 'Remoção da vesícula biliar'],
-            ['nome' => 'Herniorrafia Inguinal', 'area' => 'Cirurgia Geral', 'descricao' => 'Correção de hérnia inguinal'],
-            ['nome' => 'Laparotomia Exploradora', 'area' => 'Cirurgia Geral', 'descricao' => 'Abertura cirúrgica do abdómen para exploração'],
-            ['nome' => 'Gastrectomia', 'area' => 'Cirurgia Geral', 'descricao' => 'Remoção total ou parcial do estômago'],
+            ['nome' => 'Apendicectomia', 'especialidade' => 'Cirurgia Geral', 'descricao' => 'Remoção cirúrgica do apêndice'],
+            ['nome' => 'Colecistectomia', 'especialidade' => 'Cirurgia Geral', 'descricao' => 'Remoção da vesícula biliar'],
+            ['nome' => 'Herniorrafia Inguinal', 'especialidade' => 'Cirurgia Geral', 'descricao' => 'Correção de hérnia inguinal'],
+            ['nome' => 'Laparotomia Exploradora', 'especialidade' => 'Cirurgia Geral', 'descricao' => 'Abertura cirúrgica do abdómen para exploração'],
+            ['nome' => 'Gastrectomia', 'especialidade' => 'Cirurgia Geral', 'descricao' => 'Remoção total ou parcial do estômago'],
             
             // Cirurgia Cardiotorácica
-            ['nome' => 'Bypass Coronário', 'area' => 'Cirurgia Cardiotorácica', 'descricao' => 'Revascularização do miocárdio'],
-            ['nome' => 'Substituição Valvular', 'area' => 'Cirurgia Cardiotorácica', 'descricao' => 'Troca de válvula cardíaca'],
-            ['nome' => 'Correção de Aneurisma', 'area' => 'Cirurgia Cardiotorácica', 'descricao' => 'Correção cirúrgica de aneurisma'],
+            ['nome' => 'Bypass Coronário', 'especialidade' => 'Cirurgia Cardiotorácica', 'descricao' => 'Revascularização do miocárdio'],
+            ['nome' => 'Substituição Valvular', 'especialidade' => 'Cirurgia Cardiotorácica', 'descricao' => 'Troca de válvula cardíaca'],
+            ['nome' => 'Correção de Aneurisma', 'especialidade' => 'Cirurgia Cardiotorácica', 'descricao' => 'Correção cirúrgica de aneurisma'],
             
             // Cirurgia Vascular
-            ['nome' => 'Safenectomia', 'area' => 'Cirurgia Vascular', 'descricao' => 'Remoção da veia safena'],
-            ['nome' => 'Escleroterapia', 'area' => 'Cirurgia Vascular', 'descricao' => 'Tratamento de varizes por injeção'],
-            ['nome' => 'Angioplastia', 'area' => 'Cirurgia Vascular', 'descricao' => 'Desobstrução de artérias'],
+            ['nome' => 'Safenectomia', 'especialidade' => 'Cirurgia Vascular', 'descricao' => 'Remoção da veia safena'],
+            ['nome' => 'Escleroterapia', 'especialidade' => 'Cirurgia Vascular', 'descricao' => 'Tratamento de varizes por injeção'],
+            ['nome' => 'Angioplastia', 'especialidade' => 'Cirurgia Vascular', 'descricao' => 'Desobstrução de artérias'],
             
             // Neurocirurgia
-            ['nome' => 'Discectomia', 'area' => 'Neurocirurgia', 'descricao' => 'Remoção de disco intervertebral'],
-            ['nome' => 'Laminectomia', 'area' => 'Neurocirurgia', 'descricao' => 'Remoção de lâmina vertebral'],
-            ['nome' => 'Craniotomia', 'area' => 'Neurocirurgia', 'descricao' => 'Abertura do crânio'],
+            ['nome' => 'Discectomia', 'especialidade' => 'Neurocirurgia', 'descricao' => 'Remoção de disco intervertebral'],
+            ['nome' => 'Laminectomia', 'especialidade' => 'Neurocirurgia', 'descricao' => 'Remoção de lâmina vertebral'],
+            ['nome' => 'Craniotomia', 'especialidade' => 'Neurocirurgia', 'descricao' => 'Abertura do crânio'],
             
             // Ortopedia
-            ['nome' => 'Osteossíntese', 'area' => 'Ortopedia', 'descricao' => 'Fixação cirúrgica de fratura'],
-            ['nome' => 'Artroplastia do Joelho', 'area' => 'Ortopedia', 'descricao' => 'Prótese total do joelho'],
-            ['nome' => 'Artroplastia da Anca', 'area' => 'Ortopedia', 'descricao' => 'Prótese total da anca'],
-            ['nome' => 'Artroscopia', 'area' => 'Ortopedia', 'descricao' => 'Visualização endoscópica de articulação'],
+            ['nome' => 'Osteossíntese', 'especialidade' => 'Ortopedia', 'descricao' => 'Fixação cirúrgica de fratura'],
+            ['nome' => 'Artroplastia do Joelho', 'especialidade' => 'Ortopedia', 'descricao' => 'Prótese total do joelho'],
+            ['nome' => 'Artroplastia da Anca', 'especialidade' => 'Ortopedia', 'descricao' => 'Prótese total da anca'],
+            ['nome' => 'Artroscopia', 'especialidade' => 'Ortopedia', 'descricao' => 'Visualização endoscópica de articulação'],
             
             // Urologia
-            ['nome' => 'Nefrolitotomia', 'area' => 'Urologia', 'descricao' => 'Remoção de cálculo renal'],
-            ['nome' => 'Prostatectomia', 'area' => 'Urologia', 'descricao' => 'Remoção da próstata'],
-            ['nome' => 'Cistoscopia', 'area' => 'Urologia', 'descricao' => 'Endoscopia da bexiga'],
-            ['nome' => 'RTU Prostática', 'area' => 'Urologia', 'descricao' => 'Ressecção transuretral da próstata'],
+            ['nome' => 'Nefrolitotomia', 'especialidade' => 'Urologia', 'descricao' => 'Remoção de cálculo renal'],
+            ['nome' => 'Prostatectomia', 'especialidade' => 'Urologia', 'descricao' => 'Remoção da próstata'],
+            ['nome' => 'Cistoscopia', 'especialidade' => 'Urologia', 'descricao' => 'Endoscopia da bexiga'],
+            ['nome' => 'RTU Prostática', 'especialidade' => 'Urologia', 'descricao' => 'Ressecção transuretral da próstata'],
             
             // Ginecologia
-            ['nome' => 'Histerectomia', 'area' => 'Ginecologia', 'descricao' => 'Remoção do útero'],
-            ['nome' => 'Miomectomia', 'area' => 'Ginecologia', 'descricao' => 'Remoção de miomas uterinos'],
-            ['nome' => 'Laparoscopia Ginecológica', 'area' => 'Ginecologia', 'descricao' => 'Cirurgia ginecológica por via laparoscópica'],
+            ['nome' => 'Histerectomia', 'especialidade' => 'Ginecologia', 'descricao' => 'Remoção do útero'],
+            ['nome' => 'Miomectomia', 'especialidade' => 'Ginecologia', 'descricao' => 'Remoção de miomas uterinos'],
+            ['nome' => 'Laparoscopia Ginecológica', 'especialidade' => 'Ginecologia', 'descricao' => 'Cirurgia ginecológica por via laparoscópica'],
             
             // Oftalmologia
-            ['nome' => 'Facoemulsificação', 'area' => 'Oftalmologia', 'descricao' => 'Cirurgia de catarata'],
-            ['nome' => 'Vitrectomia', 'area' => 'Oftalmologia', 'descricao' => 'Remoção do vítreo ocular'],
+            ['nome' => 'Facoemulsificação', 'especialidade' => 'Oftalmologia', 'descricao' => 'Cirurgia de catarata'],
+            ['nome' => 'Vitrectomia', 'especialidade' => 'Oftalmologia', 'descricao' => 'Remoção do vítreo ocular'],
             
             // Otorrinolaringologia
-            ['nome' => 'Amigdalectomia', 'area' => 'Otorrinolaringologia', 'descricao' => 'Remoção das amígdalas'],
-            ['nome' => 'Septoplastia', 'area' => 'Otorrinolaringologia', 'descricao' => 'Correção do septo nasal'],
+            ['nome' => 'Amigdalectomia', 'especialidade' => 'Otorrinolaringologia', 'descricao' => 'Remoção das amígdalas'],
+            ['nome' => 'Septoplastia', 'especialidade' => 'Otorrinolaringologia', 'descricao' => 'Correção do septo nasal'],
             
             // Cirurgia Plástica
-            ['nome' => 'Abdominoplastia', 'area' => 'Cirurgia Plástica', 'descricao' => 'Cirurgia estética do abdómen'],
-            ['nome' => 'Mamoplastia', 'area' => 'Cirurgia Plástica', 'descricao' => 'Cirurgia da mama'],
+            ['nome' => 'Abdominoplastia', 'especialidade' => 'Cirurgia Plástica', 'descricao' => 'Cirurgia estética do abdómen'],
+            ['nome' => 'Mamoplastia', 'especialidade' => 'Cirurgia Plástica', 'descricao' => 'Cirurgia da mama'],
         ];
 
         foreach ($procedimentos as $procedimento) {

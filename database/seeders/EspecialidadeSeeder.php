@@ -3,16 +3,16 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Area;
+use App\Models\Especialidade;
 
-class AreaSeeder extends Seeder
+class EspecialidadeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $areas = [
+        $especialidades = [
             [
                 'nome' => 'Cirurgia Geral',
                 'descricao' => 'Procedimentos cirúrgicos gerais e de urgência',
@@ -55,8 +55,8 @@ class AreaSeeder extends Seeder
             ],
         ];
 
-        foreach ($areas as $area) {
-            Area::create($area);
+        foreach ($especialidades as $especialidade) {
+            Especialidade::create($especialidade);
         }
     }
 }
