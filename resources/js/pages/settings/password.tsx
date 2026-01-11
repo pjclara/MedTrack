@@ -37,6 +37,7 @@ export default function Password() {
 
                     <Form
                         {...PasswordController.update.form()}
+                        disableWhileProcessing={false}
                         options={{
                             preserveScroll: true,
                         }}

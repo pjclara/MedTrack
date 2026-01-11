@@ -23,6 +23,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
 
             <Form
                 {...update.form()}
+                disableWhileProcessing={false}
                 transform={(data) => ({ ...data, token, email })}
                 resetOnSuccess={['password', 'password_confirmation']}
             >

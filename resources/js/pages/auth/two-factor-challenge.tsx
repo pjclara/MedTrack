@@ -55,6 +55,7 @@ export default function TwoFactorChallenge() {
             <div className="space-y-6">
                 <Form
                     {...store.form()}
+                    disableWhileProcessing={false}
                     className="space-y-4"
                     resetOnError
                     resetOnSuccess={!showRecoveryInput}

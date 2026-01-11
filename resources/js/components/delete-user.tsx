@@ -55,6 +55,7 @@ export default function DeleteUser() {
 
                         <Form
                             {...ProfileController.destroy.form()}
+                            disableWhileProcessing={false}
                             options={{
                                 preserveScroll: true,
                             }}

@@ -55,6 +55,7 @@ export default function Profile({
 
                     <Form
                         {...ProfileController.update.form()}
+                        disableWhileProcessing={false}
                         options={{
                             preserveScroll: true,
                         }}
