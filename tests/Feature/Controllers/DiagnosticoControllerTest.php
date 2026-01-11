@@ -25,11 +25,10 @@ class DiagnosticoControllerTest extends TestCase
     public function test_store_creates_new_diagnostico(): void
     {
         $user = User::factory()->create();
-        $especialidade = Especialidade::factory()->create(['user_id' => $user->id]);
         
         $data = [
             'nome' => 'Apendicite Aguda ' . uniqid(),
-            'especialidade' => $especialidade->nome,
+            'zona_anatomica' => 'Abdomen',
             'tipo' => 'Benigno',
             'descricao' => 'Descrição do diagnóstico',
         ];
@@ -41,7 +40,7 @@ class DiagnosticoControllerTest extends TestCase
 
         $this->assertDatabaseHas('diagnosticos', [
             'nome' => $data['nome'],
-            'especialidade' => $especialidade->nome,
+            'zona_anatomica' => 'Abdomen',
             'tipo' => 'Benigno',
             'user_id' => $user->id,
         ]);
@@ -50,11 +49,10 @@ class DiagnosticoControllerTest extends TestCase
     public function test_store_redirects_back_with_modal_header(): void
     {
         $user = User::factory()->create();
-        $especialidade = Especialidade::factory()->create(['user_id' => $user->id]);
         
         $data = [
             'nome' => 'Modal Diagnostico ' . uniqid(),
-            'especialidade' => $especialidade->nome,
+            'zona_anatomica' => 'Pescoço',
         ];
 
         $response = $this->actingAs($user)

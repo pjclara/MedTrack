@@ -62,7 +62,7 @@ class ProcedimentoController extends Controller
     public function show(Procedimento $procedimento)
     {
         Gate::authorize('view', $procedimento);
-        $procedimento->load('areaRelation', 'cirurgias');
+        $procedimento->load('especialidadeRelation', 'cirurgias');
         return Inertia::render('procedimentos/show', [
             'procedimento' => $procedimento
         ]);

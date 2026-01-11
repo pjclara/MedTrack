@@ -7,12 +7,14 @@ use App\Http\Controllers\UtenteController;
 use App\Http\Controllers\TipoDeCirurgiaController;
 use App\Http\Controllers\TipoDeOrigemController;
 use App\Http\Controllers\EspecialidadeController;
+use App\Http\Controllers\ZonaAnatomicaController;
 use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\DiagnosticoController;
 use App\Http\Controllers\ProcedimentoController;
 use App\Http\Controllers\RegistoCirurgicoController;
 use App\Http\Controllers\AtividadeCientificaController;
 use App\Http\Controllers\FormacaoController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return Inertia::render('welcome', [
@@ -63,9 +65,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('tipos-de-cirurgia', TipoDeCirurgiaController::class);
     Route::resource('tipos-de-origem', TipoDeOrigemController::class);
     Route::resource('especialidades', EspecialidadeController::class);
+    Route::resource('zona-anatomicas', ZonaAnatomicaController::class);
     Route::resource('hospitals', HospitalController::class);
     Route::resource('diagnosticos', DiagnosticoController::class);
     Route::resource('procedimentos', ProcedimentoController::class);
+    Route::resource('users', UserController::class);
     Route::resource('registos-cirurgicos', RegistoCirurgicoController::class)
         ->parameters(['registos-cirurgicos' => 'registo']);
     

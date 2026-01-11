@@ -82,16 +82,14 @@ class EspecialidadeControllerTest extends TestCase
         $response->assertSessionHasErrors(['nome']);
     }
 
-    public function test_especialidade_has_diagnosticos_and_procedimentos(): void
+    public function test_especialidade_has_procedimentos(): void
     {
         $user = User::factory()->create();
         $especialidade = Especialidade::factory()->create(['user_id' => $user->id]);
-        Diagnostico::factory()->count(3)->create(['especialidade' => $especialidade->nome, 'user_id' => $user->id]);
         Procedimento::factory()->count(5)->create(['especialidade' => $especialidade->nome, 'user_id' => $user->id]);
 
-        $especialidade->load('diagnosticos', 'procedimentos');
+        $especialidade->load('procedimentos');
 
-        $this->assertCount(3, $especialidade->diagnosticos);
         $this->assertCount(5, $especialidade->procedimentos);
     }
 

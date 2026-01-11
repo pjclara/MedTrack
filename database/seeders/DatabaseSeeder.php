@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
 
         // Seeders do sistema MedTrack (ordem é importante devido às foreign keys)
         $this->call([
+            ZonaAnatomicaSeeder::class,
             EspecialidadeSeeder::class,
             TipoDeCirurgiaSeeder::class,
             TipoDeOrigemSeeder::class,
@@ -53,6 +54,7 @@ class DatabaseSeeder extends Seeder
             ['Tabela', 'Registos'],
             [
                 ['Especialidades', \App\Models\Especialidade::count()],
+                ['Zonas Anatómicas', \App\Models\ZonaAnatomica::count()],
                 ['Tipos de Cirurgia', \App\Models\TipoDeCirurgia::count()],
                 ['Tipos de Origem', \App\Models\TipoDeOrigem::count()],
                 ['Diagnósticos', \App\Models\Diagnostico::count()],

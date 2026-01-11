@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { BreadcrumbItem, Especialidade } from '@/types';
+import { BreadcrumbItem, ZonaAnatomica } from '@/types';
 import { Button } from '@/components/ui/button';
 import { 
     Card, 
@@ -11,7 +11,8 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Save } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { ArrowLeft, Save, Plus } from 'lucide-react';
 import { 
     Select, 
     SelectContent, 
@@ -19,9 +20,10 @@ import {
     SelectTrigger, 
     SelectValue 
 } from '@/components/ui/select';
+import { QuickAddZonaAnatomica } from '@/components/quick-add/QuickAddDialogs';
 
 interface DiagnosticoCreateProps {
-    especialidades: Especialidade[];
+    zonaAnatomicas: ZonaAnatomica[];
     tipos: string[];
 }
 
@@ -40,11 +42,12 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function DiagnosticoCreate({ especialidades, tipos }: DiagnosticoCreateProps) {
+export default function DiagnosticoCreate({ tipos, zonaAnatomicas }: DiagnosticoCreateProps) {
     const { data, setData, post, processing, errors } = useForm({
         nome: '',
-        especialidade: '',
+        zona_anatomica: '',
         tipo: '',
+        descricao: '',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -76,24 +79,41 @@ export default function DiagnosticoCreate({ especialidades, tipos }: Diagnostico
                     <form onSubmit={handleSubmit}>
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="especialidade">Especialidade</Label>
+                                <Label htmlFor="nome">Nome do Diagnóstico</Label>
+                                <Input 
+                                    id="nome" 
+                                    value={data.nome} 
+                                    onChange={(e) => setData('nome', e.target.value)}
+                                    placeholder="Ex: Apendicite Aguda"
+                                    className={errors.nome ? 'border-destructive' : ''}
+                                />
+                                {errors.nome && (
+                                    <p className="text-sm text-destructive">{errors.nome}</p>
+                                )}
+                            </div>
+
+                            <div className="space-y-2">
+                                <div className="flex items-center justify-between">
+                                    <Label htmlFor="zona_anatomica">Zona Anatómica</Label>
+                                    <QuickAddZonaAnatomica onCreated={(newZona) => setData('zona_anatomica', newZona.nome)} />
+                                </div>
                                 <Select 
-                                    value={data.especialidade} 
-                                    onValueChange={(value) => setData('especialidade', value)}
+                                    value={data.zona_anatomica} 
+                                    onValueChange={(value) => setData('zona_anatomica', value)}
                                 >
-                                    <SelectTrigger id="especialidade" className={errors.especialidade ? 'border-destructive' : ''}>
-                                        <SelectValue placeholder="Selecione uma especialidade" />
+                                    <SelectTrigger id="zona_anatomica" className={errors.zona_anatomica ? 'border-destructive' : ''}>
+                                        <SelectValue placeholder="Selecione a zona anatómica" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {(especialidades || []).map((especialidade) => (
-                                            <SelectItem key={especialidade.id} value={especialidade.nome}>
-                                                {especialidade.nome}
+                                        {(zonaAnatomicas || []).map((zona) => (
+                                            <SelectItem key={zona.id} value={zona.nome}>
+                                                {zona.nome}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                {errors.especialidade && (
-                                    <p className="text-sm text-destructive">{errors.especialidade}</p>
+                                {errors.zona_anatomica && (
+                                    <p className="text-sm text-destructive">{errors.zona_anatomica}</p>
                                 )}
                             </div>
 
@@ -120,16 +140,16 @@ export default function DiagnosticoCreate({ especialidades, tipos }: Diagnostico
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="nome">Nome do Diagnóstico</Label>
-                                <Input
-                                    id="nome"
-                                    value={data.nome}
-                                    onChange={(e) => setData('nome', e.target.value)}
-                                    placeholder="Ex: Colecistite Aguda"
-                                    className={errors.nome ? 'border-destructive' : ''}
+                                <Label htmlFor="descricao">Descrição (Opcional)</Label>
+                                <Textarea
+                                    id="descricao"
+                                    value={data.descricao}
+                                    onChange={(e) => setData('descricao', e.target.value)}
+                                    rows={4}
+                                    placeholder="Detalhes adicionais sobre o diagnóstico..."
                                 />
-                                {errors.nome && (
-                                    <p className="text-sm text-destructive">{errors.nome}</p>
+                                {errors.descricao && (
+                                    <p className="text-sm text-destructive">{errors.descricao}</p>
                                 )}
                             </div>
                         </CardContent>

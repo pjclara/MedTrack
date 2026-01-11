@@ -46,14 +46,24 @@ const mainNavItems: NavItem[] = [
 
 const adminNavItems: NavItem[] = [
     {
+        title: 'Utilizadores',
+        href: '/users',
+        icon: Users,
+    },
+    {
         title: 'Hospitais de Origem',
         href: '/hospitals',
         icon: Building2,
     },
     {
-        title: 'Áreas',
-        href: '/areas',
+        title: 'Especialidades',
+        href: '/especialidades',
         icon: Layers,
+    },
+    {
+        title: 'Zonas Anatómicas',
+        href: '/zona-anatomicas',
+        icon: LayoutGrid,
     },
     {
         title: 'Diagnósticos',

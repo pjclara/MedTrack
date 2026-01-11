@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Diagnostico;
-use App\Models\Especialidade;
+use App\Models\ZonaAnatomica;
 use App\Enums\TipoDiagnosticoEnum;
 use App\Http\Requests\StoreDiagnosticoRequest;
 use Illuminate\Http\Request;
@@ -32,10 +32,9 @@ class DiagnosticoController extends Controller
     public function create()
     {
         Gate::authorize('create', Diagnostico::class);
-        $especialidades = Especialidade::where('user_id', auth()->id())->orderBy('nome')->get();
         return Inertia::render('diagnosticos/create', [
-            'especialidades' => $especialidades,
-            'tipos' => TipoDiagnosticoEnum::values()
+            'tipos' => TipoDiagnosticoEnum::values(),
+            'zonaAnatomicas' => ZonaAnatomica::where('user_id', auth()->id())->orderBy('nome')->get(),
         ]);
     }
 
@@ -64,7 +63,7 @@ class DiagnosticoController extends Controller
     public function show(Diagnostico $diagnostico)
     {
         Gate::authorize('view', $diagnostico);
-        $diagnostico->load('areaRelation', 'cirurgias');
+        $diagnostico->load('cirurgias');
         return Inertia::render('diagnosticos/show', [
             'diagnostico' => $diagnostico
         ]);
@@ -76,11 +75,10 @@ class DiagnosticoController extends Controller
     public function edit(Diagnostico $diagnostico)
     {
         Gate::authorize('update', $diagnostico);
-        $especialidades = Especialidade::where('user_id', auth()->id())->orderBy('nome')->get();
         return Inertia::render('diagnosticos/edit', [
             'diagnostico' => $diagnostico,
-            'especialidades' => $especialidades,
-            'tipos' => TipoDiagnosticoEnum::values()
+            'tipos' => TipoDiagnosticoEnum::values(),
+            'zonaAnatomicas' => ZonaAnatomica::where('user_id', auth()->id())->orderBy('nome')->get(),
         ]);
     }
 

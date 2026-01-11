@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/select';
 import { ArrowLeft, ArrowRight, Save, Plus, Trash2, Search } from 'lucide-react';
 import { type BreadcrumbItem, type SharedData } from '@/types';
-import { type TipoDeCirurgia, type TipoDeOrigem, type Diagnostico, type Procedimento, type Especialidade, type Hospital } from '@/types/models';
+import { type TipoDeCirurgia, type TipoDeOrigem, type Diagnostico, type Procedimento, type Especialidade, type Hospital, type ZonaAnatomica } from '@/types/models';
 import { useState, FormEventHandler, useEffect } from 'react';
 import { QuickAddDiagnostico, QuickAddProcedimento, QuickAddEspecialidade } from '@/components/quick-add/QuickAddDialogs';
 import { Badge } from '@/components/ui/badge';
@@ -30,6 +30,7 @@ interface RegistoCirurgicoCreateProps {
     procedimentos: Procedimento[];
     especialidades: Especialidade[];
     hospitals: Hospital[];
+    zonaAnatomicas: ZonaAnatomica[];
     enums: {
         sexo: string[];
         funcoes: string[];
@@ -93,6 +94,7 @@ export default function RegistoCirurgicoCreate({
     procedimentos = [],
     especialidades = [],
     hospitals = [],
+    zonaAnatomicas = [],
     enums = { sexo: [], funcoes: [], clavien: [], tipo_diagnostico: [] },
 }: RegistoCirurgicoCreateProps) {
     const { auth } = usePage<SharedData>().props;
@@ -545,7 +547,7 @@ export default function RegistoCirurgicoCreate({
                                             <Label>Diagnóstico {index + 1}</Label>
                                             <div className="flex gap-2">
                                                 <QuickAddDiagnostico 
-                                                    especialidades={especialidades} 
+                                                    zonaAnatomicas={zonaAnatomicas}
                                                     onCreated={(newDiag) => {
                                                         // O Inertia refresca as props automaticamente
                                                         // Mas para selecionar o novo item, podemos ter de procurar na lista atualizada

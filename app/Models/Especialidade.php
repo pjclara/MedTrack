@@ -28,14 +28,6 @@ class Especialidade extends Model
     }
 
     /**
-     * Relação com diagnósticos
-     */
-    public function diagnosticos()
-    {
-        return $this->hasMany(Diagnostico::class, 'especialidade', 'nome');
-    }
-
-    /**
      * Relação com procedimentos
      */
     public function procedimentos()

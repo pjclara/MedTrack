@@ -56,7 +56,7 @@ export interface Cirurgia {
 export interface Diagnostico {
     id: number;
     nome: string;
-    especialidade: string;
+    zona_anatomica: string;
     tipo?: string;
     descricao?: string;
     created_at: string;
@@ -79,6 +79,14 @@ export interface Especialidade {
     updated_at: string;
     diagnosticos_count?: number;
     procedimentos_count?: number;
+}
+
+export interface ZonaAnatomica {
+    id: number;
+    nome: string;
+    descricao?: string;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface TipoDeCirurgia {

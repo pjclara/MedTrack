@@ -15,7 +15,7 @@ class StoreDiagnosticoRequest extends FormRequest
     {
         return [
             'nome' => 'required|string|max:255',
-            'especialidade' => 'required|string|max:255|exists:especialidades,nome',
+            'zona_anatomica' => 'required|string|max:255',
             'tipo' => 'nullable|string|max:255',
             'descricao' => 'nullable|string|max:1000',
         ];
@@ -25,8 +25,7 @@ class StoreDiagnosticoRequest extends FormRequest
     {
         return [
             'nome.required' => 'O nome do diagnóstico é obrigatório.',
-            'especialidade.required' => 'A especialidade é obrigatória.',
-            'especialidade.exists' => 'A especialidade selecionada não existe.',
+            'zona_anatomica.required' => 'A zona anatómica é obrigatória.',
             'descricao.max' => 'A descrição não pode ter mais de 1000 caracteres.',
         ];
     }

@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/select';
 import { ArrowLeft, ArrowRight, Save, Plus, Trash2 } from 'lucide-react';
 import { type BreadcrumbItem } from '@/types';
-import { type TipoDeCirurgia, type TipoDeOrigem, type Diagnostico, type Procedimento, type Especialidade, type Hospital } from '@/types/models';
+import { type TipoDeCirurgia, type TipoDeOrigem, type Diagnostico, type Procedimento, type Especialidade, type Hospital, type ZonaAnatomica } from '@/types/models';
 import { useState, FormEventHandler, useEffect } from 'react';
 import { QuickAddDiagnostico, QuickAddProcedimento, QuickAddEspecialidade } from '@/components/quick-add/QuickAddDialogs';
 import { Badge } from '@/components/ui/badge';
@@ -52,6 +52,7 @@ interface RegistoCirurgicoEditProps {
     procedimentos: Procedimento[];
     especialidades: Especialidade[];
     hospitals: Hospital[];
+    zonaAnatomicas: ZonaAnatomica[];
     enums: {
         sexo: string[];
         funcoes: string[];
@@ -115,7 +116,10 @@ export default function RegistoCirurgicoEdit({
     tiposDeOrigem = [],
     diagnosticos = [],
     procedimentos = [],
-    especialidades = [],    hospitals = [],    enums = { sexo: [], funcoes: [], clavien: [], tipo_de_abordagem: [], tipo_diagnostico: [] },
+    especialidades = [],
+    hospitals = [],
+    zonaAnatomicas = [],
+    enums = { sexo: [], funcoes: [], clavien: [], tipo_de_abordagem: [], tipo_diagnostico: [] },
 }: RegistoCirurgicoEditProps) {
     const [step, setStep] = useState(1);
 
@@ -494,7 +498,7 @@ export default function RegistoCirurgicoEdit({
                                         <Label>
                                             Diagnósticos <span className="text-destructive">*</span>
                                         </Label>
-                                        <QuickAddDiagnostico especialidades={especialidades} />
+                                        <QuickAddDiagnostico zonaAnatomicas={zonaAnatomicas} />
                                     </div>
                                     <CustomMultiSelect
                                         value={diagnosticosList.map(d => ({ value: d.diagnostico_id, label: diagnosticos.find(diag => diag.id.toString() === d.diagnostico_id)?.nome || '' }))}

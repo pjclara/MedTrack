@@ -18,7 +18,7 @@ class DiagnosticoFactory extends Factory
     {
         return [
             'nome' => fake()->unique()->words(3, true),
-            'especialidade' => Especialidade::factory(),
+            'zona_anatomica' => fake()->randomElement(['Abdomen', 'Tórax', 'Pescoço', 'Membros Superiores', 'Membros Inferiores']),
             'descricao' => fake()->sentence(),
             'user_id' => User::factory(),
         ];

@@ -10,6 +10,7 @@ use App\Models\Diagnostico;
 use App\Models\Procedimento;
 use App\Models\Especialidade;
 use App\Models\Hospital;
+use App\Models\ZonaAnatomica;
 use App\Http\Requests\StoreRegistoCirurgicoRequest;
 use App\Http\Requests\UpdateRegistoCirurgicoRequest;
 use Illuminate\Support\Facades\DB;
@@ -57,6 +58,7 @@ class RegistoCirurgicoController extends Controller
             'procedimentos' => Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'especialidades' => Especialidade::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'hospitals' => Hospital::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
+            'zonaAnatomicas' => ZonaAnatomica::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'enums' => [
                 'sexo' => config('medfolio.sexo_options'),
                 'funcoes' => config('medfolio.funcao_options'),
@@ -215,6 +217,7 @@ class RegistoCirurgicoController extends Controller
             'procedimentos' => Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'especialidades' => Especialidade::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'hospitals' => Hospital::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
+            'zonaAnatomicas' => ZonaAnatomica::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'enums' => [
                 'sexo' => config('medfolio.sexo_options'),
                 'funcoes' => config('medfolio.funcao_options'),

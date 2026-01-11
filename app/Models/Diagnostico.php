@@ -11,7 +11,7 @@ class Diagnostico extends Model
 
     protected $fillable = [
         'nome',
-        'especialidade',
+        'zona_anatomica',
         'tipo',
         'descricao',
         'user_id',
@@ -20,19 +20,20 @@ class Diagnostico extends Model
     protected $guarded = ['id'];
 
     /**
+     * Relação com a zona anatómica (por nome)
+     */
+    public function zonaAnatomica()
+    {
+        return $this->belongsTo(ZonaAnatomica::class, 'zona_anatomica', 'nome')
+            ->where('user_id', $this->user_id);
+    }
+
+    /**
      * Relação com o utilizador
      */
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Relação com especialidade
-     */
-    public function especialidadeRelation()
-    {
-        return $this->belongsTo(Especialidade::class, 'especialidade', 'nome');
     }
 
     /**

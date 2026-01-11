@@ -58,7 +58,7 @@ class EspecialidadeController extends Controller
     public function show(Especialidade $especialidade)
     {
         Gate::authorize('view', $especialidade);
-        $especialidade->load('diagnosticos', 'procedimentos');
+        $especialidade->load('procedimentos');
         return Inertia::render('especialidades/show', [
             'especialidade' => $especialidade
         ]);

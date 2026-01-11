@@ -104,24 +104,30 @@ export function QuickAddEspecialidade({ onCreated }: { onCreated?: (especialidad
 }
 
 export function QuickAddDiagnostico({ 
-    especialidades, 
-    onCreated 
+    onCreated,
+    zonaAnatomicas = []
 }: { 
-    especialidades: Especialidade[], 
-    onCreated?: (diag: any) => void 
+    onCreated?: (diag: any) => void;
+    zonaAnatomicas?: any[];
 }) {
     const [open, setOpen] = useState(false);
     const [nome, setNome] = useState('');
-    const [area, setArea] = useState('');
+    const [zonaAnatomica, setZonaAnatomica] = useState('');
     const [tipo, setTipo] = useState('');
     const [descricao, setDescricao] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showQuickAddZona, setShowQuickAddZona] = useState(false);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
-        router.post('/diagnosticos', { nome, area, tipo, descricao }, {
+        router.post('/diagnosticos', { 
+            nome, 
+            zona_anatomica: zonaAnatomica, 
+            tipo, 
+            descricao 
+        }, {
             preserveState: true,
             preserveScroll: true,
             headers: {
@@ -131,16 +137,17 @@ export function QuickAddDiagnostico({
                 toast.success('Diagnóstico criado com sucesso');
                 setOpen(false);
                 setNome('');
-                setArea('');
+                setZonaAnatomica('');
                 setTipo('');
                 setDescricao('');
-                if (onCreated) onCreated({ nome, area, tipo });
+                if (onCreated) onCreated({ nome });
             },
             onFinish: () => setLoading(false),
         });
     };
 
     return (
+        <>
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline" size="sm" type="button">
@@ -167,17 +174,26 @@ export function QuickAddDiagnostico({
                     </div>
                     <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                            <Label htmlFor="diag-area">Especialidade</Label>
-                            <QuickAddEspecialidade onCreated={(newArea) => setArea(newArea.nome)} />
+                            <Label htmlFor="diag-zona">Zona Anatómica</Label>
+                            <Button 
+                                type="button" 
+                                variant="link" 
+                                size="sm" 
+                                className="h-auto p-0 text-xs"
+                                onClick={() => setShowQuickAddZona(true)}
+                            >
+                                <Plus className="mr-1 h-3 w-3" />
+                                Nova Zona
+                            </Button>
                         </div>
-                        <Select value={area} onValueChange={setArea}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Selecione a especialidade" />
+                        <Select value={zonaAnatomica} onValueChange={setZonaAnatomica}>
+                            <SelectTrigger id="diag-zona">
+                                <SelectValue placeholder="Selecione a zona" />
                             </SelectTrigger>
                             <SelectContent>
-                                {especialidades.map((a) => (
-                                    <SelectItem key={a.id} value={a.nome}>
-                                        {a.nome}
+                                {zonaAnatomicas.map((zona) => (
+                                    <SelectItem key={zona.id} value={zona.nome}>
+                                        {zona.nome}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
@@ -208,11 +224,24 @@ export function QuickAddDiagnostico({
                         <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                             Cancelar
                         </Button>
-                        <Button type="submit" disabled={loading || !nome || !area}>
+                        <Button type="submit" disabled={loading || !nome || !zonaAnatomica}>
                             {loading ? 'A criar...' : 'Criar Diagnóstico'}
                         </Button>
                     </DialogFooter>
                 </form>
+            </DialogContent>
+        </Dialog>
+
+        <QuickAddZonaAnatomica 
+            open={showQuickAddZona} 
+            onOpenChange={setShowQuickAddZona}
+            onCreated={(newZona) => {
+                setZonaAnatomica(newZona.nome);
+            }}
+        />
+        </>
+    );
+}
             </DialogContent>
         </Dialog>
     );
@@ -227,7 +256,7 @@ export function QuickAddProcedimento({
 }) {
     const [open, setOpen] = useState(false);
     const [nome, setNome] = useState('');
-    const [area, setArea] = useState('');
+    const [especialidade, setEspecialidade] = useState('');
     const [descricao, setDescricao] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -235,7 +264,7 @@ export function QuickAddProcedimento({
         e.preventDefault();
         setLoading(true);
 
-        router.post('/procedimentos', { nome, area, descricao }, {
+        router.post('/procedimentos', { nome, especialidade, descricao }, {
             preserveState: true,
             preserveScroll: true,
             headers: {
@@ -245,9 +274,9 @@ export function QuickAddProcedimento({
                 toast.success('Procedimento criado com sucesso');
                 setOpen(false);
                 setNome('');
-                setArea('');
+                setEspecialidade('');
                 setDescricao('');
-                if (onCreated) onCreated({ nome, area });
+                if (onCreated) onCreated({ nome, especialidade });
             },
             onFinish: () => setLoading(false),
         });
@@ -280,17 +309,17 @@ export function QuickAddProcedimento({
                     </div>
                     <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                            <Label htmlFor="proc-area">Especialidade</Label>
-                            <QuickAddEspecialidade onCreated={(newArea) => setArea(newArea.nome)} />
+                            <Label htmlFor="proc-especialidade">Especialidade</Label>
+                            <QuickAddEspecialidade onCreated={(newSpec) => setEspecialidade(newSpec.nome)} />
                         </div>
-                        <Select value={area} onValueChange={setArea}>
-                            <SelectTrigger>
+                        <Select value={especialidade} onValueChange={setEspecialidade}>
+                            <SelectTrigger id="proc-especialidade">
                                 <SelectValue placeholder="Selecione a especialidade" />
                             </SelectTrigger>
                             <SelectContent>
-                                {especialidades.map((a) => (
-                                    <SelectItem key={a.id} value={a.nome}>
-                                        {a.nome}
+                                {especialidades.map((s) => (
+                                    <SelectItem key={s.id} value={s.nome}>
+                                        {s.nome}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
@@ -309,8 +338,90 @@ export function QuickAddProcedimento({
                         <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                             Cancelar
                         </Button>
-                        <Button type="submit" disabled={loading || !nome || !area}>
+                        <Button type="submit" disabled={loading || !nome || !especialidade}>
                             {loading ? 'A criar...' : 'Criar Procedimento'}
+                        </Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
+export function QuickAddZonaAnatomica({ 
+    onCreated 
+}: { 
+    onCreated?: (zona: any) => void 
+}) {
+    const [open, setOpen] = useState(false);
+    const [nome, setNome] = useState('');
+    const [descricao, setDescricao] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+
+        router.post('/zona-anatomicas', { 
+            nome, 
+            descricao 
+        }, {
+            preserveState: true,
+            preserveScroll: true,
+            headers: {
+                'X-Inertia-Modal-Redirect-Back': 'true',
+            },
+            onSuccess: () => {
+                toast.success('Zona anatómica criada com sucesso');
+                setOpen(false);
+                setNome('');
+                setDescricao('');
+                if (onCreated) onCreated({ nome });
+            },
+            onFinish: () => setLoading(false),
+        });
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant="outline" size="sm" type="button">
+                    <Plus className="h-4 w-4 mr-1" /> Zona
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Criar Nova Zona Anatómica</DialogTitle>
+                    <DialogDescription>
+                        Adicione uma nova zona anatómica à sua lista.
+                    </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="zona-nome">Nome</Label>
+                        <Input
+                            id="zona-nome"
+                            value={nome}
+                            onChange={(e) => setNome(e.target.value)}
+                            placeholder="Ex: Abdomen"
+                            required
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="zona-desc">Descrição (Opcional)</Label>
+                        <Textarea
+                            id="zona-desc"
+                            value={descricao}
+                            onChange={(e) => setDescricao(e.target.value)}
+                            placeholder="Detalhes adicionais..."
+                        />
+                    </div>
+                    <DialogFooter>
+                        <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                            Cancelar
+                        </Button>
+                        <Button type="submit" disabled={loading || !nome}>
+                            {loading ? 'A criar...' : 'Criar Zona'}
                         </Button>
                     </DialogFooter>
                 </form>
