@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\BelongsToUser;
 
 class Formacao extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToUser;
 
     protected $table = 'formacoes';
 
@@ -44,14 +45,6 @@ class Formacao extends Model
         'tipo' => TipoFormacaoEnum::class,
         'tipo_participacao' => TipoParticipacaoEnum::class,
     ];
-
-    /**
-     * Relacionamento com User
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
 
     /**
      * Scope: Ordenar por data mais recente

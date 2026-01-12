@@ -16,8 +16,7 @@ class EspecialidadeController extends Controller
      */
     public function index()
     {
-        $especialidades = Especialidade::where('user_id', auth()->id())
-            ->orderBy('nome')
+        $especialidades = Especialidade::orderBy('nome')
             ->paginate(15);
         return Inertia::render('especialidades/index', [
             'especialidades' => $especialidades

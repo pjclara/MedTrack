@@ -136,8 +136,15 @@ class RegistoCirurgicoSeeder extends Seeder
             ],
         ];
 
-        foreach ($registos as $registo) {
-            RegistoCirurgico::create($registo);
+        foreach ($registos as $data) {
+            $user = User::find($data['user_id']);
+            $hospital = \App\Models\Hospital::where('user_id', $user->id)->inRandomOrder()->first();
+            $especialidade = \App\Models\Especialidade::where('user_id', $user->id)->inRandomOrder()->first();
+
+            $data['hospital'] = $hospital ? $hospital->nome : null;
+            $data['especialidade'] = $especialidade ? $especialidade->nome : null;
+
+            RegistoCirurgico::create($data);
         }
     }
 }

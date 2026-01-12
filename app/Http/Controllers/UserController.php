@@ -8,15 +8,20 @@ use App\Models\Especialidade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Inertia\Inertia;
 
 class UserController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->authorize('viewAny', User::class);
+
         $users = User::orderBy('name')
             ->paginate(15);
 
@@ -30,6 +35,8 @@ class UserController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', User::class);
+
         return Inertia::render('users/create', [
             'hospitals' => Hospital::select('nome')->distinct()->orderBy('nome')->get(),
             'especialidades' => Especialidade::select('nome')->distinct()->orderBy('nome')->get(),
@@ -41,6 +48,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', User::class);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -62,6 +71,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        $this->authorize('update', $user);
+
         return Inertia::render('users/edit', [
             'user' => $user,
             'hospitals' => Hospital::select('nome')->distinct()->orderBy('nome')->get(),
@@ -74,6 +85,8 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        $this->authorize('update', $user);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => [
@@ -105,6 +118,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        $this->authorize('delete', $user);
+
         // Prevent deleting self
         if ($user->id === auth()->id()) {
             return redirect()->back()->with('error', 'Não pode eliminar o seu próprio utilizador.');

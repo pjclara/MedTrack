@@ -15,8 +15,7 @@ class HospitalController extends Controller
      */
     public function index()
     {
-        $hospitals = Hospital::where('user_id', auth()->id())
-            ->orderBy('nome')
+        $hospitals = Hospital::orderBy('nome')
             ->paginate(15);
 
         return Inertia::render('hospitals/index', [

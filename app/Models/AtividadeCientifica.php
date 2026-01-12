@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Enums\TipoAtividadeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToUser;
 
 class AtividadeCientifica extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToUser;
 
     protected $table = 'atividades_cientificas';
 
@@ -44,14 +45,7 @@ class AtividadeCientifica extends Model
     ];
 
     /**
-     * Relação com o utilizador
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
-    /**
      * Obtém a data formatada (dd/mm/yyyy)
      */
     public function getDataFormatadaAttribute()

@@ -26,7 +26,7 @@ class TipoDeCirurgiaSeeder extends Seeder
         ];
 
         foreach ($tipos as $tipo) {
-            TipoDeCirurgia::create(['nome' => $tipo]);
+            TipoDeCirurgia::firstOrCreate(['nome' => $tipo]);
         }
     }
 }

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToUser;
 
 class ZonaAnatomica extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToUser;
 
     protected $table = 'zona_anatomicas';
 
@@ -16,12 +17,4 @@ class ZonaAnatomica extends Model
         'descricao',
         'user_id',
     ];
-
-    /**
-     * Relação com o utilizador
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 }

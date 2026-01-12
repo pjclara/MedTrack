@@ -22,7 +22,7 @@ class TipoDeOrigemSeeder extends Seeder
         ];
 
         foreach ($tipos as $tipo) {
-            TipoDeOrigem::create(['nome' => $tipo]);
+            TipoDeOrigem::firstOrCreate(['nome' => $tipo]);
         }
     }
 }

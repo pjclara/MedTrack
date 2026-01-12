@@ -16,8 +16,7 @@ class ZonaAnatomicaController extends Controller
      */
     public function index()
     {
-        $zonaAnatomicas = ZonaAnatomica::where('user_id', auth()->id())
-            ->orderBy('nome')
+        $zonaAnatomicas = ZonaAnatomica::orderBy('nome')
             ->paginate(15);
         return Inertia::render('zona-anatomicas/index', [
             'zonaAnatomicas' => $zonaAnatomicas

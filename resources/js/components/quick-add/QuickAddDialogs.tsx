@@ -242,10 +242,6 @@ export function QuickAddDiagnostico({
         </>
     );
 }
-            </DialogContent>
-        </Dialog>
-    );
-}
 
 export function QuickAddProcedimento({ 
     especialidades, 

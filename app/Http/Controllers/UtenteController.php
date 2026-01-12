@@ -16,8 +16,7 @@ class UtenteController extends Controller
      */
     public function index()
     {
-        $utentes = Utente::where('user_id', auth()->id())
-            ->withCount('registosCirurgicos')
+        $utentes = Utente::withCount('registosCirurgicos')
             ->orderBy('nome')
             ->paginate(15);
         return Inertia::render('utentes/index', [

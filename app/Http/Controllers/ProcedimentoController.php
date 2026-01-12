@@ -16,8 +16,7 @@ class ProcedimentoController extends Controller
      */
     public function index()
     {
-        $procedimentos = Procedimento::where('user_id', auth()->id())
-            ->withCount('cirurgias')
+        $procedimentos = Procedimento::withCount('cirurgias')
             ->orderBy('nome')
             ->paginate(15);
         return Inertia::render('procedimentos/index', [
@@ -31,7 +30,7 @@ class ProcedimentoController extends Controller
     public function create()
     {
         Gate::authorize('create', Procedimento::class);
-        $especialidades = Especialidade::where('user_id', auth()->id())->orderBy('nome')->get();
+        $especialidades = Especialidade::orderBy('nome')->get();
         return Inertia::render('procedimentos/create', [
             'especialidades' => $especialidades
         ]);

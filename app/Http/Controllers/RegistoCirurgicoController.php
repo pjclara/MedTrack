@@ -35,7 +35,6 @@ class RegistoCirurgicoController extends Controller
                 'tipoDeCirurgia:id,nome',
                 'tipoDeOrigem:id,nome'
             ])
-            ->where('user_id', auth()->id())
             ->withCount('cirurgias')
             ->orderBy('data_cirurgia', 'desc')
             ->paginate(15);

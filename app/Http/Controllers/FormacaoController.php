@@ -20,8 +20,7 @@ class FormacaoController extends Controller
     {
         $this->authorize('viewAny', Formacao::class);
 
-        $query = Formacao::where('user_id', $request->user()->id)
-            ->recentes();
+        $query = Formacao::recentes();
 
         // Filtro por tipo
         if ($request->filled('tipo')) {

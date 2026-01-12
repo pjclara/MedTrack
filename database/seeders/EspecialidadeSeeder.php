@@ -69,7 +69,10 @@ class EspecialidadeSeeder extends Seeder
             ];
 
             foreach ($especialidades as $especialidade) {
-                Especialidade::create($especialidade);
+                Especialidade::firstOrCreate(
+                    ['nome' => $especialidade['nome'], 'user_id' => $especialidade['user_id']],
+                    ['descricao' => $especialidade['descricao']]
+                );
             }
         }
     }

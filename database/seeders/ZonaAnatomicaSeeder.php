@@ -27,7 +27,10 @@ class ZonaAnatomicaSeeder extends Seeder
             ];
 
             foreach ($zonas as $zona) {
-                \App\Models\ZonaAnatomica::create($zona);
+                \App\Models\ZonaAnatomica::firstOrCreate(
+                    ['nome' => $zona['nome'], 'user_id' => $zona['user_id']],
+                    ['descricao' => $zona['descricao']]
+                );
             }
         }
     }

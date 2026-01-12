@@ -17,8 +17,7 @@ class DiagnosticoController extends Controller
      */
     public function index()
     {
-        $diagnosticos = Diagnostico::where('user_id', auth()->id())
-            ->withCount('cirurgias')
+        $diagnosticos = Diagnostico::withCount('cirurgias')
             ->orderBy('nome')
             ->paginate(15);
         return Inertia::render('diagnosticos/index', [
@@ -34,7 +33,7 @@ class DiagnosticoController extends Controller
         Gate::authorize('create', Diagnostico::class);
         return Inertia::render('diagnosticos/create', [
             'tipos' => TipoDiagnosticoEnum::values(),
-            'zonaAnatomicas' => ZonaAnatomica::where('user_id', auth()->id())->orderBy('nome')->get(),
+            'zonaAnatomicas' => ZonaAnatomica::orderBy('nome')->get(),
         ]);
     }
 

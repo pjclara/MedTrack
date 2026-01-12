@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Users, FileText, GraduationCap, Award, Settings, Layers, Activity, ClipboardList, Building2 } from 'lucide-react';
 import AppLogo from './app-logo';
 
@@ -22,11 +22,7 @@ const mainNavItems: NavItem[] = [
         href: dashboard().url,
         icon: LayoutGrid,
     },
-    {
-        title: 'Utentes',
-        href: '/utentes',
-        icon: Users,
-    },
+
     {
         title: 'Registos Cirúrgicos',
         href: '/registos-cirurgicos',
@@ -48,6 +44,11 @@ const adminNavItems: NavItem[] = [
     {
         title: 'Utilizadores',
         href: '/users',
+        icon: Users,
+    },
+        {
+        title: 'Utentes',
+        href: '/utentes',
         icon: Users,
     },
     {
@@ -80,6 +81,16 @@ const adminNavItems: NavItem[] = [
 const footerNavItems: NavItem[] = [];
 
 export function AppSidebar() {
+    const { auth } = usePage().props as any;
+    const isAdmin = auth.is_admin;
+
+    const filteredAdminNavItems = adminNavItems.filter((item) => {
+        if (item.title === 'Utilizadores' && !isAdmin) {
+            return false;
+        }
+        return true;
+    });
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -96,7 +107,10 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} title="Plataforma" />
-                <NavMain items={adminNavItems} title="Administração" />
+                <NavMain 
+                    items={filteredAdminNavItems} 
+                    title={isAdmin ? "Administração" : "Gestão de Dados"} 
+                />
             </SidebarContent>
 
             <SidebarFooter>

@@ -33,9 +33,13 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        // Criar roles e atribuir aos utilizadores
+        $this->call(RoleSeeder::class);
+
         // Seeders do sistema MedTrack (ordem é importante devido às foreign keys)
         $this->call([
             ZonaAnatomicaSeeder::class,
+            HospitalSeeder::class,
             EspecialidadeSeeder::class,
             TipoDeCirurgiaSeeder::class,
             TipoDeOrigemSeeder::class,
@@ -48,11 +52,28 @@ class DatabaseSeeder extends Seeder
             FormacaoSeeder::class,
         ]);
 
+        // Associar hospital e especialidade aos utilizadores
+        foreach (User::all() as $user) {
+            $hospital = \App\Models\Hospital::where('user_id', $user->id)->first();
+            $especialidade = \App\Models\Especialidade::where('user_id', $user->id)->first();
+
+            if ($hospital) {
+                $user->hospital_de_origem = $hospital->nome;
+            }
+
+            if ($especialidade) {
+                $user->especialidade = $especialidade->nome;
+            }
+
+            $user->save();
+        }
+
         $this->command->info('✅ Database seeding completo!');
         $this->command->info('📊 Dados criados:');
         $this->command->table(
             ['Tabela', 'Registos'],
             [
+                ['Hospitais', \App\Models\Hospital::count()],
                 ['Especialidades', \App\Models\Especialidade::count()],
                 ['Zonas Anatómicas', \App\Models\ZonaAnatomica::count()],
                 ['Tipos de Cirurgia', \App\Models\TipoDeCirurgia::count()],

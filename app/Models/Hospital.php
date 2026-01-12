@@ -4,15 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToUser;
 
 class Hospital extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToUser;
 
     protected $fillable = ['nome', 'user_id'];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 }

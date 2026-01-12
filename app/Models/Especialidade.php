@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToUser;
 
 class Especialidade extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToUser;
 
     protected $table = 'especialidades';
 
@@ -18,14 +19,6 @@ class Especialidade extends Model
     ];
 
     protected $guarded = ['id'];
-
-    /**
-     * Relação com o utilizador
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
     /**
      * Relação com procedimentos

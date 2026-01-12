@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToUser;
 
 class Diagnostico extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToUser;
 
     protected $fillable = [
         'nome',
@@ -26,14 +27,6 @@ class Diagnostico extends Model
     {
         return $this->belongsTo(ZonaAnatomica::class, 'zona_anatomica', 'nome')
             ->where('user_id', $this->user_id);
-    }
-
-    /**
-     * Relação com o utilizador
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
     }
 
     /**

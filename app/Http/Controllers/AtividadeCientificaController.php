@@ -20,8 +20,7 @@ class AtividadeCientificaController extends Controller
     {
         $this->authorize('viewAny', AtividadeCientifica::class);
 
-        $atividades = AtividadeCientifica::where('user_id', auth()->id())
-            ->recentes()
+        $atividades = AtividadeCientifica::recentes()
             ->paginate(15);
 
         return Inertia::render('atividades-cientificas/index', [

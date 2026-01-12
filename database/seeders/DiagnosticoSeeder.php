@@ -49,7 +49,13 @@ class DiagnosticoSeeder extends Seeder
             ];
 
             foreach ($diagnosticos as $diagnostico) {
-                Diagnostico::create($diagnostico);
+                Diagnostico::firstOrCreate(
+                    ['nome' => $diagnostico['nome'], 'user_id' => $diagnostico['user_id']],
+                    [
+                        'zona_anatomica' => $diagnostico['zona_anatomica'],
+                        'descricao' => $diagnostico['descricao']
+                    ]
+                );
             }
         }
     }

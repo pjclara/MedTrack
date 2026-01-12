@@ -69,7 +69,13 @@ class ProcedimentoSeeder extends Seeder
             ];
 
             foreach ($procedimentos as $procedimento) {
-                Procedimento::create($procedimento);
+                Procedimento::firstOrCreate(
+                    ['nome' => $procedimento['nome'], 'user_id' => $procedimento['user_id']],
+                    [
+                        'especialidade' => $procedimento['especialidade'],
+                        'descricao' => $procedimento['descricao']
+                    ]
+                );
             }
         }
     }

@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\TipoAbordagemEnum;
+use App\Traits\BelongsToUser;
 
 class RegistoCirurgico extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToUser;
 
     protected $fillable = [
         'user_id',
@@ -39,14 +40,6 @@ class RegistoCirurgico extends Model
     public function utente()
     {
         return $this->belongsTo(Utente::class);
-    }
-
-    /**
-     * Relação com user (proprietário do registo)
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
     }
 
     /**

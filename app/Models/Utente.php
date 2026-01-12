@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\SexoEnum;
+use App\Traits\BelongsToUser;
 
 class Utente extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToUser;
 
     protected $fillable = [
         'nome',
@@ -26,14 +27,7 @@ class Utente extends Model
     ];
 
     /**
-     * Relação com o utilizador que registou o utente
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
-    /**
      * Relação com registos cirúrgicos
      */
     public function registosCirurgicos()
