@@ -83,6 +83,7 @@ class HospitalControllerTest extends TestCase
             'nome' => 'Tentar Mudar',
         ]);
 
-        $response->assertForbidden();
+        // With Global Scope, accessing others' data returns 404
+        $response->assertNotFound();
     }
 }

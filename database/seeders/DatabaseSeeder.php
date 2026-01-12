@@ -25,6 +25,15 @@ class DatabaseSeeder extends Seeder
 
         // Criar admin
         User::firstOrCreate(
+            ['email' => 'pjclara@gmail.com'],
+            [
+                'name' => 'Pedro Clara',
+                'password' => 'password',
+                'email_verified_at' => now(),
+            ]
+        );
+
+        User::firstOrCreate(
             ['email' => 'admin@medtrack.com'],
             [
                 'name' => 'Administrador',

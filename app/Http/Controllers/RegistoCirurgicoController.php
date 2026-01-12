@@ -240,14 +240,16 @@ class RegistoCirurgicoController extends Controller
             $utenteData = $payload['utente'];
 
             // Update utente
-            $utenteAttributes = [
-                'nome' => $utenteData['nome'],
-                'processo' => $utenteData['processo'],
-                'data_nascimento' => $utenteData['data_nascimento'],
-                'sexo' => $utenteData['sexo'],
-            ];
-
-            $registo->utente->update($utenteAttributes);
+            $utente = $registo->utente;
+            if ($utente) {
+                $utenteAttributes = [
+                    'nome' => $utenteData['nome'],
+                    'processo' => $utenteData['processo'],
+                    'data_nascimento' => $utenteData['data_nascimento'],
+                    'sexo' => $utenteData['sexo'],
+                ];
+                $utente->update($utenteAttributes);
+            }
 
             // Update registo
             $registoData = $payload['registo'];

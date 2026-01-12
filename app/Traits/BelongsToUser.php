@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Models\Scopes\UserScope;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
+use Illuminate\Support\Facades\Auth;
 
 #[ScopedBy([UserScope::class])]
 trait BelongsToUser

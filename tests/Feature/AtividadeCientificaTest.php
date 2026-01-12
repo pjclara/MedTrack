@@ -50,20 +50,21 @@ test('user cannot access scientific activity of another user', function () {
 
     $this->actingAs($user);
 
-    // Test Edit page access - Use getJson to ensure 403 instead of redirect
+    // With Global Scope active, accessing someone else's record returns 404 (Not Found)
+    // instead of 403 (Forbidden) because the record is filtered out from the query.
     $this->getJson(route('atividades-cientificas.edit', $atividade))
-        ->assertStatus(403);
+        ->assertStatus(404);
 
     // Test Update
     $this->putJson(route('atividades-cientificas.update', $atividade), [
         'titulo' => 'Hacked',
         'tipo' => TipoAtividadeEnum::ARTIGO_REVISTA->value,
         'data' => '2025-01-01',
-    ])->assertStatus(403);
+    ])->assertStatus(404);
         
     // Test Delete
     $this->deleteJson(route('atividades-cientificas.destroy', $atividade))
-        ->assertStatus(403);
+        ->assertStatus(404);
 });
 
 test('user can download their own file', function () {

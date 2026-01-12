@@ -52,8 +52,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ->map(fn($r) => [
                     'id' => $r->id,
                     'data_cirurgia' => $r->data_cirurgia->format('d/m/Y'),
-                    'utente_nome' => $r->utente->nome,
-                    'tipo' => $r->tipoDeCirurgia->nome,
+                    'utente_nome' => $r->utente?->nome ?? 'N/A',
+                    'tipo' => $r->tipoDeCirurgia?->nome ?? 'N/A',
                 ]),
         ]);
     })->name('dashboard');
