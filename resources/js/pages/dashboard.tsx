@@ -181,7 +181,8 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
                                     <BookOpen className="h-6 w-6 text-pink-600 dark:text-pink-400" />
                                 </div>
                             </div>
-                            <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.creditosFormacao}</h3>
+                            <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.creditosFormacao.toFixed(0)}</h3>
+                            
                             <p className="text-sm text-gray-600 dark:text-gray-400">Créditos de Formação</p>
                             {stats.creditosFormacao >= 50 && (
                                 <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1">✓ Objetivo anual atingido</p>
