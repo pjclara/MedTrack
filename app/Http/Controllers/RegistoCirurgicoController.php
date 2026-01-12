@@ -33,7 +33,8 @@ class RegistoCirurgicoController extends Controller
         $registos = RegistoCirurgico::with([
                 'utente:id,nome,processo',
                 'tipoDeCirurgia:id,nome',
-                'tipoDeOrigem:id,nome'
+                'tipoDeOrigem:id,nome',
+                'user:id,name,email',
             ])
             ->withCount('cirurgias')
             ->orderBy('data_cirurgia', 'desc')

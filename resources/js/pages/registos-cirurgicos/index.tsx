@@ -66,6 +66,7 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                         <TableHead>Tipo Cirurgia</TableHead>
                                         <TableHead>Hospital</TableHead>
                                         <TableHead>Abordagem</TableHead>
+                                        <TableHead>Registado Por</TableHead>
                                         <TableHead className="text-right">Ações</TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -101,6 +102,15 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                                     <Badge variant="outline">
                                                         {registo.tipo_de_abordagem}
                                                     </Badge>
+                                                </TableCell>
+                                                <TableCell>
+                                                    {registo.user ? (
+                                                        <div className="flex items-center gap-2">
+                                                            <Clock className="h-4 w-4" /> {registo.user.name}
+                                                        </div>
+                                                    ) : (
+                                                        <span className="text-muted-foreground">-</span>
+                                                    )}
                                                 </TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">

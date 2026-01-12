@@ -35,6 +35,11 @@ export interface RegistoCirurgico {
     cirurgias?: Cirurgia[];
     tipo_de_cirurgia?: TipoDeCirurgia;
     tipo_de_origem?: TipoDeOrigem;
+    user?: {
+        id: number;
+        name: string;
+        email: string;
+    };
 }
 
 export interface Cirurgia {
