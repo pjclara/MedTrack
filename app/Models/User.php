@@ -52,4 +52,20 @@ class User extends Authenticatable
             'two_factor_confirmed_at' => 'datetime',
         ];
     }
+
+    /**
+     * Get the utentes for the user.
+     */
+    public function utentes()
+    {
+        return $this->hasMany(Utente::class);
+    }
+
+    /**
+     * Get the registos cirurgicos for the user.
+     */
+    public function registosCirurgicos()
+    {
+        return $this->hasMany(RegistoCirurgico::class);
+    }
 }

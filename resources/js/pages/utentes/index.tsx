@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -27,6 +27,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function UtenteIndex({ utentes }: UtenteIndexProps) {
+    const { auth } = usePage<SharedData>().props;
+    const isAdmin = auth.is_admin;
+
     const getSexoBadgeVariant = (sexo: string) => {
         switch (sexo) {
             case 'Masculino':
@@ -84,6 +87,7 @@ export default function UtenteIndex({ utentes }: UtenteIndexProps) {
                                         <TableHead>Nome</TableHead>
                                         <TableHead>Sexo</TableHead>
                                         <TableHead>Data Nascimento</TableHead>
+                                        {isAdmin && <TableHead>Registado Por</TableHead>}
                                         <TableHead>Cirurgias</TableHead>
                                         <TableHead className="text-right">Ações</TableHead>
                                     </TableRow>
@@ -91,7 +95,7 @@ export default function UtenteIndex({ utentes }: UtenteIndexProps) {
                                 <TableBody>
                                     {utentes.data.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={6} className="text-center text-muted-foreground">
+                                            <TableCell colSpan={isAdmin ? 7 : 6} className="text-center text-muted-foreground">
                                                 Nenhum utente encontrado
                                             </TableCell>
                                         </TableRow>
@@ -110,9 +114,14 @@ export default function UtenteIndex({ utentes }: UtenteIndexProps) {
                                                 <TableCell>
                                                     {formatDateToPT(utente.data_nascimento)}
                                                 </TableCell>
+                                                {isAdmin && (
+                                                    <TableCell>
+                                                        {utente.user?.name || '-'}
+                                                    </TableCell>
+                                                )}
                                                 <TableCell>
                                                     <Badge variant="outline">
-                                                        {utente.registo_cirurgicos_count || 0}
+                                                        {utente.registos_cirurgicos_count || 0}
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell className="text-right">

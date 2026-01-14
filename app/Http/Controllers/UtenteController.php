@@ -16,9 +16,18 @@ class UtenteController extends Controller
      */
     public function index()
     {
-        $utentes = Utente::withCount('registosCirurgicos')
+        $user = auth()->user();
+        $isAdmin = $user->hasRole('admin');
+
+        $utentes = Utente::with('user:id,name')
+            ->withCount(['registosCirurgicos' => function ($query) use ($user, $isAdmin) {
+                if (!$isAdmin) {
+                    $query->where('user_id', $user->id);
+                }
+            }])
             ->orderBy('nome')
             ->paginate(15);
+
         return Inertia::render('utentes/index', [
             'utentes' => $utentes
         ]);
@@ -54,13 +63,24 @@ class UtenteController extends Controller
     public function show(Utente $utente)
     {
         Gate::authorize('view', $utente);
+
+        $user = auth()->user();
+        $isAdmin = $user->hasRole('admin');
+
         $utente->load([
-            'registosCirurgicos' => function ($query) {
-                $query->where('user_id', auth()->id())
-                    ->with(['tipoDeCirurgia', 'cirurgias'])
+            'registosCirurgicos' => function ($query) use ($user, $isAdmin) {
+                if (!$isAdmin) {
+                    $query->where('user_id', $user->id);
+                }
+                $query->with(['tipoDeCirurgia', 'cirurgias'])
                     ->orderBy('data_cirurgia', 'desc');
             }
-        ]);
+        ])->loadCount(['registosCirurgicos' => function ($query) use ($user, $isAdmin) {
+            if (!$isAdmin) {
+                $query->where('user_id', $user->id);
+            }
+        }]);
+
         return Inertia::render('utentes/show', [
             'utente' => $utente->toArray() + [
                 'data_nascimento' => $utente->data_nascimento?->format('Y-m-d'),

@@ -18,13 +18,13 @@ class RoleSeeder extends Seeder
         $userRole = Role::firstOrCreate(['name' => 'user']);
 
         // Atribuir admin ao administrador
-        $admin = User::whereIn('email', ['admin@medtrack.com', 'pjclara@gmail.com'])->get();
+        $admin = User::whereIn('email', ['admin@medtrack.com'])->get();
         foreach ($admin as $user) {
             $user->assignRole($adminRole);
         }
 
         // Atribuir user aos outros (opcional, mas boa prática)
-        $users = User::whereNotIn('email', ['admin@medtrack.com', 'pjclara@gmail.com'])->get();
+        $users = User::whereNotIn('email', ['admin@medtrack.com'])->get();
         foreach ($users as $user) {
             $user->assignRole($userRole);
         }

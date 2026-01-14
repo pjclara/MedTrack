@@ -17,7 +17,15 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { ArrowLeft, Edit, Trash2, Calendar, User, FileText } from 'lucide-react';
+import { ArrowLeft, Edit, Trash2, Calendar, User, FileText, Eye, Clock } from 'lucide-react';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 import { type BreadcrumbItem } from '@/types';
 import { type Utente } from '@/types/models';
 
@@ -175,26 +183,70 @@ export default function UtenteShow({ utente }: UtenteShowProps) {
                 </div>
 
                 <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <FileText className="h-5 w-5" />
-                            Registos Cirúrgicos
-                        </CardTitle>
-                        <CardDescription>
-                            Histórico de cirurgias realizadas
-                        </CardDescription>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                        <div>
+                            <CardTitle className="flex items-center gap-2">
+                                <FileText className="h-5 w-5" />
+                                Histórico de Registos Cirúrgicos
+                            </CardTitle>
+                            <CardDescription>
+                                Total de {utente.registos_cirurgicos_count || 0} cirurgias realizadas
+                            </CardDescription>
+                        </div>
+                        <Link href="/registos-cirurgicos/create">
+                            <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700">
+                                Novo Registo
+                            </Button>
+                        </Link>
                     </CardHeader>
                     <CardContent>
-                        <div className="flex items-center justify-between rounded-lg border p-4">
-                            <div>
-                                <p className="text-sm text-muted-foreground">Total de Cirurgias</p>
-                                <p className="text-3xl font-bold">{utente.registo_cirurgicos_count || 0}</p>
-                            </div>
-                            <Link href={`/registos-cirurgicos?utente=${utente.id}`}>
-                                <Button variant="outline">
-                                    Ver Registos
-                                </Button>
-                            </Link>
+                        <div className="rounded-md border">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Data</TableHead>
+                                        <TableHead>Tipo de Cirurgia</TableHead>
+                                        <TableHead>Hospital</TableHead>
+                                        <TableHead>Abordagem</TableHead>
+                                        <TableHead className="text-right">Ações</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {!utente.registos_cirurgicos || utente.registos_cirurgicos.length === 0 ? (
+                                        <TableRow>
+                                            <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                                                Nenhum registo encontrado para este utente
+                                            </TableCell>
+                                        </TableRow>
+                                    ) : (
+                                        utente.registos_cirurgicos.map((registo) => (
+                                            <TableRow key={registo.id}>
+                                                <TableCell className="font-medium">
+                                                    {formatDateToPT(registo.data_cirurgia)}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {registo.tipo_de_cirurgia?.nome || '-'}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {registo.hospital || '-'}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Badge variant="outline">
+                                                        {registo.tipo_de_abordagem}
+                                                    </Badge>
+                                                </TableCell>
+                                                <TableCell className="text-right">
+                                                    <Link href={`/registos-cirurgicos/${registo.id}`}>
+                                                        <Button variant="ghost" size="sm">
+                                                            <Eye className="h-4 w-4" />
+                                                        </Button>
+                                                    </Link>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    )}
+                                </TableBody>
+                            </Table>
                         </div>
                     </CardContent>
                 </Card>

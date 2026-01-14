@@ -13,7 +13,12 @@ export interface Utente {
     data_nascimento: string;
     created_at: string;
     updated_at: string;
-    registo_cirurgicos_count?: number;
+    registos_cirurgicos_count?: number;
+    registos_cirurgicos?: RegistoCirurgico[];
+    user?: {
+        id: number;
+        name: string;
+    };
 }
 
 export interface RegistoCirurgico {
