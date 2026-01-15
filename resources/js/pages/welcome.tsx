@@ -1,4 +1,4 @@
-import { dashboard, login, register } from '@/routes';
+import { dashboard, login} from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { Activity, FileText, Users, Calendar, TrendingUp, Shield } from 'lucide-react';
@@ -46,14 +46,7 @@ export default function Welcome({
                                     >
                                         Entrar
                                     </Link>
-                                    {canRegister && (
-                                        <Link
-                                            href={register().url}
-                                            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
-                                        >
-                                            Registar
-                                        </Link>
-                                    )}
+                                    
                                 </>
                             )}
                         </div>
@@ -78,33 +71,7 @@ export default function Welcome({
                                 Sistema completo para organização, monitorização e análise de intervenções cirúrgicas. 
                                 Registe procedimentos, acompanhe utentes e gere relatórios detalhados de forma simples e segura.
                             </p>
-                            <div className="flex flex-wrap gap-4">
-                                {auth.user ? (
-                                    <Link
-                                        href={dashboard().url}
-                                        className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-8 py-4 text-base font-semibold text-white shadow-lg transition-all hover:bg-emerald-700 hover:shadow-xl"
-                                    >
-                                        Aceder ao Dashboard
-                                        <TrendingUp className="h-5 w-5" />
-                                    </Link>
-                                ) : (
-                                    <>
-                                        <Link
-                                            href={register().url}
-                                            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-8 py-4 text-base font-semibold text-white shadow-lg transition-all hover:bg-emerald-700 hover:shadow-xl"
-                                        >
-                                            Começar Agora
-                                            <Activity className="h-5 w-5" />
-                                        </Link>
-                                        <Link
-                                            href={login().url}
-                                            className="inline-flex items-center gap-2 rounded-lg border-2 border-gray-300 bg-white px-8 py-4 text-base font-semibold text-gray-700 transition-all hover:border-gray-400 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:border-gray-500 dark:hover:bg-gray-700"
-                                        >
-                                            Já tenho conta
-                                        </Link>
-                                    </>
-                                )}
-                            </div>
+
                         </div>
                         <div className="relative">
                             <div className="relative rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 p-8 shadow-2xl">
@@ -241,15 +208,7 @@ export default function Welcome({
                         <p className="mb-8 text-xl text-blue-100">
                             Modernize a gestão dos seus registos cirúrgicos hoje mesmo
                         </p>
-                        {!auth.user && (
-                            <Link
-                                href={register()}
-                                className="inline-flex items-center gap-2 rounded-lg bg-white px-10 py-4 text-lg font-semibold text-emerald-600 shadow-xl transition-all hover:bg-emerald-50"
-                            >
-                                Criar Conta Gratuita
-                                <Activity className="h-5 w-5" />
-                            </Link>
-                        )}
+                        
                     </div>
                 </section>
 
