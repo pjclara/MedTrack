@@ -8,7 +8,7 @@ import { Progress } from '@/components/ui/progress';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Painel de Controlo',
         href: dashboard().url,
     },
 ];
@@ -49,7 +49,7 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard" />
+            <Head title="Painel de Controlo" />
             <div className="flex h-full flex-1 flex-col gap-6 p-6">
                 {/* Welcome Section */}
                 <div className="rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 p-8 text-white shadow-lg">
