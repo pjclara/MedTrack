@@ -22,6 +22,7 @@ import { useState, FormEventHandler, useEffect } from 'react';
 import { QuickAddDiagnostico, QuickAddProcedimento, QuickAddEspecialidade } from '@/components/quick-add/QuickAddDialogs';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { CustomMultiSelect } from '@/components/ui/react-select';
 
 interface RegistoCirurgicoCreateProps {
     tiposDeCirurgia: TipoDeCirurgia[];
@@ -120,9 +121,7 @@ export default function RegistoCirurgicoCreate({
         tipo_de_abordagem: '',
     });
 
-    const [diagnosticosList, setDiagnosticosList] = useState<DiagnosticoData[]>([
-        { diagnostico_id: '', tipo: '', procedimentos: [{ procedimento_id: '', funcao: '', clavien_dindo: '', anatomia_patologica: '', observacoes: '' }] }
-    ]);
+    const [diagnosticosList, setDiagnosticosList] = useState<DiagnosticoData[]>([]);
 
     const { post, processing, errors } = useForm();
 
@@ -154,6 +153,31 @@ export default function RegistoCirurgicoCreate({
 
     const removeDiagnostico = (index: number) => {
         setDiagnosticosList(diagnosticosList.filter((_, i) => i !== index));
+    };
+
+    const diagnosticoOptions = diagnosticos.map(d => ({
+        value: d.id.toString(),
+        label: d.nome
+    }));
+
+    const handleDiagnosticosChange = (selectedIds: string[]) => {
+        const newList = selectedIds.map(id => {
+            const existing = diagnosticosList.find(d => d.diagnostico_id === id);
+            if (existing) return existing;
+            
+            return {
+                diagnostico_id: id,
+                tipo: '',
+                procedimentos: [{ 
+                    procedimento_id: '', 
+                    funcao: '', 
+                    clavien_dindo: '', 
+                    anatomia_patologica: '', 
+                    observacoes: '' 
+                }]
+            };
+        });
+        setDiagnosticosList(newList);
     };
 
     const addProcedimento = (diagnosticoIndex: number) => {
@@ -213,7 +237,7 @@ export default function RegistoCirurgicoCreate({
             case 2:
                 return registoData.hospital && registoData.especialidade && registoData.data_cirurgia && registoData.tipo_de_cirurgia_id && registoData.tipo_de_origem_id && registoData.tipo_de_abordagem;
             case 3:
-                return diagnosticosList.every(d => d.diagnostico_id);
+                return diagnosticosList.length > 0 && diagnosticosList.every(d => d.diagnostico_id);
             case 4:
                 return diagnosticosList.every(d => d.procedimentos.every(p => p.procedimento_id && p.funcao));
             default:
@@ -535,88 +559,62 @@ export default function RegistoCirurgicoCreate({
                     {step === 3 && (
                         <Card>
                             <CardHeader>
-                                <CardTitle>{stepNames[2]}</CardTitle>
-                                <CardDescription>
-                                    Adicione os diagnósticos da cirurgia
-                                </CardDescription>
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <CardTitle>{stepNames[2]}</CardTitle>
+                                        <CardDescription>
+                                            Selecione os diagnósticos da cirurgia
+                                        </CardDescription>
+                                    </div>
+                                    <QuickAddDiagnostico 
+                                        onCreated={(newDiag) => {
+                                            // O Inertia refresca as props automaticamente
+                                        }}
+                                    />
+                                </div>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                {diagnosticosList.map((diag, index) => (
-                                    <div key={index} className="rounded-md border p-4 space-y-3">
-                                        <div className="flex items-center justify-between">
-                                            <Label>Diagnóstico {index + 1}</Label>
-                                            <div className="flex gap-2">
-                                                <QuickAddDiagnostico 
-                                                    zonaAnatomicas={zonaAnatomicas}
-                                                    onCreated={(newDiag) => {
-                                                        // O Inertia refresca as props automaticamente
-                                                        // Mas para selecionar o novo item, podemos ter de procurar na lista atualizada
-                                                        // No entanto, as props ainda não mudaram aqui.
-                                                    }}
-                                                />
-                                                {diagnosticosList.length > 1 && (
-                                                <Button
-                                                    type="button"
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    onClick={() => removeDiagnostico(index)}
-                                                >
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
-                                            )}
-                                            </div>
-                                        </div>
-                                        <div className="grid gap-4 md:grid-cols-2">
-                                            <div className="space-y-2">
-                                                <Label>Diagnóstico <span className="text-destructive">*</span></Label>
-                                                <Select
-                                                    value={diag.diagnostico_id}
-                                                    onValueChange={(value) => updateDiagnostico(index, 'diagnostico_id', value)}
-                                                >
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Selecione o diagnóstico" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {diagnosticos.map((d) => (
-                                                            <SelectItem key={d.id} value={d.id.toString()}>
-                                                                {d.nome}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
+                                <div className="space-y-2">
+                                    <Label>Diagnósticos <span className="text-destructive">*</span></Label>
+                                    <CustomMultiSelect
+                                        options={diagnosticoOptions}
+                                        value={diagnosticoOptions.filter(opt => diagnosticosList.some(d => d.diagnostico_id === opt.value))}
+                                        onChange={handleDiagnosticosChange}
+                                        placeholder="Selecione um ou mais diagnósticos..."
+                                    />
+                                </div>
 
-                                            <div className="space-y-2">
-                                                <Label>Tipo de Diagnóstico</Label>
-                                                <Select
-                                                    value={diag.tipo}
-                                                    onValueChange={(value) => updateDiagnostico(index, 'tipo', value)}
-                                                >
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Selecione o tipo" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {(enums?.tipo_diagnostico || []).map((tipo) => (
-                                                            <SelectItem key={tipo} value={tipo}>
-                                                                {tipo}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-                                        </div>
+                                {diagnosticosList.length > 0 && (
+                                    <div className="space-y-4 pt-4">
+                                        <Separator />
+                                        <h3 className="text-sm font-medium">Classificação dos Diagnósticos</h3>
+                                        {diagnosticosList.map((d, index) => {
+                                            const diagnosisName = diagnosticos.find(diag => diag.id.toString() === d.diagnostico_id)?.nome;
+                                            return (
+                                                <div key={d.diagnostico_id} className="grid grid-cols-2 gap-4 items-center p-3 border rounded-md">
+                                                    <span className="text-sm font-medium">{diagnosisName}</span>
+                                                    <div className="space-y-1">
+                                                        <Select
+                                                            value={d.tipo}
+                                                            onValueChange={(value) => updateDiagnostico(index, 'tipo', value)}
+                                                        >
+                                                            <SelectTrigger>
+                                                                <SelectValue placeholder="Tipo (Benigno/Maligno)" />
+                                                            </SelectTrigger>
+                                                            <SelectContent>
+                                                                {(enums?.tipo_diagnostico || []).map((tipo) => (
+                                                                    <SelectItem key={tipo} value={tipo}>
+                                                                        {tipo}
+                                                                    </SelectItem>
+                                                                ))}
+                                                            </SelectContent>
+                                                        </Select>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
-                                ))}
-
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    onClick={addDiagnostico}
-                                    className="w-full"
-                                >
-                                    <Plus className="mr-2 h-4 w-4" />
-                                    Adicionar Diagnóstico
-                                </Button>
+                                )}
                             </CardContent>
                         </Card>
                     )}

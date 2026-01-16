@@ -16,9 +16,6 @@ class TipoDeOrigemSeeder extends Seeder
             'Consulta Externa',
             'Urgência',
             'Internamento',
-            'Transferência',
-            'Referenciação',
-            'Particular',
         ];
 
         foreach ($tipos as $tipo) {

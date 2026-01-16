@@ -498,7 +498,7 @@ export default function RegistoCirurgicoEdit({
                                         <Label>
                                             Diagnósticos <span className="text-destructive">*</span>
                                         </Label>
-                                        <QuickAddDiagnostico zonaAnatomicas={zonaAnatomicas} />
+                                        <QuickAddDiagnostico />
                                     </div>
                                     <CustomMultiSelect
                                         value={diagnosticosList.map(d => ({ value: d.diagnostico_id, label: diagnosticos.find(diag => diag.id.toString() === d.diagnostico_id)?.nome || '' }))}

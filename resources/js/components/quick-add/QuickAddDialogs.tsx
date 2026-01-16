@@ -116,7 +116,6 @@ export function QuickAddDiagnostico({
     const [tipo, setTipo] = useState('');
     const [descricao, setDescricao] = useState('');
     const [loading, setLoading] = useState(false);
-    const [showQuickAddZona, setShowQuickAddZona] = useState(false);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -173,19 +172,7 @@ export function QuickAddDiagnostico({
                         />
                     </div>
                     <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                            <Label htmlFor="diag-zona">Zona Anatómica</Label>
-                            <Button 
-                                type="button" 
-                                variant="link" 
-                                size="sm" 
-                                className="h-auto p-0 text-xs"
-                                onClick={() => setShowQuickAddZona(true)}
-                            >
-                                <Plus className="mr-1 h-3 w-3" />
-                                Nova Zona
-                            </Button>
-                        </div>
+                        <Label htmlFor="diag-zona">Zona Anatómica</Label>
                         <Select value={zonaAnatomica} onValueChange={setZonaAnatomica}>
                             <SelectTrigger id="diag-zona">
                                 <SelectValue placeholder="Selecione a zona" />
@@ -231,14 +218,6 @@ export function QuickAddDiagnostico({
                 </form>
             </DialogContent>
         </Dialog>
-
-        <QuickAddZonaAnatomica 
-            open={showQuickAddZona} 
-            onOpenChange={setShowQuickAddZona}
-            onCreated={(newZona) => {
-                setZonaAnatomica(newZona.nome);
-            }}
-        />
         </>
     );
 }
@@ -336,88 +315,6 @@ export function QuickAddProcedimento({
                         </Button>
                         <Button type="submit" disabled={loading || !nome || !especialidade}>
                             {loading ? 'A criar...' : 'Criar Procedimento'}
-                        </Button>
-                    </DialogFooter>
-                </form>
-            </DialogContent>
-        </Dialog>
-    );
-}
-
-export function QuickAddZonaAnatomica({ 
-    onCreated 
-}: { 
-    onCreated?: (zona: any) => void 
-}) {
-    const [open, setOpen] = useState(false);
-    const [nome, setNome] = useState('');
-    const [descricao, setDescricao] = useState('');
-    const [loading, setLoading] = useState(false);
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-
-        router.post('/zona-anatomicas', { 
-            nome, 
-            descricao 
-        }, {
-            preserveState: true,
-            preserveScroll: true,
-            headers: {
-                'X-Inertia-Modal-Redirect-Back': 'true',
-            },
-            onSuccess: () => {
-                toast.success('Zona anatómica criada com sucesso');
-                setOpen(false);
-                setNome('');
-                setDescricao('');
-                if (onCreated) onCreated({ nome });
-            },
-            onFinish: () => setLoading(false),
-        });
-    };
-
-    return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button variant="outline" size="sm" type="button">
-                    <Plus className="h-4 w-4 mr-1" /> Zona
-                </Button>
-            </DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Criar Nova Zona Anatómica</DialogTitle>
-                    <DialogDescription>
-                        Adicione uma nova zona anatómica à sua lista.
-                    </DialogDescription>
-                </DialogHeader>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="zona-nome">Nome</Label>
-                        <Input
-                            id="zona-nome"
-                            value={nome}
-                            onChange={(e) => setNome(e.target.value)}
-                            placeholder="Ex: Abdomen"
-                            required
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="zona-desc">Descrição (Opcional)</Label>
-                        <Textarea
-                            id="zona-desc"
-                            value={descricao}
-                            onChange={(e) => setDescricao(e.target.value)}
-                            placeholder="Detalhes adicionais..."
-                        />
-                    </div>
-                    <DialogFooter>
-                        <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                            Cancelar
-                        </Button>
-                        <Button type="submit" disabled={loading || !nome}>
-                            {loading ? 'A criar...' : 'Criar Zona'}
                         </Button>
                     </DialogFooter>
                 </form>

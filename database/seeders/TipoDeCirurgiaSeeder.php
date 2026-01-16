@@ -15,14 +15,7 @@ class TipoDeCirurgiaSeeder extends Seeder
         $tipos = [
             'Cirurgia Eletiva',
             'Cirurgia de Urgência',
-            'Cirurgia de Emergência',
             'Cirurgia Ambulatória',
-            'Cirurgia de Grande Porte',
-            'Cirurgia de Médio Porte',
-            'Cirurgia de Pequeno Porte',
-            'Cirurgia Minimamente Invasiva',
-            'Cirurgia Reconstrutiva',
-            'Cirurgia Paliativa',
         ];
 
         foreach ($tipos as $tipo) {

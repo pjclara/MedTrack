@@ -20,7 +20,6 @@ import {
     SelectTrigger, 
     SelectValue 
 } from '@/components/ui/select';
-import { QuickAddZonaAnatomica } from '@/components/quick-add/QuickAddDialogs';
 
 interface DiagnosticoCreateProps {
     zonaAnatomicas: ZonaAnatomica[];
@@ -93,10 +92,7 @@ export default function DiagnosticoCreate({ tipos, zonaAnatomicas }: Diagnostico
                             </div>
 
                             <div className="space-y-2">
-                                <div className="flex items-center justify-between">
-                                    <Label htmlFor="zona_anatomica">Zona Anatómica</Label>
-                                    <QuickAddZonaAnatomica onCreated={(newZona) => setData('zona_anatomica', newZona.nome)} />
-                                </div>
+                                <Label htmlFor="zona_anatomica">Zona Anatómica</Label>
                                 <Select 
                                     value={data.zona_anatomica} 
                                     onValueChange={(value) => setData('zona_anatomica', value)}

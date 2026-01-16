@@ -52,13 +52,13 @@ class DatabaseSeeder extends Seeder
             EspecialidadeSeeder::class,
             TipoDeCirurgiaSeeder::class,
             TipoDeOrigemSeeder::class,
-            DiagnosticoSeeder::class,
-            ProcedimentoSeeder::class,
-            UtenteSeeder::class,
-            RegistoCirurgicoSeeder::class,
-            CirurgiaSeeder::class,
-            AtividadeCientificaSeeder::class,
-            FormacaoSeeder::class,
+            #DiagnosticoSeeder::class,
+            #ProcedimentoSeeder::class,
+            #UtenteSeeder::class,
+            #RegistoCirurgicoSeeder::class,
+            #CirurgiaSeeder::class,
+            #AtividadeCientificaSeeder::class,
+            #FormacaoSeeder::class,
         ]);
 
         // Associar hospital e especialidade aos utilizadores

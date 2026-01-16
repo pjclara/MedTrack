@@ -31,36 +31,7 @@ class EspecialidadeSeeder extends Seeder
                     'descricao' => 'Procedimentos em artérias, veias e sistema linfático',
                     'user_id' => $user->id,
                 ],
-                [
-                    'nome' => 'Neurocirurgia',
-                    'descricao' => 'Cirurgias do sistema nervoso central e periférico',
-                    'user_id' => $user->id,
-                ],
-                [
-                    'nome' => 'Ortopedia',
-                    'descricao' => 'Cirurgias do sistema musculoesquelético',
-                    'user_id' => $user->id,
-                ],
-                [
-                    'nome' => 'Urologia',
-                    'descricao' => 'Procedimentos do sistema urinário e reprodutor masculino',
-                    'user_id' => $user->id,
-                ],
-                [
-                    'nome' => 'Ginecologia',
-                    'descricao' => 'Cirurgias do sistema reprodutor feminino',
-                    'user_id' => $user->id,
-                ],
-                [
-                    'nome' => 'Oftalmologia',
-                    'descricao' => 'Procedimentos oftalmológicos',
-                    'user_id' => $user->id,
-                ],
-                [
-                    'nome' => 'Otorrinolaringologia',
-                    'descricao' => 'Cirurgias de ouvido, nariz e garganta',
-                    'user_id' => $user->id,
-                ],
+
                 [
                     'nome' => 'Cirurgia Plástica',
                     'descricao' => 'Procedimentos reconstrutivos e estéticos',
