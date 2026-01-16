@@ -11,11 +11,12 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { BookOpen, Plus, Eye, Pencil, Trash2, Download, Calendar } from 'lucide-react';
+import { BookOpen, Plus, Eye, Pencil, Trash2, Download, Calendar, FileDown } from 'lucide-react';
 import { type BreadcrumbItem, type PaginatedData } from '@/types';
-import { type Formacao } from '@/types/formacao';
+import { type Formacao } from '@/types/formacoes/formacao';
 import { router } from '@inertiajs/react';
 import { toast } from 'react-toastify';
+import formacoesRoutes from '@/routes/formacoes';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
@@ -67,12 +68,20 @@ export default function FormacaoIndex({ formacoes }: FormacaoIndexProps) {
                             Gestão de congressos, workshops, cursos e certificados
                         </p>
                     </div>
-                    <Link href="/formacoes/create">
-                        <Button className="bg-emerald-600 hover:bg-emerald-700">
-                            <Plus className="mr-2 h-4 w-4" />
-                            Nova Formação
-                        </Button>
-                    </Link>
+                    <div className="flex gap-2">
+                        <a href={formacoesRoutes.export().url}>
+                            <Button variant="outline">
+                                <FileDown className="mr-2 h-4 w-4" />
+                                Exportar Excel
+                            </Button>
+                        </a>
+                        <Link href="/formacoes/create">
+                            <Button className="bg-emerald-600 hover:bg-emerald-700">
+                                <Plus className="mr-2 h-4 w-4" />
+                                Nova Formação
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
 
                 <Card>

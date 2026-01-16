@@ -11,9 +11,10 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { PlusCircle, Edit, Eye, Clock } from 'lucide-react';
+import { PlusCircle, Edit, Eye, Clock, FileDown } from 'lucide-react';
 import { type BreadcrumbItem } from '@/types';
 import { type RegistoCirurgico, type PaginatedData } from '@/types/models';
+import registosCirurgicos from '@/routes/registos-cirurgicos';
 
 interface RegistoCirurgicoIndexProps {
     registos: PaginatedData<RegistoCirurgico>;
@@ -41,12 +42,20 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                             Gerir os registos de cirurgias realizadas
                         </p>
                     </div>
-                    <Link href="/registos-cirurgicos/create">
-                        <Button className="bg-emerald-600 hover:bg-emerald-700">
-                            <PlusCircle className="mr-2 h-4 w-4" />
-                            Novo Registo
-                        </Button>
-                    </Link>
+                    <div className="flex gap-2">
+                        <a href={registosCirurgicos.export().url}>
+                            <Button variant="outline">
+                                <FileDown className="mr-2 h-4 w-4" />
+                                Exportar Excel
+                            </Button>
+                        </a>
+                        <Link href="/registos-cirurgicos/create">
+                            <Button className="bg-emerald-600 hover:bg-emerald-700">
+                                <PlusCircle className="mr-2 h-4 w-4" />
+                                Novo Registo
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
 
                 <Card>

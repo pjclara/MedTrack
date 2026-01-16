@@ -18,6 +18,8 @@ use App\Enums\TipoAbordagemEnum;
 use App\Enums\TipoDiagnosticoEnum;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Inertia\Inertia;
+use App\Exports\RegistosCirurgicosExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RegistoCirurgicoController extends Controller
 {
@@ -299,5 +301,15 @@ class RegistoCirurgicoController extends Controller
 
         return redirect()->route('registos-cirurgicos.index')
             ->with('success', 'Registo cirúrgico removido com sucesso.');
+    }
+
+    /**
+     * Export records to Excel.
+     */
+    public function export()
+    {
+        $this->authorize('viewAny', RegistoCirurgico::class);
+
+        return Excel::download(new RegistosCirurgicosExport(auth()->id()), 'registos-cirurgicos-' . now()->format('Y-m-d') . '.xlsx');
     }
 }

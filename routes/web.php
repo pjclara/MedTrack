@@ -70,16 +70,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('diagnosticos', DiagnosticoController::class);
     Route::resource('procedimentos', ProcedimentoController::class);
     Route::resource('users', UserController::class);
+
+    Route::get('registos-cirurgicos/export', [RegistoCirurgicoController::class, 'export'])
+        ->name('registos-cirurgicos.export');
+
     Route::resource('registos-cirurgicos', RegistoCirurgicoController::class)
         ->parameters(['registos-cirurgicos' => 'registo']);
     
     // Atividade Científica Routes
+    Route::get('atividades-cientificas/export', [AtividadeCientificaController::class, 'export'])
+        ->name('atividades-cientificas.export');
+
     Route::resource('atividades-cientificas', AtividadeCientificaController::class)
         ->parameters(['atividades-cientificas' => 'atividade']);
     Route::get('atividades-cientificas/{atividade}/download', [AtividadeCientificaController::class, 'download'])
         ->name('atividades-cientificas.download');
     
     // Formações Routes
+    Route::get('formacoes/export', [FormacaoController::class, 'export'])
+        ->name('formacoes.export');
+
     Route::resource('formacoes', FormacaoController::class)
         ->parameters(['formacoes' => 'formacao']);
     Route::get('formacoes/{formacao}/download', [FormacaoController::class, 'download'])

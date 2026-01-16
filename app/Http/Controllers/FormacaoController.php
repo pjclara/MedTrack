@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use App\Exports\FormacoesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FormacaoController extends Controller
 {
@@ -177,5 +179,15 @@ class FormacaoController extends Controller
             $formacao->certificado_path,
             $formacao->certificado_original_name
         );
+    }
+
+    /**
+     * Export records to Excel.
+     */
+    public function export()
+    {
+        $this->authorize('viewAny', Formacao::class);
+
+        return Excel::download(new FormacoesExport(auth()->id()), 'formacoes-' . now()->format('Y-m-d') . '.xlsx');
     }
 }

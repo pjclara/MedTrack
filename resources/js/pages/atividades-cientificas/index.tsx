@@ -11,11 +11,12 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { BookOpen, Plus, Eye, Pencil, Trash2, Download, ExternalLink } from 'lucide-react';
+import { BookOpen, Plus, Eye, Pencil, Trash2, Download, ExternalLink, FileDown } from 'lucide-react';
 import { type BreadcrumbItem, type PaginatedData } from '@/types';
-import { type AtividadeCientifica } from '@/types/atividade-cientifica';
+import { type AtividadeCientifica } from '@/types/atividades-cientificas/atividade-cientifica';
 import { router } from '@inertiajs/react';
 import { toast } from 'react-toastify';
+import atividadesCientificas from '@/routes/atividades-cientificas';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
@@ -63,12 +64,20 @@ export default function AtividadeIndex({ atividades }: AtividadeIndexProps) {
                             Gestão de publicações, apresentações e atividades educacionais
                         </p>
                     </div>
-                    <Link href="/atividades-cientificas/create">
-                        <Button className="bg-emerald-600 hover:bg-emerald-700">
-                            <Plus className="mr-2 h-4 w-4" />
-                            Nova Atividade
-                        </Button>
-                    </Link>
+                    <div className="flex gap-2">
+                        <a href={atividadesCientificas.export().url}>
+                            <Button variant="outline">
+                                <FileDown className="mr-2 h-4 w-4" />
+                                Exportar Excel
+                            </Button>
+                        </a>
+                        <Link href="/atividades-cientificas/create">
+                            <Button className="bg-emerald-600 hover:bg-emerald-700">
+                                <Plus className="mr-2 h-4 w-4" />
+                                Nova Atividade
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
 
                 <Card>

@@ -8,6 +8,8 @@ use App\Models\AtividadeCientifica;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use App\Exports\AtividadesCientificasExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AtividadeCientificaController extends Controller
 {
@@ -163,5 +165,15 @@ class AtividadeCientificaController extends Controller
             $atividade->ficheiro_path,
             $atividade->ficheiro_original_name
         );
+    }
+
+    /**
+     * Export records to Excel.
+     */
+    public function export()
+    {
+        $this->authorize('viewAny', AtividadeCientifica::class);
+
+        return Excel::download(new AtividadesCientificasExport(auth()->id()), 'atividades-cientificas-' . now()->format('Y-m-d') . '.xlsx');
     }
 }
