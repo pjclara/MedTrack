@@ -1,0 +1,1 @@
+const a=t=>{const n=typeof t=="string"?new Date(t):t,r=String(n.getDate()).padStart(2,"0"),o=String(n.getMonth()+1).padStart(2,"0"),e=n.getFullYear();return`${r}/${o}/${e}`},s=t=>{if(!t)return"";const[n,r,o]=t.split("-");return`${o}/${r}/${n}`};export{s as c,a as f};
