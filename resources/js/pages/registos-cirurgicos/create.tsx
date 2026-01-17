@@ -19,10 +19,11 @@ import { ArrowLeft, ArrowRight, Save, Plus, Trash2, Search } from 'lucide-react'
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { type TipoDeCirurgia, type TipoDeOrigem, type Diagnostico, type Procedimento, type Especialidade, type Hospital, type ZonaAnatomica } from '@/types/models';
 import { useState, FormEventHandler, useEffect } from 'react';
-import { QuickAddDiagnostico, QuickAddProcedimento, QuickAddEspecialidade } from '@/components/quick-add/QuickAddDialogs';
+import { QuickAddDiagnostico, QuickAddProcedimento } from '@/components/quick-add/QuickAddDialogs';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { CustomMultiSelect } from '@/components/ui/react-select';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface RegistoCirurgicoCreateProps {
     tiposDeCirurgia: TipoDeCirurgia[];
@@ -98,6 +99,7 @@ export default function RegistoCirurgicoCreate({
     zonaAnatomicas = [],
     enums = { sexo: [], funcoes: [], clavien: [], tipo_diagnostico: [] },
 }: RegistoCirurgicoCreateProps) {
+    const isMobile = useIsMobile();
     const { auth } = usePage<SharedData>().props;
     const [step, setStep] = useState(1);
     const [searchProcesso, setSearchProcesso] = useState('');
@@ -249,36 +251,55 @@ export default function RegistoCirurgicoCreate({
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Criar Registo Cirúrgico" />
 
-            <div className="flex flex-col gap-4 p-6">
+            <div className={`flex flex-col gap-4 ${isMobile ? 'p-4' : 'p-6'}`}>
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Criar Registo Cirúrgico</h1>
-                        <p className="text-muted-foreground font-medium">
-                            {stepNames[step - 1]}
-                        </p>
+                        <h1 className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-bold tracking-tight`}>
+                            {isMobile ? 'Novo Registo' : 'Criar Registo Cirúrgico'}
+                        </h1>
+                        {!isMobile && (
+                            <p className="text-muted-foreground font-medium">
+                                {stepNames[step - 1]}
+                            </p>
+                        )}
                     </div>
                 </div>
 
                 {/* Progress */}
                 <div className="flex flex-col gap-2">
-                    <div className="flex gap-2">
-                        {stepNames.map((name, index) => {
-                            const s = index + 1;
-                            return (
-                                <div key={s} className="flex-1 flex flex-col gap-2 items-center">
-                                    <div
-                                        className={`h-2 w-full rounded transition-colors ${s <= step ? 'bg-primary' : 'bg-muted'}`}
-                                        title={name}
-                                    />
-                                    <span 
-                                        className={`text-[10px] uppercase tracking-wider font-semibold hidden md:block text-center ${s === step ? 'text-primary' : 'text-muted-foreground/50'}`}
-                                    >
-                                        {name}
-                                    </span>
-                                </div>
-                            );
-                        })}
-                    </div>
+                    {isMobile ? (
+                        <div className="flex flex-col gap-1 px-1">
+                            <div className="flex justify-between items-end mb-1">
+                                <span className="text-xs font-bold text-primary uppercase tracking-wider">Passo {step} de 6</span>
+                                <span className="text-xs font-medium text-muted-foreground">{stepNames[step-1]}</span>
+                            </div>
+                            <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                                <div 
+                                    className="h-full bg-primary transition-all duration-500 ease-out" 
+                                    style={{ width: `${(step / 6) * 100}%` }}
+                                />
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="flex gap-2">
+                            {stepNames.map((name, index) => {
+                                const s = index + 1;
+                                return (
+                                    <div key={s} className="flex-1 flex flex-col gap-2 items-center">
+                                        <div
+                                            className={`h-2 w-full rounded transition-colors duration-300 ${s <= step ? 'bg-primary' : 'bg-muted'}`}
+                                            title={name}
+                                        />
+                                        <span 
+                                            className={`text-[10px] uppercase tracking-wider font-semibold hidden md:block text-center ${s === step ? 'text-primary' : 'text-muted-foreground/50'}`}
+                                        >
+                                            {name}
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
 
                 <form onSubmit={handleSubmit}>
@@ -430,12 +451,9 @@ export default function RegistoCirurgicoCreate({
                                     </div>
 
                                     <div className="space-y-2">
-                                        <div className="flex items-center justify-between">
-                                            <Label htmlFor="especialidade">
-                                                Especialidade <span className="text-destructive">*</span>
-                                            </Label>
-                                            <QuickAddEspecialidade onCreated={(newEspecialidade) => setRegistoData({ ...registoData, especialidade: newEspecialidade.nome })} />
-                                        </div>
+                                        <Label htmlFor="especialidade">
+                                            Especialidade <span className="text-destructive">*</span>
+                                        </Label>
                                         <Select
                                             value={registoData.especialidade}
                                             onValueChange={(value) => setRegistoData({ ...registoData, especialidade: value })}
@@ -570,6 +588,7 @@ export default function RegistoCirurgicoCreate({
                                         onCreated={(newDiag) => {
                                             // O Inertia refresca as props automaticamente
                                         }}
+                                        zonaAnatomicas={zonaAnatomicas}
                                     />
                                 </div>
                             </CardHeader>
@@ -801,27 +820,29 @@ export default function RegistoCirurgicoCreate({
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-6">
-                                {/* Utente */}
-                                <div>
-                                    <h3 className="font-semibold mb-2">Utente</h3>
-                                    <div className="rounded-md border p-4 space-y-1 text-sm">
-                                        <p><strong>Nome:</strong> {utenteData.nome}</p>
-                                        <p><strong>Processo:</strong> {utenteData.processo}</p>
-                                        <p><strong>Data Nascimento:</strong> {convertISOToPT(utenteData.data_nascimento)}</p>
-                                        <p><strong>Sexo:</strong> {utenteData.sexo}</p>
+                                <div className="grid gap-6 md:grid-cols-2">
+                                    {/* Utente */}
+                                    <div>
+                                        <h3 className="font-semibold mb-2">Utente</h3>
+                                        <div className="rounded-md border p-4 space-y-1 text-sm bg-muted/30">
+                                            <p><span className="text-muted-foreground mr-1">Nome:</span> {utenteData.nome}</p>
+                                            <p><span className="text-muted-foreground mr-1">Processo:</span> {utenteData.processo}</p>
+                                            <p><span className="text-muted-foreground mr-1">Data Nascimento:</span> {convertISOToPT(utenteData.data_nascimento)}</p>
+                                            <p><span className="text-muted-foreground mr-1">Sexo:</span> {utenteData.sexo}</p>
+                                        </div>
                                     </div>
-                                </div>
 
-                                {/* Registo */}
-                                <div>
-                                    <h3 className="font-semibold mb-2">Registo Cirúrgico</h3>
-                                    <div className="rounded-md border p-4 space-y-1 text-sm">
-                                        <p><strong>Data:</strong> {convertISOToPT(registoData.data_cirurgia)}</p>
-                                        <p><strong>Tipo:</strong> {tiposDeCirurgia.find(t => t.id.toString() === registoData.tipo_de_cirurgia_id)?.nome}</p>
-                                        <p><strong>Origem:</strong> {tiposDeOrigem.find(t => t.id.toString() === registoData.tipo_de_origem_id)?.nome}</p>
-                                        <p><strong>Abordagem:</strong> {registoData.tipo_de_abordagem}</p>
-                                        <p><strong>Ambulatório:</strong> {registoData.ambulatorio ? 'Sim' : 'Não'}</p>
-                                        {registoData.observacoes && <p><strong>Obs:</strong> {registoData.observacoes}</p>}
+                                    {/* Registo */}
+                                    <div>
+                                        <h3 className="font-semibold mb-2">Registo Cirúrgico</h3>
+                                        <div className="rounded-md border p-4 space-y-1 text-sm bg-muted/30">
+                                            <p><span className="text-muted-foreground mr-1">Data:</span> {convertISOToPT(registoData.data_cirurgia)}</p>
+                                            <p><span className="text-muted-foreground mr-1">Tipo:</span> {tiposDeCirurgia.find(t => t.id.toString() === registoData.tipo_de_cirurgia_id)?.nome}</p>
+                                            <p><span className="text-muted-foreground mr-1">Origem:</span> {tiposDeOrigem.find(t => t.id.toString() === registoData.tipo_de_origem_id)?.nome}</p>
+                                            <p><span className="text-muted-foreground mr-1">Abordagem:</span> {registoData.tipo_de_abordagem}</p>
+                                            <p><span className="text-muted-foreground mr-1">Ambulatório:</span> {registoData.ambulatorio ? 'Sim' : 'Não'}</p>
+                                            {registoData.observacoes && <p><span className="text-muted-foreground mr-1">Obs:</span> {registoData.observacoes}</p>}
+                                        </div>
                                     </div>
                                 </div>
 
@@ -871,14 +892,15 @@ export default function RegistoCirurgicoCreate({
                     )}
 
                     {/* Navigation */}
-                    <div className="flex justify-between pt-3">
+                    <div className={`flex items-center justify-between pt-6 ${isMobile ? 'fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-md border-t p-4 z-50' : ''}`}>
                         <Button
                             type="button"
                             variant="outline"
                             onClick={() => step > 1 ? setStep(step - 1) : router.visit('/registos-cirurgicos')}
+                            className={isMobile ? 'flex-1 mr-2' : ''}
                         >
                             <ArrowLeft className="mr-2 h-4 w-4" />
-                            {step === 1 ? 'Cancelar' : 'Anterior'}
+                            {step === 1 ? 'Cancelar' : (isMobile ? 'Anterior' : 'Passo Anterior')}
                         </Button>
 
                         {step < 6 ? (
@@ -886,17 +908,23 @@ export default function RegistoCirurgicoCreate({
                                 type="button"
                                 onClick={() => setStep(step + 1)}
                                 disabled={!canAdvance()}
+                                className={isMobile ? 'flex-1 ml-2' : ''}
                             >
-                                Próximo
+                                {isMobile ? 'Próximo' : 'Próximo Passo'}
                                 <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
                         ) : (
-                            <Button type="submit" disabled={processing} className="bg-emerald-600 hover:bg-emerald-700">
+                            <Button 
+                                type="submit" 
+                                disabled={processing} 
+                                className={`bg-emerald-600 hover:bg-emerald-700 ${isMobile ? 'flex-1 ml-2' : ''}`}
+                            >
                                 <Save className="mr-2 h-4 w-4" />
                                 {processing ? 'A guardar...' : 'Confirmar e Guardar'}
                             </Button>
                         )}
                     </div>
+                    {isMobile && <div className="h-20" />} {/* Spacer for sticky footer */}
                 </form>
             </div>
         </AppLayout>

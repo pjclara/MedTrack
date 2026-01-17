@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Plus } from 'lucide-react';
-import { router } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import {
     Select,
     SelectContent,
@@ -30,15 +30,15 @@ interface Especialidade {
 
 export function QuickAddEspecialidade({ onCreated }: { onCreated?: (especialidade: any) => void }) {
     const [open, setOpen] = useState(false);
-    const [nome, setNome] = useState('');
-    const [descricao, setDescricao] = useState('');
-    const [loading, setLoading] = useState(false);
+    const { data, setData, post, processing, reset, errors } = useForm({
+        nome: '',
+        descricao: '',
+    });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
 
-        router.post('/especialidades', { nome, descricao }, {
+        post('/especialidades', {
             preserveState: true,
             preserveScroll: true,
             headers: {
@@ -47,11 +47,9 @@ export function QuickAddEspecialidade({ onCreated }: { onCreated?: (especialidad
             onSuccess: () => {
                 toast.success('Especialidade criada com sucesso');
                 setOpen(false);
-                setNome('');
-                setDescricao('');
-                if (onCreated) onCreated({ nome });
+                reset();
+                if (onCreated) onCreated({ nome: data.nome });
             },
-            onFinish: () => setLoading(false),
         });
     };
 
@@ -74,27 +72,29 @@ export function QuickAddEspecialidade({ onCreated }: { onCreated?: (especialidad
                         <Label htmlFor="especialidade-nome">Nome</Label>
                         <Input
                             id="especialidade-nome"
-                            value={nome}
-                            onChange={(e) => setNome(e.target.value)}
+                            value={data.nome}
+                            onChange={(e) => setData('nome', e.target.value)}
                             placeholder="Ex: Cirurgia Geral"
                             required
                         />
+                        {errors.nome && <p className="text-xs text-destructive">{errors.nome}</p>}
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="especialidade-desc">Descrição (Opcional)</Label>
                         <Textarea
                             id="especialidade-desc"
-                            value={descricao}
-                            onChange={(e) => setDescricao(e.target.value)}
+                            value={data.descricao}
+                            onChange={(e) => setData('descricao', e.target.value)}
                             placeholder="Breve descrição da especialidade..."
                         />
+                        {errors.descricao && <p className="text-xs text-destructive">{errors.descricao}</p>}
                     </div>
                     <DialogFooter>
                         <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                             Cancelar
                         </Button>
-                        <Button type="submit" disabled={loading || !nome}>
-                            {loading ? 'A criar...' : 'Criar Especialidade'}
+                        <Button type="submit" disabled={processing || !data.nome}>
+                            {processing ? 'A criar...' : 'Criar Especialidade'}
                         </Button>
                     </DialogFooter>
                 </form>
@@ -111,22 +111,17 @@ export function QuickAddDiagnostico({
     zonaAnatomicas?: any[];
 }) {
     const [open, setOpen] = useState(false);
-    const [nome, setNome] = useState('');
-    const [zonaAnatomica, setZonaAnatomica] = useState('');
-    const [tipo, setTipo] = useState('');
-    const [descricao, setDescricao] = useState('');
-    const [loading, setLoading] = useState(false);
+    const { data, setData, post, processing, reset, errors } = useForm({
+        nome: '',
+        zona_anatomica: '',
+        tipo: '',
+        descricao: '',
+    });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
 
-        router.post('/diagnosticos', { 
-            nome, 
-            zona_anatomica: zonaAnatomica, 
-            tipo, 
-            descricao 
-        }, {
+        post('/diagnosticos', {
             preserveState: true,
             preserveScroll: true,
             headers: {
@@ -135,13 +130,9 @@ export function QuickAddDiagnostico({
             onSuccess: () => {
                 toast.success('Diagnóstico criado com sucesso');
                 setOpen(false);
-                setNome('');
-                setZonaAnatomica('');
-                setTipo('');
-                setDescricao('');
-                if (onCreated) onCreated({ nome });
+                reset();
+                if (onCreated) onCreated({ nome: data.nome });
             },
-            onFinish: () => setLoading(false),
         });
     };
 
@@ -165,30 +156,38 @@ export function QuickAddDiagnostico({
                         <Label htmlFor="diag-nome">Nome do Diagnóstico</Label>
                         <Input
                             id="diag-nome"
-                            value={nome}
-                            onChange={(e) => setNome(e.target.value)}
+                            value={data.nome}
+                            onChange={(e) => setData('nome', e.target.value)}
                             placeholder="Ex: Apendicite Aguda"
                             required
                         />
+                        {errors.nome && <p className="text-xs text-destructive">{errors.nome}</p>}
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="diag-zona">Zona Anatómica</Label>
-                        <Select value={zonaAnatomica} onValueChange={setZonaAnatomica}>
+                        <Select 
+                            value={data.zona_anatomica} 
+                            onValueChange={(val) => setData('zona_anatomica', val)}
+                        >
                             <SelectTrigger id="diag-zona">
                                 <SelectValue placeholder="Selecione a zona" />
                             </SelectTrigger>
                             <SelectContent>
-                                {zonaAnatomicas.map((zona) => (
-                                    <SelectItem key={zona.id} value={zona.nome}>
-                                        {zona.nome}
+                                {zonaAnatomicas.map((zona: any) => (
+                                    <SelectItem key={zona.id || zona} value={zona.nome || zona}>
+                                        {zona.nome || zona}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
+                        {errors.zona_anatomica && <p className="text-xs text-destructive">{errors.zona_anatomica}</p>}
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="diag-tipo">Tipo de Diagnóstico</Label>
-                        <Select value={tipo} onValueChange={setTipo}>
+                        <Label htmlFor="diag-tipo">Tipo de Diagnóstico (Opcional)</Label>
+                        <Select 
+                            value={data.tipo} 
+                            onValueChange={(val) => setData('tipo', val)}
+                        >
                             <SelectTrigger>
                                 <SelectValue placeholder="Selecione o tipo" />
                             </SelectTrigger>
@@ -197,22 +196,24 @@ export function QuickAddDiagnostico({
                                 <SelectItem value="Maligno">Maligno</SelectItem>
                             </SelectContent>
                         </Select>
+                        {errors.tipo && <p className="text-xs text-destructive">{errors.tipo}</p>}
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="diag-desc">Descrição (Opcional)</Label>
                         <Textarea
                             id="diag-desc"
-                            value={descricao}
-                            onChange={(e) => setDescricao(e.target.value)}
+                            value={data.descricao}
+                            onChange={(e) => setData('descricao', e.target.value)}
                             placeholder="Detalhes adicionais..."
                         />
+                        {errors.descricao && <p className="text-xs text-destructive">{errors.descricao}</p>}
                     </div>
                     <DialogFooter>
                         <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                             Cancelar
                         </Button>
-                        <Button type="submit" disabled={loading || !nome || !zonaAnatomica}>
-                            {loading ? 'A criar...' : 'Criar Diagnóstico'}
+                        <Button type="submit" disabled={processing || !data.nome || !data.zona_anatomica}>
+                            {processing ? 'A criar...' : 'Criar Diagnóstico'}
                         </Button>
                     </DialogFooter>
                 </form>
@@ -223,23 +224,23 @@ export function QuickAddDiagnostico({
 }
 
 export function QuickAddProcedimento({ 
-    especialidades, 
+    especialidades = [], 
     onCreated 
 }: { 
-    especialidades: Especialidade[], 
+    especialidades?: Especialidade[], 
     onCreated?: (proc: any) => void 
 }) {
     const [open, setOpen] = useState(false);
-    const [nome, setNome] = useState('');
-    const [especialidade, setEspecialidade] = useState('');
-    const [descricao, setDescricao] = useState('');
-    const [loading, setLoading] = useState(false);
+    const { data, setData, post, processing, reset, errors } = useForm({
+        nome: '',
+        especialidade: '',
+        descricao: '',
+    });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
 
-        router.post('/procedimentos', { nome, especialidade, descricao }, {
+        post('/procedimentos', {
             preserveState: true,
             preserveScroll: true,
             headers: {
@@ -248,12 +249,9 @@ export function QuickAddProcedimento({
             onSuccess: () => {
                 toast.success('Procedimento criado com sucesso');
                 setOpen(false);
-                setNome('');
-                setEspecialidade('');
-                setDescricao('');
-                if (onCreated) onCreated({ nome, especialidade });
+                reset();
+                if (onCreated) onCreated({ nome: data.nome, especialidade: data.especialidade });
             },
-            onFinish: () => setLoading(false),
         });
     };
 
@@ -276,18 +274,22 @@ export function QuickAddProcedimento({
                         <Label htmlFor="proc-nome">Nome do Procedimento</Label>
                         <Input
                             id="proc-nome"
-                            value={nome}
-                            onChange={(e) => setNome(e.target.value)}
+                            value={data.nome}
+                            onChange={(e) => setData('nome', e.target.value)}
                             placeholder="Ex: Apendicectomia Laparoscópica"
                             required
                         />
+                        {errors.nome && <p className="text-xs text-destructive">{errors.nome}</p>}
                     </div>
                     <div className="space-y-2">
                         <div className="flex items-center justify-between">
                             <Label htmlFor="proc-especialidade">Especialidade</Label>
-                            <QuickAddEspecialidade onCreated={(newSpec) => setEspecialidade(newSpec.nome)} />
+                            <QuickAddEspecialidade onCreated={(newSpec) => setData('especialidade', newSpec.nome)} />
                         </div>
-                        <Select value={especialidade} onValueChange={setEspecialidade}>
+                        <Select 
+                            value={data.especialidade} 
+                            onValueChange={(val) => setData('especialidade', val)}
+                        >
                             <SelectTrigger id="proc-especialidade">
                                 <SelectValue placeholder="Selecione a especialidade" />
                             </SelectTrigger>
@@ -299,22 +301,24 @@ export function QuickAddProcedimento({
                                 ))}
                             </SelectContent>
                         </Select>
+                        {errors.especialidade && <p className="text-xs text-destructive">{errors.especialidade}</p>}
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="proc-desc">Descrição (Opcional)</Label>
                         <Textarea
                             id="proc-desc"
-                            value={descricao}
-                            onChange={(e) => setDescricao(e.target.value)}
+                            value={data.descricao}
+                            onChange={(e) => setData('descricao', e.target.value)}
                             placeholder="Detalhes adicionais..."
                         />
+                        {errors.descricao && <p className="text-xs text-destructive">{errors.descricao}</p>}
                     </div>
                     <DialogFooter>
                         <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                             Cancelar
                         </Button>
-                        <Button type="submit" disabled={loading || !nome || !especialidade}>
-                            {loading ? 'A criar...' : 'Criar Procedimento'}
+                        <Button type="submit" disabled={processing || !data.nome || !data.especialidade}>
+                            {processing ? 'A criar...' : 'Criar Procedimento'}
                         </Button>
                     </DialogFooter>
                 </form>

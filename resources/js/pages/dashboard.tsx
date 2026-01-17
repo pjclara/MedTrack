@@ -5,6 +5,7 @@ import { Head, Link } from '@inertiajs/react';
 import { Activity, Users, FileText, TrendingUp, Calendar, AlertTriangle, GraduationCap, Award, Clock, ArrowUpRight, BookOpen } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -37,6 +38,7 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
+    const isMobile = useIsMobile();
     // Calcular taxa de complicações
     const complicationRate = stats.totalRegistos > 0 
         ? ((stats.complicacoes / stats.totalRegistos) * 100).toFixed(1)
@@ -50,14 +52,14 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Painel de Controlo" />
-            <div className="flex h-full flex-1 flex-col gap-6 p-6">
+            <div className={`flex h-full flex-1 flex-col gap-6 ${isMobile ? 'p-4' : 'p-6'}`}>
                 {/* Welcome Section */}
-                <div className="rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 p-8 text-white shadow-lg">
+                <div className={`rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 ${isMobile ? 'p-6 text-center' : 'p-8'} text-white shadow-lg`}>
                     <div className="flex items-center justify-between">
                         <div>
-                            <h1 className="mb-2 text-3xl font-bold">Bem-vindo ao MedTrack</h1>
-                            <p className="text-emerald-100 text-lg">
-                                Sistema de Gestão de Registos Cirúrgicos e Formação Profissional
+                            <h1 className={`mb-2 ${isMobile ? 'text-2xl' : 'text-3xl'} font-bold`}>Bem-vindo ao Medfolio</h1>
+                            <p className={`${isMobile ? 'text-emerald-100 text-sm' : 'text-emerald-100 text-lg'}`}>
+                                Sistema de Gestão de Registos Cirúrgicos e Formação
                             </p>
                         </div>
                         <div className="hidden md:block text-right">
@@ -75,7 +77,7 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
                 {/* Stats Grid */}
                 <div>
                     <h2 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Atividade Cirúrgica</h2>
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                         <Link href="/registos-cirurgicos" className="group">
                             <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md hover:border-emerald-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-emerald-600">
                                 <div className="flex items-start justify-between mb-3">
@@ -192,7 +194,7 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
                 </div>
 
                 {/* Recent Activity */}
-                <div className="grid gap-6 lg:grid-cols-3">
+                <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
                     <div className="lg:col-span-2">
                         <Card>
                             <CardHeader>

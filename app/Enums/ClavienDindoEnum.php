@@ -4,6 +4,7 @@ namespace App\Enums;
 
 enum ClavienDindoEnum: string
 {
+    case Sem_Complicacoes = 'Sem Complicações';
     case GRAU_I = 'I';
     case GRAU_II = 'II';
     case GRAU_IIIA = 'IIIa';
