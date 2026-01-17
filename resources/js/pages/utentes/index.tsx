@@ -1,4 +1,4 @@
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, usePage, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,15 +11,19 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { PlusCircle, Search, Edit, Eye, User, Calendar, Hash, Stethoscope } from 'lucide-react';
+import { PlusCircle, Search, Edit, Eye, User, Calendar, Hash, Stethoscope, Trash2 } from 'lucide-react';
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { type Utente, type PaginatedData } from '@/types/models';
 import { Input } from '@/components/ui/input';
 import { formatDateToPT } from '@/utils/date-formatters';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useState, useEffect } from 'react';
 
 interface UtenteIndexProps {
     utentes: PaginatedData<Utente>;
+    filters: {
+        search?: string;
+    };
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -27,10 +31,31 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Utentes', href: '/utentes' },
 ];
 
-export default function UtenteIndex({ utentes }: UtenteIndexProps) {
+export default function UtenteIndex({ utentes, filters }: UtenteIndexProps) {
     const isMobile = useIsMobile();
     const { auth } = usePage<SharedData>().props;
     const isAdmin = auth.is_admin;
+    const [searchTerm, setSearchTerm] = useState(filters.search || '');
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (searchTerm !== (filters.search || '')) {
+                router.get(
+                    '/utentes',
+                    { search: searchTerm },
+                    { preserveState: true, preserveScroll: true, replace: true }
+                );
+            }
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [searchTerm]);
+
+    const handleDelete = (id: number, nome: string) => {
+        if (confirm(`Tem a certeza que deseja remover o utente "${nome}"? Esta ação não pode ser revertida.`)) {
+            router.delete(`/utentes/${id}`);
+        }
+    };
 
     const getSexoBadgeVariant = (sexo: string) => {
         switch (sexo) {
@@ -69,6 +94,8 @@ export default function UtenteIndex({ utentes }: UtenteIndexProps) {
                         <Input
                             placeholder="Pesquisar por nome ou processo..."
                             className="pl-8"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
                 </div>
@@ -111,6 +138,14 @@ export default function UtenteIndex({ utentes }: UtenteIndexProps) {
                                                         <Edit className="h-4 w-4" />
                                                     </Button>
                                                 </Link>
+                                                <Button 
+                                                    variant="ghost" 
+                                                    size="icon" 
+                                                    className="h-8 w-8 text-red-600"
+                                                    onClick={() => handleDelete(utente.id, utente.nome)}
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
                                             </div>
                                         </div>
 
@@ -197,10 +232,18 @@ export default function UtenteIndex({ utentes }: UtenteIndexProps) {
                                                                 </Button>
                                                             </Link>
                                                             <Link href={`/utentes/${utente.id}/edit`}>
-                                                                <Button variant="ghost" size="sm">
+                                                                <Button variant="ghost" size="sm" className="text-blue-600">
                                                                     <Edit className="h-4 w-4" />
                                                                 </Button>
                                                             </Link>
+                                                            <Button 
+                                                                variant="ghost" 
+                                                                size="sm" 
+                                                                className="text-red-600"
+                                                                onClick={() => handleDelete(utente.id, utente.nome)}
+                                                            >
+                                                                <Trash2 className="h-4 w-4" />
+                                                            </Button>
                                                         </div>
                                                     </TableCell>
                                                 </TableRow>
@@ -242,5 +285,3 @@ export default function UtenteIndex({ utentes }: UtenteIndexProps) {
         </AppLayout>
     );
 }
-
-```

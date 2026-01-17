@@ -16,6 +16,7 @@ import { ArrowLeft, Save } from 'lucide-react';
 import { type BreadcrumbItem } from '@/types';
 import { type Utente } from '@/types/models';
 import { FormEventHandler } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface UtenteEditProps {
     utente: Utente;
@@ -28,6 +29,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function UtenteEdit({ utente }: UtenteEditProps) {
+    const isMobile = useIsMobile();
     const { data, setData, put, processing, errors } = useForm({
         nome: utente.nome,
         processo: utente.processo.toString(),
@@ -52,16 +54,16 @@ export default function UtenteEdit({ utente }: UtenteEditProps) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Editar Utente - ${utente.nome}`} />
 
-            <div className="flex flex-col gap-4 p-6">
-                <div className="flex items-center justify-between">
+            <div className={`flex flex-col gap-4 ${isMobile ? 'p-4' : 'p-6'}`}>
+                <div className={`flex ${isMobile ? 'flex-col gap-4' : 'items-center justify-between'}`}>
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Editar Utente</h1>
+                        <h1 className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-bold tracking-tight`}>Editar Utente</h1>
                         <p className="text-muted-foreground">
                             Atualizar dados de {utente.nome}
                         </p>
                     </div>
-                    <Link href="/utentes">
-                        <Button variant="outline">
+                    <Link href="/utentes" className={isMobile ? 'w-full' : ''}>
+                        <Button variant="outline" className={isMobile ? 'w-full' : ''}>
                             <ArrowLeft className="mr-2 h-4 w-4" />
                             Voltar
                         </Button>

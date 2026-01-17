@@ -14,22 +14,33 @@ class UtenteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
         $isAdmin = $user->hasRole('admin');
+        $search = $request->input('search');
 
         $utentes = Utente::with('user:id,name')
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('nome', 'like', "%{$search}%")
+                      ->orWhere('processo', 'like', "%{$search}%");
+                });
+            })
             ->withCount(['registosCirurgicos' => function ($query) use ($user, $isAdmin) {
                 if (!$isAdmin) {
                     $query->where('user_id', $user->id);
                 }
             }])
             ->orderBy('nome')
-            ->paginate(15);
+            ->paginate(15)
+            ->withQueryString();
 
         return Inertia::render('utentes/index', [
-            'utentes' => $utentes
+            'utentes' => $utentes,
+            'filters' => [
+                'search' => $search
+            ]
         ]);
     }
 
@@ -132,9 +143,8 @@ class UtenteController extends Controller
      */
     public function findByProcesso(Request $request, string $processo)
     {
-        $utente = Utente::where('processo', $processo)
-            ->where('user_id', auth()->id())
-            ->first();
+        // O UserScope tratará da filtragem por user_id se não for admin
+        $utente = Utente::where('processo', $processo)->first();
 
         if (!$utente) {
             return response()->json(['utente' => null]);

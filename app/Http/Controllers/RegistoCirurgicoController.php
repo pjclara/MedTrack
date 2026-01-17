@@ -49,11 +49,28 @@ class RegistoCirurgicoController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(\Illuminate\Http\Request $request)
     {
         $this->authorize('create', RegistoCirurgico::class);
 
+        $duplicateData = null;
+        if ($request->has('duplicate_from')) {
+            $original = RegistoCirurgico::findOrFail($request->duplicate_from);
+            $this->authorize('view', $original);
+            $duplicateData = $this->transformForWizard($original);
+            
+            // Clear utente and date for duplication
+            $duplicateData['utente'] = [
+                'nome' => '',
+                'processo' => '',
+                'data_nascimento' => '',
+                'sexo' => '',
+            ];
+            $duplicateData['registo']['data_cirurgia'] = '';
+        }
+
         return Inertia::render('registos-cirurgicos/create', [
+            'duplicateData' => $duplicateData,
             'tiposDeCirurgia' => TipoDeCirurgia::orderBy('nome')->get(['id', 'nome']),
             'tiposDeOrigem' => TipoDeOrigem::orderBy('nome')->get(['id', 'nome']),
             'diagnosticos' => Diagnostico::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
@@ -163,6 +180,33 @@ class RegistoCirurgicoController extends Controller
     {
         $this->authorize('update', $registo);
 
+        return Inertia::render('registos-cirurgicos/edit', [
+            'registo' => array_merge(
+                ['id' => $registo->id],
+                $this->transformForWizard($registo)
+            ),
+            'tiposDeCirurgia' => TipoDeCirurgia::orderBy('nome')->get(['id', 'nome']),
+            'tiposDeOrigem' => TipoDeOrigem::orderBy('nome')->get(['id', 'nome']),
+            'diagnosticos' => Diagnostico::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
+            'procedimentos' => Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
+            'especialidades' => Especialidade::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
+            'hospitals' => Hospital::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
+            'zonaAnatomicas' => ZonaAnatomica::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
+            'enums' => [
+                'sexo' => config('medfolio.sexo_options'),
+                'funcoes' => config('medfolio.funcao_options'),
+                'clavien' => config('medfolio.clavien_dindo_options'),
+                'tipo_de_abordagem' => TipoAbordagemEnum::values(),
+                'tipo_diagnostico' => TipoDiagnosticoEnum::values(),
+            ],
+        ]);
+    }
+
+    /**
+     * Helper to transform a record into wizard format for frontend.
+     */
+    private function transformForWizard(RegistoCirurgico $registo)
+    {
         $registo->load([
             'utente',
             'tipoDeCirurgia',
@@ -171,7 +215,6 @@ class RegistoCirurgicoController extends Controller
             'cirurgias.procedimento'
         ]);
 
-        // Transform cirurgias into wizard format
         $diagnosticosMap = [];
         foreach ($registo->cirurgias as $cirurgia) {
             $diagId = $cirurgia->diagnostico_id;
@@ -191,43 +234,26 @@ class RegistoCirurgicoController extends Controller
             ];
         }
 
-        return Inertia::render('registos-cirurgicos/edit', [
+        return [
+            'utente' => [
+                'id' => (string) $registo->utente->id,
+                'nome' => $registo->utente->nome,
+                'processo' => $registo->utente->processo,
+                'data_nascimento' => $registo->utente->data_nascimento,
+                'sexo' => $registo->utente->sexo,
+            ],
             'registo' => [
-                'id' => $registo->id,
-                'utente' => [
-                    'id' => (string) $registo->utente->id,
-                    'nome' => $registo->utente->nome,
-                    'processo' => $registo->utente->processo,
-                    'data_nascimento' => $registo->utente->data_nascimento,
-                    'sexo' => $registo->utente->sexo,
-                ],
-                'registo' => [
-                    'hospital' => $registo->hospital,
-                    'especialidade' => $registo->especialidade,
-                    'data_cirurgia' => $registo->data_cirurgia?->format('Y-m-d'),
-                    'tipo_de_cirurgia_id' => (string) $registo->tipo_de_cirurgia_id,
-                    'tipo_de_origem_id' => (string) ($registo->tipo_de_origem_id ?? ''),
-                    'ambulatorio' => $registo->ambulatorio,
-                    'tipo_de_abordagem' => $registo->tipo_de_abordagem?->value ?? '',
-                    'observacoes' => $registo->observacoes ?? '',
-                ],
-                'diagnosticos' => array_values($diagnosticosMap),
+                'hospital' => $registo->hospital,
+                'especialidade' => $registo->especialidade,
+                'data_cirurgia' => $registo->data_cirurgia?->format('Y-m-d'),
+                'tipo_de_cirurgia_id' => (string) $registo->tipo_de_cirurgia_id,
+                'tipo_de_origem_id' => (string) ($registo->tipo_de_origem_id ?? ''),
+                'ambulatorio' => $registo->ambulatorio,
+                'tipo_de_abordagem' => $registo->tipo_de_abordagem?->value ?? '',
+                'observacoes' => $registo->observacoes ?? '',
             ],
-            'tiposDeCirurgia' => TipoDeCirurgia::orderBy('nome')->get(['id', 'nome']),
-            'tiposDeOrigem' => TipoDeOrigem::orderBy('nome')->get(['id', 'nome']),
-            'diagnosticos' => Diagnostico::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
-            'procedimentos' => Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
-            'especialidades' => Especialidade::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
-            'hospitals' => Hospital::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
-            'zonaAnatomicas' => ZonaAnatomica::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
-            'enums' => [
-                'sexo' => config('medfolio.sexo_options'),
-                'funcoes' => config('medfolio.funcao_options'),
-                'clavien' => config('medfolio.clavien_dindo_options'),
-                'tipo_de_abordagem' => TipoAbordagemEnum::values(),
-                'tipo_diagnostico' => TipoDiagnosticoEnum::values(),
-            ],
-        ]);
+            'diagnosticos' => array_values($diagnosticosMap),
+        ];
     }
 
     /**

@@ -16,6 +16,7 @@ import { ArrowLeft, Save } from 'lucide-react';
 import { type BreadcrumbItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
@@ -24,6 +25,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function UtenteCreate() {
+    const isMobile = useIsMobile();
     const { data, setData, post, processing, errors, reset } = useForm({
         nome: '',
         processo: '',
@@ -49,16 +51,16 @@ export default function UtenteCreate() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Criar Utente" />
 
-            <div className="flex flex-col gap-4 p-6">
-                <div className="flex items-center justify-between">
+            <div className={`flex flex-col gap-4 ${isMobile ? 'p-4' : 'p-6'}`}>
+                <div className={`flex ${isMobile ? 'flex-col gap-4' : 'items-center justify-between'}`}>
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Criar Utente</h1>
+                        <h1 className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-bold tracking-tight`}>Criar Utente</h1>
                         <p className="text-muted-foreground">
                             Adicionar novo utente ao sistema
                         </p>
                     </div>
-                    <Link href="/utentes">
-                        <Button variant="outline">
+                    <Link href="/utentes" className={isMobile ? 'w-full' : ''}>
+                        <Button variant="outline" className={isMobile ? 'w-full' : ''}>
                             <ArrowLeft className="mr-2 h-4 w-4" />
                             Voltar
                         </Button>

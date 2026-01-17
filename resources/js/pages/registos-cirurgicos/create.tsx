@@ -39,6 +39,11 @@ interface RegistoCirurgicoCreateProps {
         clavien: string[];
         tipo_diagnostico: string[];
     };
+    duplicateData?: {
+        utente: UtenteData;
+        registo: RegistoData;
+        diagnosticos: DiagnosticoData[];
+    };
 }
 
 interface UtenteData {
@@ -98,21 +103,22 @@ export default function RegistoCirurgicoCreate({
     hospitals = [],
     zonaAnatomicas = [],
     enums = { sexo: [], funcoes: [], clavien: [], tipo_diagnostico: [] },
+    duplicateData,
 }: RegistoCirurgicoCreateProps) {
     const isMobile = useIsMobile();
     const { auth } = usePage<SharedData>().props;
     const [step, setStep] = useState(1);
-    const [searchProcesso, setSearchProcesso] = useState('');
+    const [searchProcesso, setSearchProcesso] = useState(duplicateData?.utente?.processo || '');
     const [utenteFound, setUtenteFound] = useState<boolean | null>(null);
 
-    const [utenteData, setUtenteData] = useState<UtenteData>({
+    const [utenteData, setUtenteData] = useState<UtenteData>(duplicateData?.utente || {
         nome: '',
         processo: '',
         data_nascimento: '',
         sexo: '',
     });
 
-    const [registoData, setRegistoData] = useState<RegistoData>({
+    const [registoData, setRegistoData] = useState<RegistoData>(duplicateData?.registo || {
         hospital: auth.user.hospital_de_origem || '',
         especialidade: auth.user.especialidade || '',
         data_cirurgia: '',
@@ -123,7 +129,7 @@ export default function RegistoCirurgicoCreate({
         tipo_de_abordagem: '',
     });
 
-    const [diagnosticosList, setDiagnosticosList] = useState<DiagnosticoData[]>([]);
+    const [diagnosticosList, setDiagnosticosList] = useState<DiagnosticoData[]>(duplicateData?.diagnosticos || []);
 
     const { post, processing, errors } = useForm();
 
@@ -221,7 +227,7 @@ export default function RegistoCirurgicoCreate({
             diagnosticos: diagnosticosList,
         };
 
-        router.post('/registos-cirurgicos', payload, {
+        router.post('/registos-cirurgicos', payload as any, {
             onSuccess: () => {
                 toast.success('Registo cirúrgico criado com sucesso!');
             },
@@ -255,7 +261,7 @@ export default function RegistoCirurgicoCreate({
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-bold tracking-tight`}>
-                            {isMobile ? 'Novo Registo' : 'Criar Registo Cirúrgico'}
+                            {duplicateData ? 'Duplicar Registo' : (isMobile ? 'Novo Registo' : 'Criar Registo Cirúrgico')}
                         </h1>
                         {!isMobile && (
                             <p className="text-muted-foreground font-medium">

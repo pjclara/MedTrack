@@ -11,7 +11,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { PlusCircle, Edit, Eye, Clock, FileDown, Hospital, User, Activity } from 'lucide-react';
+import { PlusCircle, Edit, Eye, Clock, FileDown, Hospital, User, Activity, Copy } from 'lucide-react';
 import { type BreadcrumbItem } from '@/types';
 import { type RegistoCirurgico, type PaginatedData } from '@/types/models';
 import registosCirurgicos from '@/routes/registos-cirurgicos';
@@ -98,7 +98,7 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                                     <TableCell>
                                                         {registo.utente ? (
                                                             <Link href={`/utentes/${registo.utente.id}`} className="hover:underline font-medium text-emerald-700">
-                                                                {registo.utente.nome}
+                                                                {registo.utente.processo}
                                                             </Link>
                                                         ) : (
                                                             <span className="text-muted-foreground">-</span>
@@ -137,6 +137,11 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                                             <Link href={`/registos-cirurgicos/${registo.id}/edit`}>
                                                                 <Button variant="ghost" size="sm">
                                                                     <Edit className="h-4 w-4 text-emerald-600" />
+                                                                </Button>
+                                                            </Link>
+                                                            <Link href={`/registos-cirurgicos/create?duplicate_from=${registo.id}`}>
+                                                                <Button variant="ghost" size="sm" title="Duplicar">
+                                                                    <Copy className="h-4 w-4 text-blue-600" />
                                                                 </Button>
                                                             </Link>
                                                         </div>
@@ -195,6 +200,11 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                                     <Link href={`/registos-cirurgicos/${registo.id}/edit`}>
                                                         <Button variant="secondary" size="sm" className="h-8 text-emerald-700 bg-emerald-50 hover:bg-emerald-100">
                                                             <Edit className="mr-2 h-3.5 w-3.5" /> Editar
+                                                        </Button>
+                                                    </Link>
+                                                    <Link href={`/registos-cirurgicos/create?duplicate_from=${registo.id}`}>
+                                                        <Button variant="outline" size="sm" className="h-8 text-blue-700 border-blue-200 bg-blue-50 hover:bg-blue-100">
+                                                            <Copy className="mr-2 h-3.5 w-3.5" /> Duplicar
                                                         </Button>
                                                     </Link>
                                                 </div>
