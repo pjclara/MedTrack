@@ -11,7 +11,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { PlusCircle, Edit, Eye, Clock, FileDown, Hospital, User, Activity, Copy } from 'lucide-react';
+import { PlusCircle, Edit, Eye, Clock, FileDown, Hospital, User, Activity, Copy, Stethoscope, Timer, Scissors, UserCog, UserCheck, GraduationCap, UserCircle } from 'lucide-react';
 import { type BreadcrumbItem } from '@/types';
 import { type RegistoCirurgico, type PaginatedData } from '@/types/models';
 import registosCirurgicos from '@/routes/registos-cirurgicos';
@@ -30,6 +30,19 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
     const isMobile = useIsMobile();
     const formatDate = (date: string) => {
         return new Date(date).toLocaleDateString('pt-PT');
+    };
+
+
+    const getFuncaoIcon = (funcao?: string) => {
+        if (!funcao) return Stethoscope;
+        const funcaoLower = funcao.toLowerCase();
+        if (funcaoLower.includes('principal')) return UserCircle;
+        if (funcaoLower.includes('assistente')) return UserCheck;
+        return Stethoscope;
+    };
+
+    const getFuncaoText = (cirurgia: any) => {
+        return cirurgia.funcao || 'N/A';
     };
 
     return (
@@ -76,16 +89,15 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                             <TableHead>Data</TableHead>
                                             <TableHead>Utente</TableHead>
                                             <TableHead>Tipo Cirurgia</TableHead>
-                                            <TableHead>Hospital</TableHead>
+                                            <TableHead>Cirurgias</TableHead>
                                             <TableHead>Abordagem</TableHead>
-                                            <TableHead>Registado Por</TableHead>
                                             <TableHead className="text-right">Ações</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
                                         {registos.data.length === 0 ? (
                                             <TableRow>
-                                                <TableCell colSpan={7} className="text-center text-muted-foreground py-10">
+                                                <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
                                                     Nenhum registo encontrado
                                                 </TableCell>
                                             </TableRow>
@@ -108,9 +120,32 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                                         {registo.tipo_de_cirurgia?.nome || '-'}
                                                     </TableCell>
                                                     <TableCell>
-                                                        <div className="flex items-center gap-1">
-                                                            <Hospital className="h-3 w-3 text-muted-foreground" />
-                                                            {registo.hospital || '-'}
+                                                        <div className="space-y-1">
+                                                            <div className="flex items-center gap-2">
+                                                                <Badge variant="secondary" className="font-mono text-xs">
+                                                                    {registo.cirurgias_count || 0} cirurgia{registo.cirurgias_count !== 1 ? 's' : ''}
+                                                                </Badge>
+                                                            </div>
+                                                            {registo.cirurgias && registo.cirurgias.length > 0 && (
+                                                                <div className="flex flex-col gap-1 mt-1">
+                                                                    {registo.cirurgias.map((cirurgia, idx) => {
+                                                                        const FuncaoIcon = getFuncaoIcon(cirurgia.funcao);
+                                                                        return (
+                                                                        <div key={idx} className="flex items-center gap-2 text-xs">
+                                                                            <div className="flex items-center gap-1 text-muted-foreground">
+                                                                                <FuncaoIcon className="h-3 w-3" />
+                                                                            </div>
+                                                                            {cirurgia.procedimento && (
+                                                                                <Badge variant="secondary" className="text-xs font-normal">
+                                                                                    <Scissors className="h-3 w-3 mr-1" />
+                                                                                    {cirurgia.procedimento.nome}
+                                                                                </Badge>
+                                                                            )}
+                                                                        </div>
+                                                                        );
+                                                                    })}
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </TableCell>
                                                     <TableCell>
@@ -118,15 +153,7 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                                             {registo.tipo_de_abordagem}
                                                         </Badge>
                                                     </TableCell>
-                                                    <TableCell>
-                                                        {registo.user ? (
-                                                            <div className="flex items-center gap-2 text-xs">
-                                                                <User className="h-3 w-3" /> {registo.user.name}
-                                                            </div>
-                                                        ) : (
-                                                            <span className="text-muted-foreground">-</span>
-                                                        )}
-                                                    </TableCell>
+
                                                     <TableCell className="text-right">
                                                         <div className="flex justify-end gap-2">
                                                             <Link href={`/registos-cirurgicos/${registo.id}`}>
@@ -184,6 +211,32 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                                     <Hospital className="h-4 w-4 text-muted-foreground" />
                                                     <span>{registo.hospital || '-'}</span>
                                                 </div>
+                                                {registo.cirurgias && registo.cirurgias.length > 0 && (
+                                                    <div className="mt-2 pt-2 border-t space-y-1.5">
+                                                        <div className="font-semibold text-xs text-emerald-700 flex items-center gap-1">
+                                                            <Stethoscope className="h-3 w-3" />
+                                                            {registo.cirurgias_count} Cirurgia{registo.cirurgias_count !== 1 ? 's' : ''}
+                                                        </div>
+                                                        {registo.cirurgias.map((cirurgia, idx) => {
+                                                            const FuncaoIcon = getFuncaoIcon(cirurgia.funcao);
+                                                            return (
+                                                            <div key={idx} className="text-xs pl-4 space-y-0.5">
+                                                                <div className="flex items-center gap-2 text-muted-foreground">
+                                                                    <FuncaoIcon className="h-3 w-3" />
+                                                                    <span className="font-medium">{getFuncaoText(cirurgia)}</span>
+                                                                    
+                                                                </div>
+                                                                {cirurgia.procedimento && (
+                                                                    <div className="flex items-center gap-1 text-emerald-700 pl-4">
+                                                                        <Scissors className="h-3 w-3" />
+                                                                        <span className="font-medium">{cirurgia.procedimento.nome}</span>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                )}
                                             </div>
 
                                             <div className="pt-2 flex justify-between items-center border-t">

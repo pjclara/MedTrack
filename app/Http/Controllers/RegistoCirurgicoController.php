@@ -37,6 +37,8 @@ class RegistoCirurgicoController extends Controller
                 'tipoDeCirurgia:id,nome',
                 'tipoDeOrigem:id,nome',
                 'user:id,name,email',
+                'cirurgias:id,registo_cirurgico_id,funcao,procedimento_id',
+                'cirurgias.procedimento:id,nome',
             ])
             ->withCount('cirurgias')
             ->orderBy('data_cirurgia', 'desc')

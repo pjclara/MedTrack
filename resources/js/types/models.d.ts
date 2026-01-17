@@ -38,6 +38,7 @@ export interface RegistoCirurgico {
     updated_at: string;
     utente?: Utente;
     cirurgias?: Cirurgia[];
+    cirurgias_count?: number;
     tipo_de_cirurgia?: TipoDeCirurgia;
     tipo_de_origem?: TipoDeOrigem;
     user?: {
@@ -53,6 +54,8 @@ export interface Cirurgia {
     diagnostico_id: number;
     procedimento_id: number;
     funcao: 'Cirurgião Principal' | 'Cirurgião Assistente' | 'Residente' | 'Interno';
+    funcao_cirurgiao?: string;
+    duracao_minutos?: number;
     clavien_dindo?: 'I' | 'II' | 'IIIa' | 'IIIb' | 'IVa' | 'IVb' | 'V';
     tipo?: string;
     anatomia_patologica?: string;
