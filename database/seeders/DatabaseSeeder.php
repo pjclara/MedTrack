@@ -43,7 +43,10 @@ class DatabaseSeeder extends Seeder
         );
 
         // Criar roles e atribuir aos utilizadores
-        $this->call(RoleSeeder::class);
+        $this->call([
+            RoleSeeder::class,
+            AdminUserSeeder::class,
+        ]);
 
         // Seeders do sistema MedTrack (ordem é importante devido às foreign keys)
         $this->call([

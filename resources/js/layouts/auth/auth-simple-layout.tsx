@@ -35,7 +35,7 @@ export default function AuthSimpleLayout({
                                     MedTrack
                                 </h1>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Sistema de Gestão Cirúrgica
+                                    Soluções SurgTuga
                                 </p>
                             </div>
                         </Link>
@@ -95,7 +95,7 @@ export default function AuthSimpleLayout({
                                     MedTrack
                                 </h1>
                                 <p className="text-xs text-gray-600 dark:text-gray-400">
-                                    Sistema de Gestão Cirúrgica
+                                    by SurgTuga
                                 </p>
                             </div>
                         </Link>

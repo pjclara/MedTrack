@@ -42,11 +42,6 @@ const mainNavItems: NavItem[] = [
 
 const adminNavItems: NavItem[] = [
     {
-        title: 'Utilizadores',
-        href: '/users',
-        icon: Users,
-    },
-        {
         title: 'Utentes',
         href: '/utentes',
         icon: Users,
@@ -84,13 +79,6 @@ export function AppSidebar() {
     const { auth } = usePage().props as any;
     const isAdmin = auth.is_admin;
 
-    const filteredAdminNavItems = adminNavItems.filter((item) => {
-        if (item.title === 'Utilizadores' && !isAdmin) {
-            return false;
-        }
-        return true;
-    });
-
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -108,8 +96,8 @@ export function AppSidebar() {
             <SidebarContent>
                 <NavMain items={mainNavItems} title="Plataforma" />
                 <NavMain 
-                    items={filteredAdminNavItems} 
-                    title={isAdmin ? "Administração" : "Gestão de Dados"} 
+                    items={adminNavItems} 
+                    title={isAdmin ? "Gestão do Sistema" : "Gestão de Dados"} 
                 />
             </SidebarContent>
 

@@ -11,7 +11,7 @@ export default function AppLogo() {
                     MedTrack
                 </span>
                 <span className="truncate text-xs text-muted-foreground">
-                    Gestão Cirúrgica
+                    by SurgTuga
                 </span>
             </div>
         </>

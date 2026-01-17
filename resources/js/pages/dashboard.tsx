@@ -57,9 +57,9 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
                 <div className={`rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 ${isMobile ? 'p-6 text-center' : 'p-8'} text-white shadow-lg`}>
                     <div className="flex items-center justify-between">
                         <div>
-                            <h1 className={`mb-2 ${isMobile ? 'text-2xl' : 'text-3xl'} font-bold`}>Bem-vindo ao Medfolio</h1>
+                            <h1 className={`mb-2 ${isMobile ? 'text-2xl' : 'text-3xl'} font-bold`}>Bem-vindo ao MedTrack</h1>
                             <p className={`${isMobile ? 'text-emerald-100 text-sm' : 'text-emerald-100 text-lg'}`}>
-                                Sistema de Gestão de Registos Cirúrgicos e Formação
+                                by SurgTuga
                             </p>
                         </div>
                         <div className="hidden md:block text-right">

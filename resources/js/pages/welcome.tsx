@@ -12,7 +12,7 @@ export default function Welcome({
 
     return (
         <>
-            <Head title="MedTrack - Sistema de Gestão de Registos Cirúrgicos" />
+            <Head title="MedTrack - Soluções SurgTuga" />
             <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
                 {/* Header */}
                 <header className="border-b border-gray-200 bg-white/80 backdrop-blur-sm dark:border-gray-700 dark:bg-gray-800/80">
@@ -26,7 +26,7 @@ export default function Welcome({
                                     MedTrack
                                 </h1>
                                 <p className="text-xs text-gray-600 dark:text-gray-400">
-                                    Sistema de Gestão Cirúrgica
+                                    by SurgTuga
                                 </p>
                             </div>
                         </div>
@@ -225,7 +225,7 @@ export default function Welcome({
                                 </span>
                             </div>
                             <p className="text-sm text-gray-600 dark:text-gray-400">
-                                © {new Date().getFullYear()} MedTrack. Sistema de Gestão de Registos Cirúrgicos.
+                                © {new Date().getFullYear()} MedTrack. Desenvolvido por SurgTuga.
                             </p>
                         </div>
                     </div>
