@@ -26,7 +26,7 @@ export default function Welcome({
                                     MedTrack
                                 </h1>
                                 <p className="text-xs text-gray-600 dark:text-gray-400">
-                                    by SurgTuga
+                                    by SurgTuga - Auto Deploy Test! 🚀
                                 </p>
                             </div>
                         </div>
