@@ -43,7 +43,7 @@ export default function AdminLogin() {
                                     <Input
                                         id="email"
                                         type="email"
-                                        placeholder="admin@medfolio.com"
+                                        placeholder="admin@medtrack.com"
                                         className="pl-10"
                                         value={data.email}
                                         onChange={(e) => setData('email', e.target.value)}
