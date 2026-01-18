@@ -2,6 +2,7 @@ import AdminLayout from '@/layouts/admin-layout';
 import { Head, Link } from '@inertiajs/react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, Legend } from 'recharts';
 import { Users, FileText, CheckCircle2, AlertCircle, TrendingUp, Activity, ArrowUpRight, UserCircle2 } from 'lucide-react';
 import { formatDateToPT } from '@/utils/date-formatters';
@@ -194,58 +195,68 @@ export default function AdminDashboard({ metrics, recent_users, recent_records }
                     </Card>
                 </div>
 
-                {/* Recent Surgical Records */}
-                <Card className="shadow-md hover:shadow-xl transition-shadow duration-300">
-                    <CardHeader>
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <CardTitle className="flex items-center gap-2">
-                                    <Activity className="h-5 w-5 text-emerald-600" />
-                                    Atividade Recente
-                                </CardTitle>
-                                <CardDescription>Últimos registos cirúrgicos no sistema</CardDescription>
-                            </div>
-                            <Link href="/admin/curriculos" className="text-sm text-emerald-600 hover:text-emerald-700 flex items-center gap-1 font-medium">
-                                Ver todos
-                                <ArrowUpRight className="h-4 w-4" />
-                            </Link>
+                {/* Recent Activity Table */}
+                <Card className="shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border-t-4 border-t-emerald-500">
+                    <CardHeader className="bg-white border-b border-neutral-100 flex flex-row items-center justify-between">
+                        <div>
+                            <CardTitle className="flex items-center gap-2 text-xl">
+                                <Activity className="h-6 w-6 text-emerald-600" />
+                                Monitorização Global de Atividade
+                            </CardTitle>
+                            <CardDescription>Últimas interações de todos os utilizadores na plataforma</CardDescription>
                         </div>
+                        <Button variant="outline" asChild size="sm">
+                            <Link href="/admin/curriculos" className="text-emerald-600 hover:text-emerald-700 font-medium">
+                                Ver Todo o Histórico
+                            </Link>
+                        </Button>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-0">
                         <div className="relative w-full overflow-auto">
                             <table className="w-full text-sm">
-                                <thead>
-                                    <tr className="border-b border-neutral-200">
-                                        <th className="px-4 py-3 text-left font-semibold text-neutral-700">Data</th>
-                                        <th className="px-4 py-3 text-left font-semibold text-neutral-700">Utilizador</th>
-                                        <th className="px-4 py-3 text-left font-semibold text-neutral-700">Utente</th>
-                                        <th className="px-4 py-3 text-left font-semibold text-neutral-700">Tipo</th>
+                                <thead className="bg-neutral-50/50">
+                                    <tr className="border-b border-neutral-100">
+                                        <th className="px-6 py-4 text-left font-semibold text-neutral-600">Tipo</th>
+                                        <th className="px-6 py-4 text-left font-semibold text-neutral-600">Utilizador</th>
+                                        <th className="px-6 py-4 text-left font-semibold text-neutral-600">Detalhe</th>
+                                        <th className="px-6 py-4 text-left font-semibold text-neutral-600">Data</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {recent_records.length > 0 ? (
-                                        recent_records.map((record) => (
-                                            <tr key={record.id} className="border-b border-neutral-100 hover:bg-emerald-50/30 transition-colors">
-                                                <td className="px-4 py-3">
-                                                    <Badge variant="outline" className="font-mono text-xs">
-                                                        {formatDateToPT(record.data_cirurgia)}
+                                        recent_records.map((record, index) => (
+                                            <tr key={index} className="border-b border-neutral-100 last:border-0 hover:bg-emerald-50/20 transition-colors">
+                                                <td className="px-6 py-4">
+                                                    <Badge 
+                                                        className={`${
+                                                            record.type === 'Cirurgia' ? 'bg-emerald-100 text-emerald-700' :
+                                                            record.type === 'Atividade' ? 'bg-blue-100 text-blue-700' :
+                                                            'bg-purple-100 text-purple-700'
+                                                        } border-0 shadow-none px-2 py-0.5`}
+                                                    >
+                                                        {record.type}
                                                     </Badge>
                                                 </td>
-                                                <td className="px-4 py-3">
-                                                    <span className="font-medium text-neutral-900">{record.user?.name}</span>
+                                                <td className="px-6 py-4">
+                                                    <span className="font-semibold text-neutral-900">{record.user}</span>
                                                 </td>
-                                                <td className="px-4 py-3 text-neutral-600">{record.utente?.nome}</td>
-                                                <td className="px-4 py-3">
-                                                    <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200">
-                                                        {record.tipo_de_cirurgia?.nome || 'N/A'}
-                                                    </Badge>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex flex-col">
+                                                        <span className="text-neutral-800 font-medium">{record.detail}</span>
+                                                        <span className="text-xs text-neutral-500">{record.target}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <span className="text-neutral-500 text-xs font-medium">
+                                                        {formatDateToPT(record.date)}
+                                                    </span>
                                                 </td>
                                             </tr>
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan={4} className="px-4 py-8 text-center text-neutral-400">
-                                                Nenhum registo recente
+                                            <td colSpan={4} className="px-6 py-12 text-center text-neutral-400 italic">
+                                                Nenhuma atividade registada até ao momento
                                             </td>
                                         </tr>
                                     )}

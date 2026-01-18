@@ -70,4 +70,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(RegistoCirurgico::class);
     }
+
+    /**
+     * Get the atividades científicas for the user.
+     */
+    public function atividadesCientificas()
+    {
+        return $this->hasMany(AtividadeCientifica::class);
+    }
+
+    /**
+     * Get the formações for the user.
+     */
+    public function formacoes()
+    {
+        return $this->hasMany(Formacao::class);
+    }
 }

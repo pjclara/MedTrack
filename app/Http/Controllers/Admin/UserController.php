@@ -19,6 +19,7 @@ class UserController extends Controller
                 $query->where('name', 'like', "%{$search}%")
                       ->orWhere('email', 'like', "%{$search}%");
             })
+            ->withCount(['registosCirurgicos', 'atividadesCientificas', 'formacoes'])
             ->orderBy('created_at', 'desc')
             ->paginate(10)
             ->withQueryString();
@@ -58,9 +59,38 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        $user->load(['registosCirurgicos', 'utentes']);
+        $user->loadCount([
+            'registosCirurgicos as registos_count', 
+            'atividadesCientificas as atividades_count', 
+            'formacoes as formacoes_count'
+        ]);
+        
+        $recentActivity = collect()
+            ->merge($user->registosCirurgicos()->latest()->take(5)->get()->map(fn($i) => [
+                'type' => 'Registo Cirúrgico',
+                'description' => "Cirurgia a " . ($i->utente?->nome ?? 'Utente'),
+                'date' => $i->created_at->format('Y-m-d H:i:s'),
+                'color' => 'emerald'
+            ]))
+            ->merge($user->atividadesCientificas()->latest()->take(5)->get()->map(fn($i) => [
+                'type' => 'Atividade Científica',
+                'description' => $i->titulo,
+                'date' => $i->created_at->format('Y-m-d H:i:s'),
+                'color' => 'blue'
+            ]))
+            ->merge($user->formacoes()->latest()->take(5)->get()->map(fn($i) => [
+                'type' => 'Formação',
+                'description' => $i->nome,
+                'date' => $i->created_at->format('Y-m-d H:i:s'),
+                'color' => 'purple'
+            ]))
+            ->sortByDesc('date')
+            ->take(10)
+            ->values();
+
         return Inertia::render('admin/users/show', [
-            'user' => $user
+            'user' => $user,
+            'recentActivity' => $recentActivity
         ]);
     }
 

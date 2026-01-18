@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Plus } from 'lucide-react';
-import { useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import {
     Select,
     SelectContent,
@@ -44,11 +44,12 @@ export function QuickAddEspecialidade({ onCreated }: { onCreated?: (especialidad
             headers: {
                 'X-Inertia-Modal-Redirect-Back': 'true',
             },
-            onSuccess: () => {
+            onSuccess: (page) => {
                 toast.success('Especialidade criada com sucesso');
                 setOpen(false);
                 reset();
-                if (onCreated) onCreated({ nome: data.nome });
+                const newId = page.props.flash?.new_especialidade_id;
+                if (onCreated) onCreated({ id: newId, nome: data.nome });
             },
         });
     };
@@ -103,6 +104,84 @@ export function QuickAddEspecialidade({ onCreated }: { onCreated?: (especialidad
     );
 }
 
+export function QuickAddZonaAnatomica({ onCreated }: { onCreated?: (zona: any) => void }) {
+    const [open, setOpen] = useState(false);
+    const { data, setData, post, processing, reset, errors } = useForm({
+        nome: '',
+        descricao: '',
+    });
+
+    const { flash } = usePage<any>().props;
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        post('/zona-anatomicas', {
+            preserveState: true,
+            preserveScroll: true,
+            headers: {
+                'X-Inertia-Modal-Redirect-Back': 'true',
+            },
+            onSuccess: (page) => {
+                toast.success('Zona Anatómica criada com sucesso');
+                setOpen(false);
+                reset();
+                const newId = page.props.flash?.new_zona_anatomica_id;
+                if (onCreated) onCreated({ id: newId, nome: data.nome });
+            },
+        });
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant="outline" size="sm" type="button">
+                    <Plus className="h-4 w-4 mr-1" /> Zona
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Criar Nova Zona Anatómica</DialogTitle>
+                    <DialogDescription>
+                        Adicione uma nova zona anatómica (ex: Cabeça e Pescoço).
+                    </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="zona-nome">Nome da Zona</Label>
+                        <Input
+                            id="zona-nome"
+                            value={data.nome}
+                            onChange={(e) => setData('nome', e.target.value)}
+                            placeholder="Ex: Abdómen"
+                            required
+                        />
+                        {errors.nome && <p className="text-xs text-destructive">{errors.nome}</p>}
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="zona-desc">Descrição (Opcional)</Label>
+                        <Textarea
+                            id="zona-desc"
+                            value={data.descricao}
+                            onChange={(e) => setData('descricao', e.target.value)}
+                            placeholder="Breve descrição..."
+                        />
+                        {errors.descricao && <p className="text-xs text-destructive">{errors.descricao}</p>}
+                    </div>
+                    <DialogFooter>
+                        <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                            Cancelar
+                        </Button>
+                        <Button type="submit" disabled={processing || !data.nome}>
+                            {processing ? 'A criar...' : 'Criar Zona'}
+                        </Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
 export function QuickAddDiagnostico({ 
     onCreated,
     zonaAnatomicas = []
@@ -121,17 +200,29 @@ export function QuickAddDiagnostico({
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
+        // Validação adicional
+        if (!data.nome || !data.zona_anatomica) {
+            toast.error('Por favor preencha todos os campos obrigatórios');
+            return;
+        }
+
         post('/diagnosticos', {
             preserveState: true,
             preserveScroll: true,
             headers: {
                 'X-Inertia-Modal-Redirect-Back': 'true',
             },
-            onSuccess: () => {
+            onSuccess: (page) => {
                 toast.success('Diagnóstico criado com sucesso');
                 setOpen(false);
                 reset();
-                if (onCreated) onCreated({ nome: data.nome });
+                const newId = page.props.flash?.new_diagnostico_id;
+                if (onCreated) onCreated({ id: newId, nome: data.nome });
+            },
+            onError: (errors) => {
+                console.error('Erro ao criar diagnóstico:', errors);
+                const errorMessage = errors.zona_anatomica || errors.nome || 'Erro ao criar diagnóstico';
+                toast.error(errorMessage);
             },
         });
     };
@@ -164,23 +255,38 @@ export function QuickAddDiagnostico({
                         {errors.nome && <p className="text-xs text-destructive">{errors.nome}</p>}
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="diag-zona">Zona Anatómica</Label>
+                        <div className="flex items-center justify-between">
+                            <Label htmlFor="diag-zona">Zona Anatómica <span className="text-destructive">*</span></Label>
+                            <QuickAddZonaAnatomica onCreated={(newZona) => {
+                                setData('zona_anatomica', newZona.nome);
+                            }} />
+                        </div>
                         <Select 
                             value={data.zona_anatomica} 
                             onValueChange={(val) => setData('zona_anatomica', val)}
+                            required
                         >
                             <SelectTrigger id="diag-zona">
                                 <SelectValue placeholder="Selecione a zona" />
                             </SelectTrigger>
                             <SelectContent>
-                                {zonaAnatomicas.map((zona: any) => (
-                                    <SelectItem key={zona.id || zona} value={zona.nome || zona}>
-                                        {zona.nome || zona}
-                                    </SelectItem>
-                                ))}
+                                {zonaAnatomicas && zonaAnatomicas.length > 0 ? (
+                                    zonaAnatomicas.map((zona: any) => (
+                                        <SelectItem key={zona.id || zona.nome || zona} value={zona.nome || zona}>
+                                            {zona.nome || zona}
+                                        </SelectItem>
+                                    ))
+                                ) : (
+                                    <SelectItem value="__empty__" disabled>Crie uma zona anatómica primeiro</SelectItem>
+                                )}
                             </SelectContent>
                         </Select>
                         {errors.zona_anatomica && <p className="text-xs text-destructive">{errors.zona_anatomica}</p>}
+                        {(!zonaAnatomicas || zonaAnatomicas.length === 0) && (
+                            <p className="text-xs text-orange-600">
+                                Utilize o botão "Zona" acima para criar a primeira zona anatómica
+                            </p>
+                        )}
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="diag-tipo">Tipo de Diagnóstico (Opcional)</Label>
@@ -212,7 +318,10 @@ export function QuickAddDiagnostico({
                         <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                             Cancelar
                         </Button>
-                        <Button type="submit" disabled={processing || !data.nome || !data.zona_anatomica}>
+                        <Button 
+                            type="submit" 
+                            disabled={processing || !data.nome || !data.zona_anatomica}
+                        >
                             {processing ? 'A criar...' : 'Criar Diagnóstico'}
                         </Button>
                     </DialogFooter>
@@ -246,11 +355,12 @@ export function QuickAddProcedimento({
             headers: {
                 'X-Inertia-Modal-Redirect-Back': 'true',
             },
-            onSuccess: () => {
+            onSuccess: (page) => {
                 toast.success('Procedimento criado com sucesso');
                 setOpen(false);
                 reset();
-                if (onCreated) onCreated({ nome: data.nome, especialidade: data.especialidade });
+                const newId = page.props.flash?.new_procedimento_id;
+                if (onCreated) onCreated({ id: newId, nome: data.nome, especialidade: data.especialidade });
             },
         });
     };

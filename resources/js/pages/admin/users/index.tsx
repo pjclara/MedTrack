@@ -27,6 +27,9 @@ interface User {
     email: string;
     is_active: boolean;
     created_at: string;
+    registos_cirurgicos_count: number;
+    atividades_cientificas_count: number;
+    formacoes_count: number;
 }
 
 interface AdminUserListProps {
@@ -92,6 +95,7 @@ export default function AdminUserList({ users, filters }: AdminUserListProps) {
                                     <TableHead>Nome</TableHead>
                                     <TableHead>Email</TableHead>
                                     <TableHead>Status</TableHead>
+                                    <TableHead className="text-center">Atividade</TableHead>
                                     <TableHead>Registado em</TableHead>
                                     <TableHead className="text-right">Ações</TableHead>
                                 </TableRow>
@@ -111,6 +115,22 @@ export default function AdminUserList({ users, filters }: AdminUserListProps) {
                                                     <XCircle className="h-4 w-4" /> Inativo
                                                 </div>
                                             )}
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex items-center justify-center gap-4">
+                                                <div className="flex flex-col items-center" title="Registos Cirúrgicos">
+                                                    <span className="text-sm font-bold text-emerald-600">{user.registos_cirurgicos_count}</span>
+                                                    <span className="text-[10px] text-neutral-400 uppercase font-medium">Cir</span>
+                                                </div>
+                                                <div className="flex flex-col items-center" title="Atividades Científicas">
+                                                    <span className="text-sm font-bold text-blue-600">{user.atividades_cientificas_count}</span>
+                                                    <span className="text-[10px] text-neutral-400 uppercase font-medium">Cie</span>
+                                                </div>
+                                                <div className="flex flex-col items-center" title="Formações">
+                                                    <span className="text-sm font-bold text-purple-600">{user.formacoes_count}</span>
+                                                    <span className="text-[10px] text-neutral-400 uppercase font-medium">For</span>
+                                                </div>
+                                            </div>
                                         </TableCell>
                                         <TableCell>{formatDateToPT(user.created_at)}</TableCell>
                                         <TableCell className="text-right">

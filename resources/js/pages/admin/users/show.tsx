@@ -31,8 +31,16 @@ interface User {
     formacoes_count: number;
 }
 
+interface ActivityItem {
+    type: string;
+    description: string;
+    date: string;
+    color: string;
+}
+
 interface Props {
     user: User;
+    recentActivity: ActivityItem[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -41,7 +49,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Detalhes do Utilizador', href: '#' },
 ];
 
-export default function Show({ user }: Props) {
+export default function Show({ user, recentActivity }: Props) {
     return (
         <AdminLayout breadcrumbs={breadcrumbs}>
             <Head title={`Perfil: ${user.name}`} />
@@ -177,32 +185,47 @@ export default function Show({ user }: Props) {
                             </div>
                         </div>
 
-                        {/* Recent Activity or detailed info could go here */}
+                        {/* Recent Activity Monitoring */}
                         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex-1">
                             <h3 className="font-semibold text-slate-900 mb-6 flex items-center gap-2">
                                 <Activity className="w-4 h-4 text-emerald-600" />
-                                Resumo do Currículo
+                                Monitorização de Atividade Recente
                             </h3>
-                            <div className="space-y-6">
-                                <p className="text-slate-600 text-sm">
-                                    O utilizador <strong>{user.name}</strong> tem um total de <strong>{user.registos_count + user.atividades_count + user.formacoes_count}</strong> registos no seu portfólio digital.
-                                </p>
-
-                                <div className="bg-slate-50 p-4 rounded-lg border border-slate-100">
-                                    <h4 className="text-sm font-medium text-slate-700 mb-2">Próximos Passos</h4>
-                                    <ul className="text-sm text-slate-500 list-disc list-inside space-y-1">
-                                        <li>Exportar currículo em formato PDF/Excel</li>
-                                        <li>Analisar distribuição por zonas anatómicas</li>
-                                        <li>Verificar complicações registadas (Clavien-Dindo)</li>
-                                    </ul>
-                                </div>
+                            
+                            <div className="relative">
+                                {recentActivity.length > 0 ? (
+                                    <div className="space-y-6">
+                                        {recentActivity.map((activity, index) => (
+                                            <div key={index} className="flex gap-4 relative">
+                                                {index !== recentActivity.length - 1 && (
+                                                    <div className="absolute left-[11px] top-7 bottom-[-24px] w-[2px] bg-slate-100"></div>
+                                                )}
+                                                <div className={`mt-1 h-[24px] w-[24px] min-w-[24px] rounded-full border-4 border-white shadow-sm bg-${activity.color}-500 flex items-center justify-center`}>
+                                                    <div className="h-2 w-2 rounded-full bg-white"></div>
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-sm font-bold text-slate-900">{activity.type}</span>
+                                                        <span className="text-[10px] text-slate-400 font-medium">{new Date(activity.date).toLocaleString()}</span>
+                                                    </div>
+                                                    <p className="text-sm text-slate-600 mt-0.5">{activity.description}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-12">
+                                        <Activity className="w-12 h-12 text-slate-200 mx-auto mb-3" />
+                                        <p className="text-slate-500 text-sm">Nenhuma atividade recente registada.</p>
+                                    </div>
+                                )}
                                 
-                                <div className="flex justify-end pt-4">
+                                <div className="mt-10 pt-6 border-t border-slate-50 flex justify-end">
                                     <Link
                                         href={`/admin/curriculos?user_id=${user.id}`}
                                         className="text-emerald-600 hover:text-emerald-700 text-sm font-medium flex items-center gap-1"
                                     >
-                                        Ver todos os registos detalhados
+                                        Ver histórico completo do utilizador
                                         <ArrowLeft className="w-4 h-4 rotate-180" />
                                     </Link>
                                 </div>

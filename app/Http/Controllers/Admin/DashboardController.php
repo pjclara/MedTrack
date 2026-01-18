@@ -19,7 +19,35 @@ class DashboardController extends Controller
         $incompleteUsers = $totalUsers - $completeUsers;
 
         $recentUsers = User::latest()->take(5)->get();
-        $recentRecords = RegistoCirurgico::with(['user', 'utente'])->latest()->take(5)->get();
+        
+        $recentRecords = collect()
+            ->merge(RegistoCirurgico::with(['user', 'utente'])->latest()->take(5)->get()->map(fn($r) => [
+                'type' => 'Cirurgia',
+                'user' => $r->user?->name,
+                'target' => $r->utente?->nome,
+                'detail' => $r->tipoDeCirurgia?->nome,
+                'date' => $r->data_cirurgia,
+                'id' => $r->id
+            ]))
+            ->merge(\App\Models\AtividadeCientifica::with('user')->latest()->take(5)->get()->map(fn($a) => [
+                'type' => 'Atividade',
+                'user' => $a->user?->name,
+                'target' => $a->tipo,
+                'detail' => $a->titulo,
+                'date' => $a->created_at,
+                'id' => $a->id
+            ]))
+            ->merge(\App\Models\Formacao::with('user')->latest()->take(5)->get()->map(fn($f) => [
+                'type' => 'Formação',
+                'user' => $f->user?->name,
+                'target' => $f->entidade,
+                'detail' => $f->nome,
+                'date' => $f->created_at,
+                'id' => $f->id
+            ]))
+            ->sortByDesc('date')
+            ->take(8)
+            ->values();
 
         return Inertia::render('admin/dashboard', [
             'metrics' => [

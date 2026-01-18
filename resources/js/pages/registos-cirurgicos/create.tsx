@@ -221,11 +221,41 @@ export default function RegistoCirurgicoCreate({
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
 
+        // CRITICAL: Only allow submission on step 6 (Review)
+        if (step !== 6) {
+            console.warn(`⚠️ Attempted to submit from step ${step}. Submission only allowed from step 6.`);
+            toast.warning('Por favor complete todos os passos antes de submeter');
+            return;
+        }
+
+        // Validate that diagnosticosList is not empty
+        if (diagnosticosList.length === 0) {
+            console.error('❌ Cannot submit: diagnosticosList is empty');
+            toast.error('Adicione pelo menos um diagnóstico antes de submeter');
+            setStep(3); // Go back to diagnostics step
+            return;
+        }
+
+        // Transform diagnosticos to ensure proper types
+        const transformedDiagnosticos = diagnosticosList.map(d => ({
+            diagnostico_id: parseInt(d.diagnostico_id),
+            tipo: d.tipo || null,
+            procedimentos: d.procedimentos.map(p => ({
+                procedimento_id: parseInt(p.procedimento_id),
+                funcao: p.funcao,
+                clavien_dindo: p.clavien_dindo || null,
+                anatomia_patologica: p.anatomia_patologica || null,
+                observacoes: p.observacoes || null
+            }))
+        }));
+
         const payload = {
             utente: utenteData,
             registo: registoData,
-            diagnosticos: diagnosticosList,
+            diagnosticos: transformedDiagnosticos,
         };
+
+
 
         router.post('/registos-cirurgicos', payload as any, {
             onSuccess: () => {
@@ -233,7 +263,7 @@ export default function RegistoCirurgicoCreate({
             },
             onError: (errors) => {
                 toast.error('Erro ao criar registo cirúrgico. Verifique os dados.');
-                console.error(errors);
+                console.error('=== VALIDATION ERRORS ===', errors);
             },
         });
     };
@@ -592,7 +622,19 @@ export default function RegistoCirurgicoCreate({
                                     </div>
                                     <QuickAddDiagnostico 
                                         onCreated={(newDiag) => {
-                                            // O Inertia refresca as props automaticamente
+                                            if (newDiag.id) {
+                                                const idStr = newDiag.id.toString();
+                                                if (!diagnosticosList.some(d => d.diagnostico_id === idStr)) {
+                                                    setDiagnosticosList([
+                                                        ...diagnosticosList,
+                                                        { 
+                                                            diagnostico_id: idStr, 
+                                                            tipo: '', 
+                                                            procedimentos: [{ procedimento_id: '', funcao: '', clavien_dindo: '', anatomia_patologica: '', observacoes: '' }] 
+                                                        }
+                                                    ]);
+                                                }
+                                            }
                                         }}
                                         zonaAnatomicas={zonaAnatomicas}
                                     />
@@ -670,6 +712,11 @@ export default function RegistoCirurgicoCreate({
                                                         <div className="flex gap-2">
                                                             <QuickAddProcedimento 
                                                                 especialidades={especialidades}
+                                                                onCreated={(newProc) => {
+                                                                    if (newProc.id) {
+                                                                        updateProcedimento(diagIndex, procIndex, 'procedimento_id', newProc.id.toString());
+                                                                    }
+                                                                }}
                                                             />
                                                             {diag.procedimentos.length > 1 && (
                                                             <Button

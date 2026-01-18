@@ -41,10 +41,13 @@ class EspecialidadeController extends Controller
         $validated = $request->validated();
         $validated['user_id'] = auth()->id();
 
-        Especialidade::create($validated);
+        $especialidade = Especialidade::create($validated);
 
         if ($request->header('X-Inertia-Modal-Redirect-Back')) {
-            return redirect()->back()->with('success', 'Especialidade criada com sucesso.');
+            return redirect()->back()->with([
+                'success' => 'Especialidade criada com sucesso.',
+                'new_especialidade_id' => $especialidade->id
+            ]);
         }
 
         return redirect()->route('especialidades.index')

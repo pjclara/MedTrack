@@ -18,7 +18,7 @@ use App\Http\Controllers\FormacaoController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    return Inertia::render('welcome', [
         'canRegister' => Features::enabled(Features::registration()),
     ]);
 })->name('home');

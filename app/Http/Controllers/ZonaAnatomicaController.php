@@ -41,10 +41,13 @@ class ZonaAnatomicaController extends Controller
         $validated = $request->validated();
         $validated['user_id'] = auth()->id();
 
-        ZonaAnatomica::create($validated);
+        $zonaAnatomica = ZonaAnatomica::create($validated);
 
         if ($request->header('X-Inertia-Modal-Redirect-Back')) {
-            return redirect()->back()->with('success', 'Zona anatómica criada com sucesso.');
+            return redirect()->back()->with([
+                'success' => 'Zona anatómica criada com sucesso.',
+                'new_zona_anatomica_id' => $zonaAnatomica->id
+            ]);
         }
 
         return redirect()->route('zona-anatomicas.index')

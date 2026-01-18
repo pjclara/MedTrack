@@ -45,10 +45,13 @@ class ProcedimentoController extends Controller
         $validated = $request->validated();
         $validated['user_id'] = auth()->id();
 
-        Procedimento::create($validated);
+        $procedimento = Procedimento::create($validated);
 
         if ($request->header('X-Inertia-Modal-Redirect-Back')) {
-            return redirect()->back()->with('success', 'Procedimento criado com sucesso.');
+            return redirect()->back()->with([
+                'success' => 'Procedimento criado com sucesso.',
+                'new_procedimento_id' => $procedimento->id
+            ]);
         }
 
         return redirect()->route('procedimentos.index')
