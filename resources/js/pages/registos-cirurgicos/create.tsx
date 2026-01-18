@@ -130,6 +130,7 @@ export default function RegistoCirurgicoCreate({
     });
 
     const [diagnosticosList, setDiagnosticosList] = useState<DiagnosticoData[]>(duplicateData?.diagnosticos || []);
+    const [availableDiagnosticos, setAvailableDiagnosticos] = useState(diagnosticos);
 
     const { post, processing, errors } = useForm();
 
@@ -163,7 +164,7 @@ export default function RegistoCirurgicoCreate({
         setDiagnosticosList(diagnosticosList.filter((_, i) => i !== index));
     };
 
-    const diagnosticoOptions = diagnosticos.map(d => ({
+    const diagnosticoOptions = availableDiagnosticos.map(d => ({
         value: d.id.toString(),
         label: d.nome
     }));
@@ -221,18 +222,16 @@ export default function RegistoCirurgicoCreate({
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        // CRITICAL: Only allow submission on step 6 (Review)
+        // Only allow submission on step 6 (Review)
         if (step !== 6) {
-            console.warn(`⚠️ Attempted to submit from step ${step}. Submission only allowed from step 6.`);
             toast.warning('Por favor complete todos os passos antes de submeter');
             return;
         }
 
         // Validate that diagnosticosList is not empty
         if (diagnosticosList.length === 0) {
-            console.error('❌ Cannot submit: diagnosticosList is empty');
             toast.error('Adicione pelo menos um diagnóstico antes de submeter');
-            setStep(3); // Go back to diagnostics step
+            setStep(3);
             return;
         }
 
@@ -624,6 +623,16 @@ export default function RegistoCirurgicoCreate({
                                         onCreated={(newDiag) => {
                                             if (newDiag.id) {
                                                 const idStr = newDiag.id.toString();
+                                                
+                                                // Add to available diagnosticos if not already there
+                                                if (!availableDiagnosticos.some(d => d.id.toString() === idStr)) {
+                                                    setAvailableDiagnosticos([
+                                                        ...availableDiagnosticos,
+                                                        { id: newDiag.id, nome: newDiag.nome }
+                                                    ]);
+                                                }
+                                                
+                                                // Add to selected diagnosticos list
                                                 if (!diagnosticosList.some(d => d.diagnostico_id === idStr)) {
                                                     setDiagnosticosList([
                                                         ...diagnosticosList,

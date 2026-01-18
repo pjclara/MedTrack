@@ -27,26 +27,35 @@ Route::middleware(['auth', 'active', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         $userId = auth()->id();
         $currentMonth = now()->startOfMonth();
-        
+
         return Inertia::render('dashboard', [
             'stats' => [
                 'totalRegistos' => \App\Models\RegistoCirurgico::where('user_id', $userId)->count(),
-                'totalUtentes' => \App\Models\Utente::whereHas('registosCirurgicos', function($q) use ($userId) {
+                'totalUtentes' => \App\Models\Utente::whereHas('registosCirurgicos', function ($q) use ($userId) {
                     $q->where('user_id', $userId);
                 })->count(),
+
                 'cirurgiasMes' => \App\Models\RegistoCirurgico::where('user_id', $userId)
                     ->whereDate('data_cirurgia', '>=', $currentMonth)
                     ->count(),
-                'complicacoes' => \App\Models\Cirurgia::whereHas('registoCirurgico', function($q) use ($userId) {
+                'complicacoes' => \App\Models\Cirurgia::whereHas('registoCirurgico', function ($q) use ($userId) {
                     $q->where('user_id', $userId);
                 })->whereNotNull('clavien-dindo')->count(),
                 'totalPublicacoes' => \App\Models\AtividadeCientifica::where('user_id', $userId)->count(),
                 'formacoes' => \App\Models\Formacao::where('user_id', $userId)->count(),
                 'horasFormacao' => \App\Models\Formacao::where('user_id', $userId)->sum('duracao_horas') ?? 0,
                 'creditosFormacao' => \App\Models\Formacao::where('user_id', $userId)->sum('creditos') ?? 0,
+                'totalMeusRegistosPrincipais' =>
+                \App\Models\RegistoCirurgico::where('user_id', $userId)
+                    ->whereHas('cirurgias', function ($q) use ($userId) {
+                        $q->where('user_id', $userId)
+                            ->where('funcao', \App\Enums\FuncaoCirurgiaoEnum::CIRURGIAO_PRINCIPAL);
+                    })
+                    ->count(),
+
             ],
             'recentRegistos' => \App\Models\RegistoCirurgico::where('user_id', $userId)
-                ->with(['utente', 'tipoDeCirurgia'])
+                ->with(['utente', 'tipoDeCirurgia', 'cirurgias.procedimento'])
                 ->latest('data_cirurgia')
                 ->take(5)
                 ->get()
@@ -54,7 +63,9 @@ Route::middleware(['auth', 'active', 'verified'])->group(function () {
                     'id' => $r->id,
                     'data_cirurgia' => $r->data_cirurgia->format('d/m/Y'),
                     'utente_nome' => $r->utente?->nome ?? 'N/A',
+                    'processo_numero' => $r->utente?->processo ?? 'N/A',
                     'tipo' => $r->tipoDeCirurgia?->nome ?? 'N/A',
+                    'procedimentos' => $r->cirurgias->map(fn($c) => $c->procedimento?->nome)->filter()->unique()->values()->all(),
                 ]),
         ]);
     })->name('dashboard');
@@ -76,7 +87,7 @@ Route::middleware(['auth', 'active', 'verified'])->group(function () {
 
     Route::resource('registos-cirurgicos', RegistoCirurgicoController::class)
         ->parameters(['registos-cirurgicos' => 'registo']);
-    
+
     // Atividade Científica Routes
     Route::get('atividades-cientificas/export', [AtividadeCientificaController::class, 'export'])
         ->name('atividades-cientificas.export');
@@ -85,7 +96,7 @@ Route::middleware(['auth', 'active', 'verified'])->group(function () {
         ->parameters(['atividades-cientificas' => 'atividade']);
     Route::get('atividades-cientificas/{atividade}/download', [AtividadeCientificaController::class, 'download'])
         ->name('atividades-cientificas.download');
-    
+
     // Formações Routes
     Route::get('formacoes/export', [FormacaoController::class, 'export'])
         ->name('formacoes.export');
@@ -97,8 +108,10 @@ Route::middleware(['auth', 'active', 'verified'])->group(function () {
 });
 
 // Admin Authentication (Public)
-Route::prefix('admin')->name('admin.')->group(function() {
-    Route::get('/', function() { return redirect()->route('admin.dashboard'); });
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', function () {
+        return redirect()->route('admin.dashboard');
+    });
     Route::get('login', [\App\Http\Controllers\Admin\AuthController::class, 'showLogin'])->name('login');
     Route::post('login', [\App\Http\Controllers\Admin\AuthController::class, 'login'])->name('login.post');
 });
@@ -106,26 +119,26 @@ Route::prefix('admin')->name('admin.')->group(function() {
 // Admin Protected Routes
 Route::prefix('admin')->name('admin.')->middleware(['web', 'admin'])->group(function () {
     Route::post('logout', [\App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('logout');
-    
-    Route::get('dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
-        
-        // User Management
-        Route::get('users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
-        Route::get('users/create', [\App\Http\Controllers\Admin\UserController::class, 'create'])->name('users.create');
-        Route::post('users', [\App\Http\Controllers\Admin\UserController::class, 'store'])->name('users.store');
-        Route::get('users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'show'])->name('users.show');
-        Route::get('users/{user}/edit', [\App\Http\Controllers\Admin\UserController::class, 'edit'])->name('users.edit');
-        Route::put('users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'update'])->name('users.update');
-        Route::delete('users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
-        
-        // Curriculum Management
-        Route::get('curriculos', [\App\Http\Controllers\Admin\CurriculumController::class, 'index'])->name('curriculos.index');
-        Route::get('curriculos/{registo_cirurgico}', [\App\Http\Controllers\Admin\CurriculumController::class, 'show'])->name('curriculos.show');
-        Route::get('curriculos/{registo_cirurgico}/export/json', [\App\Http\Controllers\Admin\CurriculumController::class, 'exportJson'])->name('curriculos.export.json');
-        Route::get('curriculos/{registo_cirurgico}/export/pdf', [\App\Http\Controllers\Admin\CurriculumController::class, 'exportPdf'])->name('curriculos.export.pdf');
-        
-        // Logs
-        Route::get('logs', [\App\Http\Controllers\Admin\LogController::class, 'index'])->name('logs.index');
-    });
 
-require __DIR__.'/settings.php';
+    Route::get('dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+
+    // User Management
+    Route::get('users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
+    Route::get('users/create', [\App\Http\Controllers\Admin\UserController::class, 'create'])->name('users.create');
+    Route::post('users', [\App\Http\Controllers\Admin\UserController::class, 'store'])->name('users.store');
+    Route::get('users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'show'])->name('users.show');
+    Route::get('users/{user}/edit', [\App\Http\Controllers\Admin\UserController::class, 'edit'])->name('users.edit');
+    Route::put('users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'update'])->name('users.update');
+    Route::delete('users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
+
+    // Curriculum Management
+    Route::get('curriculos', [\App\Http\Controllers\Admin\CurriculumController::class, 'index'])->name('curriculos.index');
+    Route::get('curriculos/{registo_cirurgico}', [\App\Http\Controllers\Admin\CurriculumController::class, 'show'])->name('curriculos.show');
+    Route::get('curriculos/{registo_cirurgico}/export/json', [\App\Http\Controllers\Admin\CurriculumController::class, 'exportJson'])->name('curriculos.export.json');
+    Route::get('curriculos/{registo_cirurgico}/export/pdf', [\App\Http\Controllers\Admin\CurriculumController::class, 'exportPdf'])->name('curriculos.export.pdf');
+
+    // Logs
+    Route::get('logs', [\App\Http\Controllers\Admin\LogController::class, 'index'])->name('logs.index');
+});
+
+require __DIR__ . '/settings.php';

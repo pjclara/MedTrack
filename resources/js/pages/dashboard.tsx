@@ -23,13 +23,17 @@ interface DashboardStats {
     formacoes: number;
     horasFormacao: number;
     creditosFormacao: number;
+    totalMeusRegistosPrincipais: number;
 }
 
 interface RecentRegisto {
     id: number;
     data_cirurgia: string;
     utente_nome: string;
+    processo_numero: string;
+    utente_: string;
     tipo: string;
+    procedimentos: string[];
 }
 
 interface DashboardProps {
@@ -41,7 +45,7 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
     const isMobile = useIsMobile();
     // Calcular taxa de complicações
     const complicationRate = stats.totalRegistos > 0 
-        ? ((stats.complicacoes / stats.totalRegistos) * 100).toFixed(1)
+        ? ((stats.complicacoes / stats.totalMeusRegistosPrincipais) * 100).toFixed(1)
         : 0;
 
     // Média de horas por formação
@@ -77,7 +81,7 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
                 {/* Stats Grid */}
                 <div>
                     <h2 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Atividade Cirúrgica</h2>
-                    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+                    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                         <Link href="/registos-cirurgicos" className="group">
                             <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md hover:border-emerald-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-emerald-600">
                                 <div className="flex items-start justify-between mb-3">
@@ -91,18 +95,6 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
                             </div>
                         </Link>
 
-                        <Link href="/utentes" className="group">
-                            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md hover:border-green-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-green-600">
-                                <div className="flex items-start justify-between mb-3">
-                                    <div className="rounded-lg bg-green-100 p-3 dark:bg-green-900/30">
-                                        <Users className="h-6 w-6 text-green-600 dark:text-green-400" />
-                                    </div>
-                                    <ArrowUpRight className="h-4 w-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                </div>
-                                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.totalUtentes}</h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">Utentes Registados</p>
-                            </div>
-                        </Link>
 
                         <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                             <div className="flex items-start justify-between mb-3">
@@ -115,6 +107,22 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
                             {stats.totalRegistos > 0 && (
                                 <div className="mt-3">
                                     <Progress value={(stats.cirurgiasMes / stats.totalRegistos) * 100} className="h-1.5" />
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                            <div className="flex items-start justify-between mb-3">
+                                <div className="rounded-lg bg-cyan-100 p-3 dark:bg-cyan-900/30">
+                                    <Activity className="h-6 w-6 text-cyan-600 dark:text-cyan-400" />
+                                </div>
+                            </div>
+                            <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.totalMeusRegistosPrincipais}</h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">Como Cirurgião Principal</p>
+                            {stats.totalRegistos > 0 && (
+                                <div className="mt-3">
+                                    <Progress value={(stats.totalMeusRegistosPrincipais / stats.totalRegistos) * 100} className="h-1.5" />
+                                    <p className="text-xs text-gray-500 mt-1">{((stats.totalMeusRegistosPrincipais / stats.totalRegistos) * 100).toFixed(0)}% do total</p>
                                 </div>
                             )}
                         </div>
@@ -166,30 +174,6 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
                             </div>
                         </Link>
 
-                        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                            <div className="flex items-start justify-between mb-3">
-                                <div className="rounded-lg bg-indigo-100 p-3 dark:bg-indigo-900/30">
-                                    <Clock className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
-                                </div>
-                            </div>
-                            <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.horasFormacao}<span className="text-lg">h</span></h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Horas de Formação</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">Média: {avgHoursPerTraining}h por formação</p>
-                        </div>
-
-                        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                            <div className="flex items-start justify-between mb-3">
-                                <div className="rounded-lg bg-pink-100 p-3 dark:bg-pink-900/30">
-                                    <BookOpen className="h-6 w-6 text-pink-600 dark:text-pink-400" />
-                                </div>
-                            </div>
-                            <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.creditosFormacao.toFixed(0)}</h3>
-                            
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Créditos de Formação</p>
-                            {stats.creditosFormacao >= 50 && (
-                                <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1">✓ Objetivo anual atingido</p>
-                            )}
-                        </div>
                     </div>
                 </div>
 
@@ -237,11 +221,25 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
                                                         </div>
                                                         <div>
                                                             <p className="font-medium text-gray-900 dark:text-white">
-                                                                {registo.utente_nome}
+                                                                Processo: {registo.processo_numero}
                                                             </p>
                                                             <p className="text-sm text-gray-600 dark:text-gray-400">
                                                                 {registo.tipo}
                                                             </p>
+                                                            {registo.procedimentos && registo.procedimentos.length > 0 && (
+                                                                <div className="flex flex-wrap gap-1 mt-1">
+                                                                    {registo.procedimentos.slice(0, 2).map((proc, idx) => (
+                                                                        <span key={idx} className="text-xs px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                                                                            {proc}
+                                                                        </span>
+                                                                    ))}
+                                                                    {registo.procedimentos.length > 2 && (
+                                                                        <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                                                                            +{registo.procedimentos.length - 2}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </div>
                                                     <div className="flex items-center gap-2">

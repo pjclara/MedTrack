@@ -84,4 +84,10 @@ class Cirurgia extends Model
     {
         return $query->whereNotNull('clavien-dindo');
     }
+
+    // is Cirurgia principal
+    public function isPrincipal()
+    {
+        return $this->funcao === FuncaoCirurgiaoEnum::CIRURGIAO_PRINCIPAL;
+    }
 }
