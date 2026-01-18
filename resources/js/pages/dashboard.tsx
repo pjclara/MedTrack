@@ -57,17 +57,17 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
                 <div className={`rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 ${isMobile ? 'p-6 text-center' : 'p-8'} text-white shadow-lg`}>
                     <div className="flex items-center justify-between">
                         <div>
-                            <h1 className={`mb-2 ${isMobile ? 'text-2xl' : 'text-3xl'} font-bold`}>Bem-vindo ao MedTrack</h1>
+                            <h1 className={`mb-2 ${isMobile ? 'text-2xl' : 'text-3xl'} font-bold`}>Currículo Cirúrgico</h1>
                             <p className={`${isMobile ? 'text-emerald-100 text-sm' : 'text-emerald-100 text-lg'}`}>
-                                by SurgTuga
+                                Mantenha o seu currículo sempre atualizado - by SurgTuga
                             </p>
                         </div>
                         <div className="hidden md:block text-right">
-                            <p className="text-emerald-100 text-sm">Resumo Geral</p>
+                            <p className="text-emerald-100 text-sm">Total de Atividades</p>
                             <div className="flex gap-6 mt-2">
                                 <div>
-                                    <p className="text-3xl font-bold">{stats.totalRegistos + stats.formacoes}</p>
-                                    <p className="text-emerald-200 text-sm">Total de Registos</p>
+                                    <p className="text-3xl font-bold">{stats.totalRegistos + stats.formacoes + stats.totalPublicacoes}</p>
+                                    <p className="text-emerald-200 text-sm">Registos no Currículo</p>
                                 </div>
                             </div>
                         </div>

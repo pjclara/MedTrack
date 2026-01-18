@@ -35,30 +35,30 @@ export default function AuthSimpleLayout({
                                     MedTrack
                                 </h1>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Soluções SurgTuga
+                                    by SurgTuga
                                 </p>
                             </div>
                         </Link>
 
                         <div className="space-y-6">
                             <h2 className="text-4xl font-bold leading-tight text-gray-900 dark:text-white">
-                                Gestão Profissional de<br />
-                                <span className="text-emerald-600">Registos Cirúrgicos</span>
+                                O seu Currículo<br />
+                                <span className="text-emerald-600">Cirúrgico Digital</span>
                             </h2>
                             <p className="text-lg text-gray-600 dark:text-gray-300">
-                                Plataforma completa para organização, monitorização e análise de intervenções cirúrgicas.
+                                Registe intervenções cirúrgicas, atividades científicas e formações. Mantenha tudo atualizado num só lugar.
                             </p>
                         </div>
 
-                        <div className="space-y-4 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 p-8 shadow-2xl">
+                        <div className="space-y-4 rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-800 p-8 shadow-2xl">
                             <div className="flex items-start gap-4">
                                 <div className="rounded-lg bg-white/20 p-2">
                                     <Activity className="h-5 w-5 text-white" />
                                 </div>
                                 <div>
-                                    <h3 className="font-semibold text-white">Registo Detalhado</h3>
-                                    <p className="text-sm text-blue-100">
-                                        Sistema wizard intuitivo em 6 passos para documentação completa
+                                    <h3 className="font-semibold text-white">Currículo Completo</h3>
+                                    <p className="text-sm text-emerald-100">
+                                        Todas as suas atividades cirúrgicas, científicas e formações organizadas
                                     </p>
                                 </div>
                             </div>
@@ -67,9 +67,9 @@ export default function AuthSimpleLayout({
                                     <Activity className="h-5 w-5 text-white" />
                                 </div>
                                 <div>
-                                    <h3 className="font-semibold text-white">Segurança Total</h3>
-                                    <p className="text-sm text-blue-100">
-                                        Controlo de acesso por utilizador e proteção de dados médicos
+                                    <h3 className="font-semibold text-white">Sempre Atualizado</h3>
+                                    <p className="text-sm text-emerald-100">
+                                        Registe facilmente e mantenha o seu percurso profissional atualizado
                                     </p>
                                 </div>
                             </div>

@@ -1,7 +1,7 @@
 import { dashboard, login} from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { Activity, FileText, Users, Calendar, TrendingUp, Shield } from 'lucide-react';
+import { Activity, FileText, Users, Calendar, TrendingUp, Shield, GraduationCap, Award, Briefcase } from 'lucide-react';
 
 export default function Welcome({
     canRegister = true,
@@ -26,7 +26,7 @@ export default function Welcome({
                                     MedTrack
                                 </h1>
                                 <p className="text-xs text-gray-600 dark:text-gray-400">
-                                    by SurgTuga - Auto Deploy Test! 🚀
+                                    by SurgTuga
                                 </p>
                             </div>
                         </div>
@@ -58,18 +58,19 @@ export default function Welcome({
                     <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
                         <div className="flex flex-col justify-center">
                             <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
-                                <Activity className="h-4 w-4" />
-                                Plataforma Médica Profissional
+                                <Briefcase className="h-4 w-4" />
+                                Gestão de Currículo Cirúrgico
                             </div>
                             <h2 className="mb-6 text-5xl font-bold leading-tight text-gray-900 dark:text-white">
-                                Gestão Inteligente de
-                                <span className="block text-blue-600">
-                                    Registos Cirúrgicos
+                                Mantenha o seu
+                                <span className="block text-emerald-600">
+                                    Currículo Cirúrgico
                                 </span>
+                                <span className="block">Sempre Atualizado</span>
                             </h2>
                             <p className="mb-8 text-lg text-gray-600 dark:text-gray-300">
-                                Sistema completo para organização, monitorização e análise de intervenções cirúrgicas. 
-                                Registe procedimentos, acompanhe utentes e gere relatórios detalhados de forma simples e segura.
+                                Plataforma completa para registo de intervenções cirúrgicas, atividades científicas e formações. 
+                                Documente toda a sua trajetória profissional e mantenha um currículo detalhado e atualizado automaticamente.
                             </p>
 
                         </div>
@@ -83,32 +84,32 @@ export default function Welcome({
                                             <div className="rounded-lg bg-white/20 p-2">
                                                 <FileText className="h-5 w-5 text-white" />
                                             </div>
-                                            <span className="font-semibold text-white">Registos Detalhados</span>
+                                            <span className="font-semibold text-white">Registos Cirúrgicos</span>
                                         </div>
                                         <p className="text-sm text-blue-100">
-                                            Documentação completa de procedimentos cirúrgicos com diagnósticos e complicações
+                                            Documentação completa de todas as suas intervenções cirúrgicas
                                         </p>
                                     </div>
                                     <div className="rounded-lg bg-white/10 p-6 backdrop-blur-sm">
                                         <div className="mb-3 flex items-center gap-3">
                                             <div className="rounded-lg bg-white/20 p-2">
-                                                <Users className="h-5 w-5 text-white" />
+                                                <GraduationCap className="h-5 w-5 text-white" />
                                             </div>
-                                            <span className="font-semibold text-white">Gestão de Utentes</span>
+                                            <span className="font-semibold text-white">Atividades Científicas</span>
                                         </div>
                                         <p className="text-sm text-blue-100">
-                                            Histórico completo de cada utente com todos os procedimentos realizados
+                                            Registo de publicações, apresentações e produções científicas
                                         </p>
                                     </div>
                                     <div className="rounded-lg bg-white/10 p-6 backdrop-blur-sm">
                                         <div className="mb-3 flex items-center gap-3">
                                             <div className="rounded-lg bg-white/20 p-2">
-                                                <Calendar className="h-5 w-5 text-white" />
+                                                <Award className="h-5 w-5 text-white" />
                                             </div>
-                                            <span className="font-semibold text-white">Acompanhamento Temporal</span>
+                                            <span className="font-semibold text-white">Formações & Cursos</span>
                                         </div>
                                         <p className="text-sm text-blue-100">
-                                            Visualização cronológica de cirurgias e evolução de casos clínicos
+                                            Histórico completo de todas as formações e cursos realizados
                                         </p>
                                     </div>
                                 </div>
@@ -122,22 +123,44 @@ export default function Welcome({
                     <div className="mx-auto max-w-7xl px-6">
                         <div className="mb-16 text-center">
                             <h3 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white">
-                                Funcionalidades Principais
+                                Tudo para o seu Currículo Profissional
                             </h3>
                             <p className="text-lg text-gray-600 dark:text-gray-300">
-                                Tudo o que precisa para uma gestão cirúrgica eficiente
+                                Registe, organize e mantenha atualizado todo o seu percurso cirúrgico e académico
                             </p>
                         </div>
                         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                             <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-lg dark:border-gray-700 dark:bg-gray-900">
                                 <div className="mb-4 inline-flex rounded-lg bg-emerald-100 p-3 dark:bg-emerald-900/30">
-                                    <FileText className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                                    <FileText className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                                 </div>
                                 <h4 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">
-                                    Wizard de Registo
+                                    Intervenções Cirúrgicas
                                 </h4>
                                 <p className="text-gray-600 dark:text-gray-300">
-                                    Interface intuitiva em 6 passos para registo completo de cirurgias, diagnósticos e procedimentos
+                                    Registo detalhado de todas as cirurgias realizadas, com procedimentos, diagnósticos e função cirúrgica
+                                </p>
+                            </div>
+                            <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-lg dark:border-gray-700 dark:bg-gray-900">
+                                <div className="mb-4 inline-flex rounded-lg bg-blue-100 p-3 dark:bg-blue-900/30">
+                                    <GraduationCap className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                                </div>
+                                <h4 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">
+                                    Atividades Científicas
+                                </h4>
+                                <p className="text-gray-600 dark:text-gray-300">
+                                    Documente publicações, apresentações em congressos e toda a sua produção científica
+                                </p>
+                            </div>
+                            <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-lg dark:border-gray-700 dark:bg-gray-900">
+                                <div className="mb-4 inline-flex rounded-lg bg-purple-100 p-3 dark:bg-purple-900/30">
+                                    <Award className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                                </div>
+                                <h4 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">
+                                    Formações & Certificações
+                                </h4>
+                                <p className="text-gray-600 dark:text-gray-300">
+                                    Mantenha um registo atualizado de cursos, workshops e certificações obtidas
                                 </p>
                             </div>
                             <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-lg dark:border-gray-700 dark:bg-gray-900">
@@ -148,18 +171,7 @@ export default function Welcome({
                                     Gestão de Utentes
                                 </h4>
                                 <p className="text-gray-600 dark:text-gray-300">
-                                    Cadastro completo de utentes com processo clínico, dados pessoais e histórico médico
-                                </p>
-                            </div>
-                            <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-lg dark:border-gray-700 dark:bg-gray-900">
-                                <div className="mb-4 inline-flex rounded-lg bg-purple-100 p-3 dark:bg-purple-900/30">
-                                    <Activity className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-                                </div>
-                                <h4 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">
-                                    Classificação Clavien-Dindo
-                                </h4>
-                                <p className="text-gray-600 dark:text-gray-300">
-                                    Registo de complicações cirúrgicas segundo classificação internacional padronizada
+                                    Base de dados de utentes com histórico completo de intervenções realizadas
                                 </p>
                             </div>
                             <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-lg dark:border-gray-700 dark:bg-gray-900">
@@ -167,10 +179,10 @@ export default function Welcome({
                                     <TrendingUp className="h-6 w-6 text-orange-600 dark:text-orange-400" />
                                 </div>
                                 <h4 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">
-                                    Relatórios e Análises
+                                    Estatísticas & Relatórios
                                 </h4>
                                 <p className="text-gray-600 dark:text-gray-300">
-                                    Estatísticas detalhadas e visualização de dados para análise de desempenho cirúrgico
+                                    Visualize e exporte dados do seu currículo com relatórios detalhados e estatísticas
                                 </p>
                             </div>
                             <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-lg dark:border-gray-700 dark:bg-gray-900">
@@ -178,21 +190,10 @@ export default function Welcome({
                                     <Shield className="h-6 w-6 text-red-600 dark:text-red-400" />
                                 </div>
                                 <h4 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">
-                                    Segurança e Privacidade
+                                    Segurança & Privacidade
                                 </h4>
                                 <p className="text-gray-600 dark:text-gray-300">
-                                    Acesso controlado por utilizador com autenticação segura e proteção de dados médicos
-                                </p>
-                            </div>
-                            <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-lg dark:border-gray-700 dark:bg-gray-900">
-                                <div className="mb-4 inline-flex rounded-lg bg-indigo-100 p-3 dark:bg-indigo-900/30">
-                                    <Calendar className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
-                                </div>
-                                <h4 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">
-                                    Multi-especialidade
-                                </h4>
-                                <p className="text-gray-600 dark:text-gray-300">
-                                    Suporte para múltiplas áreas cirúrgicas, diagnósticos e tipos de procedimentos
+                                    Seus dados protegidos com autenticação segura e conformidade com RGPD
                                 </p>
                             </div>
                         </div>
@@ -200,13 +201,13 @@ export default function Welcome({
                 </section>
 
                 {/* CTA Section */}
-                <section className="bg-gradient-to-br from-blue-600 to-blue-800 py-20">
+                <section className="bg-gradient-to-br from-emerald-600 to-emerald-800 py-20">
                     <div className="mx-auto max-w-4xl px-6 text-center">
                         <h3 className="mb-6 text-4xl font-bold text-white">
-                            Pronto para começar?
+                            Mantenha o seu currículo sempre atualizado
                         </h3>
-                        <p className="mb-8 text-xl text-blue-100">
-                            Modernize a gestão dos seus registos cirúrgicos hoje mesmo
+                        <p className="mb-8 text-xl text-emerald-100">
+                            Registe todas as suas atividades cirúrgicas, científicas e formações num só lugar
                         </p>
                         
                     </div>
