@@ -230,7 +230,6 @@ export default function RegistoCirurgicoShow({ registo }: RegistoCirurgicoShowPr
                                     <TableHeader>
                                         <TableRow>
                                             <TableHead>Diagnóstico</TableHead>
-                                            <TableHead>Tipo</TableHead>
                                             <TableHead>Procedimento</TableHead>
                                             <TableHead>Função</TableHead>
                                         </TableRow>
@@ -242,23 +241,7 @@ export default function RegistoCirurgicoShow({ registo }: RegistoCirurgicoShowPr
                                                     {cirurgia.diagnostico?.nome || '-'}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {cirurgia.tipo && (
-                                                        <Badge variant={cirurgia.tipo === 'Maligno' ? 'destructive' : 'secondary'}>
-                                                            {cirurgia.tipo}
-                                                        </Badge>
-                                                    )}
-                                                </TableCell>
-                                                <TableCell>
                                                     {cirurgia.procedimento?.nome || '-'}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {cirurgia.tipo_de_abordagem ? (
-                                                        <Badge variant="outline">
-                                                            {cirurgia.tipo_de_abordagem}
-                                                        </Badge>
-                                                    ) : (
-                                                        '-'
-                                                    )}
                                                 </TableCell>
                                                 <TableCell>
                                                     {cirurgia.funcao ? (

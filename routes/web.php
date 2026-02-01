@@ -40,7 +40,9 @@ Route::middleware(['auth', 'active', 'verified'])->group(function () {
                     ->count(),
                 'complicacoes' => \App\Models\Cirurgia::whereHas('registoCirurgico', function ($q) use ($userId) {
                     $q->where('user_id', $userId);
-                })->whereNotNull('clavien-dindo')->count(),
+                })->whereNotNull('clavien-dindo')
+                ->where('clavien-dindo', '!=', 'Sem Complicações')
+                ->count(),
                 'totalPublicacoes' => \App\Models\AtividadeCientifica::where('user_id', $userId)->count(),
                 'formacoes' => \App\Models\Formacao::where('user_id', $userId)->count(),
                 'horasFormacao' => \App\Models\Formacao::where('user_id', $userId)->sum('duracao_horas') ?? 0,
