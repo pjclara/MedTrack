@@ -51,6 +51,14 @@ class HandleInertiaRequests extends Middleware
                 'is_admin_guard' => !!$admin,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'flash' => fn () => [
+                'success' => $request->session()->get('success'),
+                'error' => $request->session()->get('error'),
+                'new_diagnostico_id' => $request->session()->get('new_diagnostico_id'),
+                'new_procedimento_id' => $request->session()->get('new_procedimento_id'),
+                'new_especialidade_id' => $request->session()->get('new_especialidade_id'),
+                'new_zona_anatomica_id' => $request->session()->get('new_zona_anatomica_id'),
+            ],
         ];
     }
 }

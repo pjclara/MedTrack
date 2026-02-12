@@ -525,34 +525,7 @@ export default function RegistoCirurgicoEdit({
                                         placeholder="Selecione os diagnósticos"
                                     />
                                 </div>
-                                {diagnosticosList.length > 0 && (
-                                    <div className="space-y-4 pt-4">
-                                        <h3 className="text-sm font-medium">Classificação dos Diagnósticos</h3>
-                                        {diagnosticosList.map((d, index) => {
-                                            const diagnosisName = diagnosticos.find(diag => diag.id.toString() === d.diagnostico_id)?.nome;
-                                            return (
-                                                <div key={d.diagnostico_id} className="grid grid-cols-2 gap-4 items-center p-3 border rounded-md">
-                                                    <span className="text-sm">{diagnosisName}</span>
-                                                    <Select
-                                                        value={d.tipo}
-                                                        onValueChange={(value) => updateDiagnosticoTipo(index, value)}
-                                                    >
-                                                        <SelectTrigger>
-                                                            <SelectValue placeholder="Tipo (Benigno/Maligno)" />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            {(enums?.tipo_diagnostico || []).map((tipo) => (
-                                                                <SelectItem key={tipo} value={tipo}>
-                                                                    {tipo}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                )}
+                                
                             </CardContent>
                         </Card>
                     )}

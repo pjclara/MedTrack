@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -8,12 +8,8 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Plus } from 'lucide-react';
-import { useForm, usePage } from '@inertiajs/react';
 import {
     Select,
     SelectContent,
@@ -21,6 +17,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { useForm, usePage } from '@inertiajs/react';
+import { Plus } from 'lucide-react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
 interface Especialidade {
@@ -28,7 +28,11 @@ interface Especialidade {
     nome: string;
 }
 
-export function QuickAddEspecialidade({ onCreated }: { onCreated?: (especialidade: any) => void }) {
+export function QuickAddEspecialidade({
+    onCreated,
+}: {
+    onCreated?: (especialidade: any) => void;
+}) {
     const [open, setOpen] = useState(false);
     const { data, setData, post, processing, reset, errors } = useForm({
         nome: '',
@@ -46,10 +50,16 @@ export function QuickAddEspecialidade({ onCreated }: { onCreated?: (especialidad
             },
             onSuccess: (page) => {
                 toast.success('Especialidade criada com sucesso');
+
+                const newId = (page.props.flash as any)?.new_diagnostico_id;
+                const nomeCriado = data.nome; // <-- guardar antes
+
                 setOpen(false);
                 reset();
-                const newId = page.props.flash?.new_especialidade_id;
-                if (onCreated) onCreated({ id: newId, nome: data.nome });
+
+                if (onCreated && newId) {
+                    onCreated({ id: newId, nome: nomeCriado });
+                }
             },
         });
     };
@@ -58,7 +68,7 @@ export function QuickAddEspecialidade({ onCreated }: { onCreated?: (especialidad
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline" size="sm" type="button">
-                    <Plus className="h-4 w-4 mr-1" /> Especialidade
+                    <Plus className="mr-1 h-4 w-4" /> Especialidade
                 </Button>
             </DialogTrigger>
             <DialogContent>
@@ -78,23 +88,42 @@ export function QuickAddEspecialidade({ onCreated }: { onCreated?: (especialidad
                             placeholder="Ex: Cirurgia Geral"
                             required
                         />
-                        {errors.nome && <p className="text-xs text-destructive">{errors.nome}</p>}
+                        {errors.nome && (
+                            <p className="text-xs text-destructive">
+                                {errors.nome}
+                            </p>
+                        )}
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="especialidade-desc">Descrição (Opcional)</Label>
+                        <Label htmlFor="especialidade-desc">
+                            Descrição (Opcional)
+                        </Label>
                         <Textarea
                             id="especialidade-desc"
                             value={data.descricao}
-                            onChange={(e) => setData('descricao', e.target.value)}
+                            onChange={(e) =>
+                                setData('descricao', e.target.value)
+                            }
                             placeholder="Breve descrição da especialidade..."
                         />
-                        {errors.descricao && <p className="text-xs text-destructive">{errors.descricao}</p>}
+                        {errors.descricao && (
+                            <p className="text-xs text-destructive">
+                                {errors.descricao}
+                            </p>
+                        )}
                     </div>
                     <DialogFooter>
-                        <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setOpen(false)}
+                        >
                             Cancelar
                         </Button>
-                        <Button type="submit" disabled={processing || !data.nome}>
+                        <Button
+                            type="submit"
+                            disabled={processing || !data.nome}
+                        >
                             {processing ? 'A criar...' : 'Criar Especialidade'}
                         </Button>
                     </DialogFooter>
@@ -104,7 +133,11 @@ export function QuickAddEspecialidade({ onCreated }: { onCreated?: (especialidad
     );
 }
 
-export function QuickAddZonaAnatomica({ onCreated }: { onCreated?: (zona: any) => void }) {
+export function QuickAddZonaAnatomica({
+    onCreated,
+}: {
+    onCreated?: (zona: any) => void;
+}) {
     const [open, setOpen] = useState(false);
     const { data, setData, post, processing, reset, errors } = useForm({
         nome: '',
@@ -126,7 +159,7 @@ export function QuickAddZonaAnatomica({ onCreated }: { onCreated?: (zona: any) =
                 toast.success('Zona Anatómica criada com sucesso');
                 setOpen(false);
                 reset();
-                const newId = page.props.flash?.new_zona_anatomica_id;
+                const newId = (page.props.flash as any)?.new_zona_anatomica_id;
                 if (onCreated) onCreated({ id: newId, nome: data.nome });
             },
         });
@@ -136,7 +169,7 @@ export function QuickAddZonaAnatomica({ onCreated }: { onCreated?: (zona: any) =
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline" size="sm" type="button">
-                    <Plus className="h-4 w-4 mr-1" /> Zona
+                    <Plus className="mr-1 h-4 w-4" /> Zona
                 </Button>
             </DialogTrigger>
             <DialogContent>
@@ -156,23 +189,40 @@ export function QuickAddZonaAnatomica({ onCreated }: { onCreated?: (zona: any) =
                             placeholder="Ex: Abdómen"
                             required
                         />
-                        {errors.nome && <p className="text-xs text-destructive">{errors.nome}</p>}
+                        {errors.nome && (
+                            <p className="text-xs text-destructive">
+                                {errors.nome}
+                            </p>
+                        )}
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="zona-desc">Descrição (Opcional)</Label>
                         <Textarea
                             id="zona-desc"
                             value={data.descricao}
-                            onChange={(e) => setData('descricao', e.target.value)}
+                            onChange={(e) =>
+                                setData('descricao', e.target.value)
+                            }
                             placeholder="Breve descrição..."
                         />
-                        {errors.descricao && <p className="text-xs text-destructive">{errors.descricao}</p>}
+                        {errors.descricao && (
+                            <p className="text-xs text-destructive">
+                                {errors.descricao}
+                            </p>
+                        )}
                     </div>
                     <DialogFooter>
-                        <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setOpen(false)}
+                        >
                             Cancelar
                         </Button>
-                        <Button type="submit" disabled={processing || !data.nome}>
+                        <Button
+                            type="submit"
+                            disabled={processing || !data.nome}
+                        >
                             {processing ? 'A criar...' : 'Criar Zona'}
                         </Button>
                     </DialogFooter>
@@ -182,10 +232,10 @@ export function QuickAddZonaAnatomica({ onCreated }: { onCreated?: (zona: any) =
     );
 }
 
-export function QuickAddDiagnostico({ 
+export function QuickAddDiagnostico({
     onCreated,
-    zonaAnatomicas = []
-}: { 
+    zonaAnatomicas = [],
+}: {
     onCreated?: (diag: any) => void;
     zonaAnatomicas?: any[];
 }) {
@@ -214,14 +264,23 @@ export function QuickAddDiagnostico({
             },
             onSuccess: (page) => {
                 toast.success('Diagnóstico criado com sucesso');
+
+                const newId = (page.props.flash as any)?.new_diagnostico_id;
+                const nomeCriado = data.nome; // <-- guardar antes
+
                 setOpen(false);
                 reset();
-                const newId = page.props.flash?.new_diagnostico_id;
-                if (onCreated) onCreated({ id: newId, nome: data.nome });
+
+                if (onCreated && newId) {
+                    onCreated({ id: newId, nome: nomeCriado });
+                }
             },
             onError: (errors) => {
                 console.error('Erro ao criar diagnóstico:', errors);
-                const errorMessage = errors.zona_anatomica || errors.nome || 'Erro ao criar diagnóstico';
+                const errorMessage =
+                    errors.zona_anatomica ||
+                    errors.nome ||
+                    'Erro ao criar diagnóstico';
                 toast.error(errorMessage);
             },
         });
@@ -229,115 +288,172 @@ export function QuickAddDiagnostico({
 
     return (
         <>
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button variant="outline" size="sm" type="button">
-                    <Plus className="h-4 w-4 mr-1" /> Diagnóstico
-                </Button>
-            </DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Criar Novo Diagnóstico</DialogTitle>
-                    <DialogDescription>
-                        Adicione um novo diagnóstico à sua lista.
-                    </DialogDescription>
-                </DialogHeader>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="diag-nome">Nome do Diagnóstico</Label>
-                        <Input
-                            id="diag-nome"
-                            value={data.nome}
-                            onChange={(e) => setData('nome', e.target.value)}
-                            placeholder="Ex: Apendicite Aguda"
-                            required
-                        />
-                        {errors.nome && <p className="text-xs text-destructive">{errors.nome}</p>}
-                    </div>
-                    <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                            <Label htmlFor="diag-zona">Zona Anatómica <span className="text-destructive">*</span></Label>
-                            <QuickAddZonaAnatomica onCreated={(newZona) => {
-                                setData('zona_anatomica', newZona.nome);
-                            }} />
+            <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild>
+                    <Button variant="outline" size="sm" type="button">
+                        <Plus className="mr-1 h-4 w-4" /> Diagnóstico
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Criar Novo Diagnóstico</DialogTitle>
+                        <DialogDescription>
+                            Adicione um novo diagnóstico à sua lista.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="diag-nome">
+                                Nome do Diagnóstico
+                            </Label>
+                            <Input
+                                id="diag-nome"
+                                value={data.nome}
+                                onChange={(e) =>
+                                    setData('nome', e.target.value)
+                                }
+                                placeholder="Ex: Apendicite Aguda"
+                                required
+                            />
+                            {errors.nome && (
+                                <p className="text-xs text-destructive">
+                                    {errors.nome}
+                                </p>
+                            )}
                         </div>
-                        <Select 
-                            value={data.zona_anatomica} 
-                            onValueChange={(val) => setData('zona_anatomica', val)}
-                            required
-                        >
-                            <SelectTrigger id="diag-zona">
-                                <SelectValue placeholder="Selecione a zona" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {zonaAnatomicas && zonaAnatomicas.length > 0 ? (
-                                    zonaAnatomicas.map((zona: any) => (
-                                        <SelectItem key={zona.id || zona.nome || zona} value={zona.nome || zona}>
-                                            {zona.nome || zona}
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <Label htmlFor="diag-zona">
+                                    Zona Anatómica{' '}
+                                    <span className="text-destructive">*</span>
+                                </Label>
+                                <QuickAddZonaAnatomica
+                                    onCreated={(newZona) => {
+                                        setData('zona_anatomica', newZona.nome);
+                                    }}
+                                />
+                            </div>
+                            <Select
+                                value={data.zona_anatomica}
+                                onValueChange={(val) =>
+                                    setData('zona_anatomica', val)
+                                }
+                                required
+                            >
+                                <SelectTrigger id="diag-zona">
+                                    <SelectValue placeholder="Selecione a zona" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {zonaAnatomicas &&
+                                    zonaAnatomicas.length > 0 ? (
+                                        zonaAnatomicas.map((zona: any) => (
+                                            <SelectItem
+                                                key={
+                                                    zona.id || zona.nome || zona
+                                                }
+                                                value={zona.nome || zona}
+                                            >
+                                                {zona.nome || zona}
+                                            </SelectItem>
+                                        ))
+                                    ) : (
+                                        <SelectItem value="__empty__" disabled>
+                                            Crie uma zona anatómica primeiro
                                         </SelectItem>
-                                    ))
-                                ) : (
-                                    <SelectItem value="__empty__" disabled>Crie uma zona anatómica primeiro</SelectItem>
-                                )}
-                            </SelectContent>
-                        </Select>
-                        {errors.zona_anatomica && <p className="text-xs text-destructive">{errors.zona_anatomica}</p>}
-                        {(!zonaAnatomicas || zonaAnatomicas.length === 0) && (
-                            <p className="text-xs text-orange-600">
-                                Utilize o botão "Zona" acima para criar a primeira zona anatómica
-                            </p>
-                        )}
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="diag-tipo">Tipo de Diagnóstico (Opcional)</Label>
-                        <Select 
-                            value={data.tipo} 
-                            onValueChange={(val) => setData('tipo', val)}
-                        >
-                            <SelectTrigger>
-                                <SelectValue placeholder="Selecione o tipo" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="Benigno">Benigno</SelectItem>
-                                <SelectItem value="Maligno">Maligno</SelectItem>
-                            </SelectContent>
-                        </Select>
-                        {errors.tipo && <p className="text-xs text-destructive">{errors.tipo}</p>}
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="diag-desc">Descrição (Opcional)</Label>
-                        <Textarea
-                            id="diag-desc"
-                            value={data.descricao}
-                            onChange={(e) => setData('descricao', e.target.value)}
-                            placeholder="Detalhes adicionais..."
-                        />
-                        {errors.descricao && <p className="text-xs text-destructive">{errors.descricao}</p>}
-                    </div>
-                    <DialogFooter>
-                        <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                            Cancelar
-                        </Button>
-                        <Button 
-                            type="submit" 
-                            disabled={processing || !data.nome || !data.zona_anatomica}
-                        >
-                            {processing ? 'A criar...' : 'Criar Diagnóstico'}
-                        </Button>
-                    </DialogFooter>
-                </form>
-            </DialogContent>
-        </Dialog>
+                                    )}
+                                </SelectContent>
+                            </Select>
+                            {errors.zona_anatomica && (
+                                <p className="text-xs text-destructive">
+                                    {errors.zona_anatomica}
+                                </p>
+                            )}
+                            {(!zonaAnatomicas ||
+                                zonaAnatomicas.length === 0) && (
+                                <p className="text-xs text-orange-600">
+                                    Utilize o botão "Zona" acima para criar a
+                                    primeira zona anatómica
+                                </p>
+                            )}
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="diag-tipo">
+                                Tipo de Diagnóstico (Opcional)
+                            </Label>
+                            <Select
+                                value={data.tipo}
+                                onValueChange={(val) => setData('tipo', val)}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Selecione o tipo" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="Benigno">
+                                        Benigno
+                                    </SelectItem>
+                                    <SelectItem value="Maligno">
+                                        Maligno
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                            {errors.tipo && (
+                                <p className="text-xs text-destructive">
+                                    {errors.tipo}
+                                </p>
+                            )}
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="diag-desc">
+                                Descrição (Opcional)
+                            </Label>
+                            <Textarea
+                                id="diag-desc"
+                                value={data.descricao}
+                                onChange={(e) =>
+                                    setData('descricao', e.target.value)
+                                }
+                                placeholder="Detalhes adicionais..."
+                            />
+                            {errors.descricao && (
+                                <p className="text-xs text-destructive">
+                                    {errors.descricao}
+                                </p>
+                            )}
+                        </div>
+                        <DialogFooter>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => setOpen(false)}
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                type="submit"
+                                disabled={
+                                    processing ||
+                                    !data.nome ||
+                                    !data.zona_anatomica
+                                }
+                            >
+                                {processing
+                                    ? 'A criar...'
+                                    : 'Criar Diagnóstico'}
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }
 
-export function QuickAddProcedimento({ 
-    especialidades = [], 
-    onCreated 
-}: { 
-    especialidades?: Especialidade[], 
-    onCreated?: (proc: any) => void 
+export function QuickAddProcedimento({
+    especialidades = [],
+    onCreated,
+}: {
+    especialidades?: Especialidade[];
+    onCreated?: (proc: any) => void;
 }) {
     const [open, setOpen] = useState(false);
     const { data, setData, post, processing, reset, errors } = useForm({
@@ -359,8 +475,13 @@ export function QuickAddProcedimento({
                 toast.success('Procedimento criado com sucesso');
                 setOpen(false);
                 reset();
-                const newId = page.props.flash?.new_procedimento_id;
-                if (onCreated) onCreated({ id: newId, nome: data.nome, especialidade: data.especialidade });
+                const newId = (page.props.flash as any)?.new_procedimento_id;
+                if (onCreated)
+                    onCreated({
+                        id: newId,
+                        nome: data.nome,
+                        especialidade: data.especialidade,
+                    });
             },
         });
     };
@@ -369,7 +490,7 @@ export function QuickAddProcedimento({
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline" size="sm" type="button">
-                    <Plus className="h-4 w-4 mr-1" /> Procedimento
+                    <Plus className="mr-1 h-4 w-4" /> Procedimento
                 </Button>
             </DialogTrigger>
             <DialogContent>
@@ -389,16 +510,28 @@ export function QuickAddProcedimento({
                             placeholder="Ex: Apendicectomia Laparoscópica"
                             required
                         />
-                        {errors.nome && <p className="text-xs text-destructive">{errors.nome}</p>}
+                        {errors.nome && (
+                            <p className="text-xs text-destructive">
+                                {errors.nome}
+                            </p>
+                        )}
                     </div>
                     <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                            <Label htmlFor="proc-especialidade">Especialidade</Label>
-                            <QuickAddEspecialidade onCreated={(newSpec) => setData('especialidade', newSpec.nome)} />
+                            <Label htmlFor="proc-especialidade">
+                                Especialidade
+                            </Label>
+                            <QuickAddEspecialidade
+                                onCreated={(newSpec) =>
+                                    setData('especialidade', newSpec.nome)
+                                }
+                            />
                         </div>
-                        <Select 
-                            value={data.especialidade} 
-                            onValueChange={(val) => setData('especialidade', val)}
+                        <Select
+                            value={data.especialidade}
+                            onValueChange={(val) =>
+                                setData('especialidade', val)
+                            }
                         >
                             <SelectTrigger id="proc-especialidade">
                                 <SelectValue placeholder="Selecione a especialidade" />
@@ -411,23 +544,42 @@ export function QuickAddProcedimento({
                                 ))}
                             </SelectContent>
                         </Select>
-                        {errors.especialidade && <p className="text-xs text-destructive">{errors.especialidade}</p>}
+                        {errors.especialidade && (
+                            <p className="text-xs text-destructive">
+                                {errors.especialidade}
+                            </p>
+                        )}
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="proc-desc">Descrição (Opcional)</Label>
                         <Textarea
                             id="proc-desc"
                             value={data.descricao}
-                            onChange={(e) => setData('descricao', e.target.value)}
+                            onChange={(e) =>
+                                setData('descricao', e.target.value)
+                            }
                             placeholder="Detalhes adicionais..."
                         />
-                        {errors.descricao && <p className="text-xs text-destructive">{errors.descricao}</p>}
+                        {errors.descricao && (
+                            <p className="text-xs text-destructive">
+                                {errors.descricao}
+                            </p>
+                        )}
                     </div>
                     <DialogFooter>
-                        <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setOpen(false)}
+                        >
                             Cancelar
                         </Button>
-                        <Button type="submit" disabled={processing || !data.nome || !data.especialidade}>
+                        <Button
+                            type="submit"
+                            disabled={
+                                processing || !data.nome || !data.especialidade
+                            }
+                        >
                             {processing ? 'A criar...' : 'Criar Procedimento'}
                         </Button>
                     </DialogFooter>
