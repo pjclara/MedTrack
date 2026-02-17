@@ -3,10 +3,10 @@
 namespace Tests\Feature\Controllers;
 
 use App\Enums\FuncaoCirurgiaoEnum;
-use App\Enums\TipoAbordagemEnum;
 use App\Models\Diagnostico;
 use App\Models\Procedimento;
 use App\Models\RegistoCirurgico;
+use App\Models\TipoDeAbordagem;
 use App\Models\User;
 use App\Models\Utente;
 use App\Models\TipoDeCirurgia;
@@ -42,6 +42,7 @@ class RegistoCirurgicoControllerTest extends TestCase
         $utente = Utente::factory()->create(['user_id' => $user->id]);
         $tipo = TipoDeCirurgia::factory()->create();
         $tipoOrigem = \App\Models\TipoDeOrigem::factory()->create();
+        $tipoAbordagem = TipoDeAbordagem::factory()->create(['user_id' => $user->id]);
         $diagnostico = \App\Models\Diagnostico::factory()->create(['user_id' => $user->id]);
         $procedimento = \App\Models\Procedimento::factory()->create(['user_id' => $user->id]);
 
@@ -59,7 +60,7 @@ class RegistoCirurgicoControllerTest extends TestCase
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
-                'tipo_de_abordagem' => TipoAbordagemEnum::LAPAROSCOPICA->value,
+                'tipo_de_abordagem_id' => (string) $tipoAbordagem->id,
                 'ambulatorio' => false,
                 'observacoes' => 'Cirurgia eletiva',
             ],
@@ -87,7 +88,7 @@ class RegistoCirurgicoControllerTest extends TestCase
 
         $this->assertDatabaseHas('registo_cirurgicos', [
             'utente_id' => $utente->id,
-            'tipo_de_abordagem' => TipoAbordagemEnum::LAPAROSCOPICA->value,
+            'tipo_de_abordagem_id' => $tipoAbordagem->id,
             'user_id' => $user->id,
         ]);
 
@@ -97,7 +98,7 @@ class RegistoCirurgicoControllerTest extends TestCase
         ]);
     }
 
-    public function test_store_validates_tipo_abordagem_enum(): void
+    public function test_store_validates_tipo_abordagem_id_exists(): void
     {
         $user = User::factory()->create();
         $utente = Utente::factory()->create(['user_id' => $user->id]);
@@ -114,11 +115,13 @@ class RegistoCirurgicoControllerTest extends TestCase
                 'data_nascimento' => $utente->data_nascimento->format('Y-m-d'),
                 'sexo' => $utente->sexo->value,
             ],
-            'registo' => [                'hospital' => 'Hospital Teste',
-                'especialidade' => 'Cirurgia Geral',                'data_cirurgia' => '2025-12-19',
+            'registo' => [
+                'hospital' => 'Hospital Teste',
+                'especialidade' => 'Cirurgia Geral',
+                'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
-                'tipo_de_abordagem' => 'abordagem_invalida',
+                'tipo_de_abordagem_id' => '99999',
                 'ambulatorio' => false,
             ],
             'diagnosticos' => [
@@ -136,7 +139,7 @@ class RegistoCirurgicoControllerTest extends TestCase
 
         $response = $this->actingAs($user)->post(route('registos-cirurgicos.store'), $data);
 
-        $response->assertSessionHasErrors(['registo.tipo_de_abordagem']);
+        $response->assertSessionHasErrors(['registo.tipo_de_abordagem_id']);
     }
 
     public function test_show_displays_registo_with_cirurgias(): void
@@ -154,6 +157,8 @@ class RegistoCirurgicoControllerTest extends TestCase
         $user = User::factory()->create();
         $registo = RegistoCirurgico::factory()->create(['user_id' => $user->id]);
 
+        $tipoAbordagem = TipoDeAbordagem::factory()->create(['user_id' => $user->id]);
+
         $data = [
             'utente' => [
                 'id' => $registo->utente_id,
@@ -169,7 +174,7 @@ class RegistoCirurgicoControllerTest extends TestCase
                 'tipo_de_cirurgia_id' => $registo->tipo_de_cirurgia_id,
                 'tipo_de_origem_id' => $registo->tipo_de_origem_id,
                 'ambulatorio' => true,
-                'tipo_de_abordagem' => TipoAbordagemEnum::ROBOTICA->value,
+                'tipo_de_abordagem_id' => (string) $tipoAbordagem->id,
                 'observacoes' => 'Observações atualizadas',
             ],
             'diagnosticos' => [
@@ -192,7 +197,7 @@ class RegistoCirurgicoControllerTest extends TestCase
 
         $this->assertDatabaseHas('registo_cirurgicos', [
             'id' => $registo->id,
-            'tipo_de_abordagem' => TipoAbordagemEnum::ROBOTICA->value,
+            'tipo_de_abordagem_id' => $tipoAbordagem->id,
         ]);
     }
 

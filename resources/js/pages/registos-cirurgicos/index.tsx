@@ -150,7 +150,7 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                                     </TableCell>
                                                     <TableCell>
                                                         <Badge variant="outline">
-                                                            {registo.tipo_de_abordagem}
+                                                            {registo.tipo_de_abordagem?.nome || 'N/A'}
                                                         </Badge>
                                                     </TableCell>
 
@@ -198,7 +198,7 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                                     </h3>
                                                 </div>
                                                 <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
-                                                    {registo.tipo_de_abordagem}
+                                                    {registo.tipo_de_abordagem?.nome || 'N/A'}
                                                 </Badge>
                                             </div>
                                             

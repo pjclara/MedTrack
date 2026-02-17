@@ -31,7 +31,7 @@ export interface RegistoCirurgico {
     tipo_de_origem_id?: number;
     asa_score?: number;
     cirurgia_urgente?: boolean;
-    tipo_de_abordagem: string;
+    tipo_de_abordagem_id?: number;
     ambulatorio: boolean;
     observacoes?: string;
     created_at: string;
@@ -41,6 +41,7 @@ export interface RegistoCirurgico {
     cirurgias_count?: number;
     tipo_de_cirurgia?: TipoDeCirurgia;
     tipo_de_origem?: TipoDeOrigem;
+    tipo_de_abordagem?: TipoDeAbordagem;
     user?: {
         id: number;
         name: string;
@@ -103,6 +104,13 @@ export interface ZonaAnatomica {
 }
 
 export interface TipoDeCirurgia {
+    id: number;
+    nome: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface TipoDeAbordagem {
     id: number;
     nome: string;
     created_at: string;

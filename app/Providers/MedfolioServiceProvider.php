@@ -5,7 +5,6 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
 use App\Enums\SexoEnum;
-use App\Enums\TipoAbordagemEnum;
 use App\Enums\FuncaoCirurgiaoEnum;
 use App\Enums\ClavienDindoEnum;
 
@@ -31,10 +30,6 @@ class MedfolioServiceProvider extends ServiceProvider
                     'sexo' => [
                         'values' => SexoEnum::values(),
                         'options' => SexoEnum::toArray(),
-                    ],
-                    'tipoAbordagem' => [
-                        'values' => TipoAbordagemEnum::values(),
-                        'options' => TipoAbordagemEnum::toArray(),
                     ],
                     'funcaoCirurgiao' => [
                         'values' => FuncaoCirurgiaoEnum::values(),

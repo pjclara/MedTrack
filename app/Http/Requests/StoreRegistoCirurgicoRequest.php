@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Enums\TipoAbordagemEnum;
 use App\Enums\SexoEnum;
 use App\Enums\FuncaoCirurgiaoEnum;
 use App\Enums\ClavienDindoEnum;
@@ -44,7 +43,7 @@ class StoreRegistoCirurgicoRequest extends FormRequest
             'registo.tipo_de_origem_id' => 'required|exists:tipo_de_origems,id',
             'registo.ambulatorio' => 'required|boolean',
             'registo.observacoes' => 'nullable|string|max:2000',
-            'registo.tipo_de_abordagem' => ['nullable', Rule::enum(TipoAbordagemEnum::class)],
+            'registo.tipo_de_abordagem_id' => ['nullable', 'exists:tipo_de_abordagems,id'],
 
             'diagnosticos' => 'required|array|min:1',
             'diagnosticos.*.diagnostico_id' => 'required|exists:diagnosticos,id',

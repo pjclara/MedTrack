@@ -3,13 +3,13 @@
 namespace Tests\Feature\Controllers;
 
 use App\Enums\FuncaoCirurgiaoEnum;
-use App\Enums\TipoAbordagemEnum;
 use App\Enums\ClavienDindoEnum;
 use App\Models\Diagnostico;
 use App\Models\Procedimento;
 use App\Models\RegistoCirurgico;
 use App\Models\TipoDeCirurgia;
 use App\Models\TipoDeOrigem;
+use App\Models\TipoDeAbordagem;
 use App\Models\User;
 use App\Models\Utente;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,6 +26,7 @@ class RegistoCirurgicoWizardTest extends TestCase
         $tipoOrigem = TipoDeOrigem::factory()->create();
         $diagnostico = Diagnostico::factory()->create(['user_id' => $user->id]);
         $procedimento = Procedimento::factory()->create(['user_id' => $user->id]);
+        $tipoAbordagem = TipoDeAbordagem::factory()->create(['user_id' => $user->id]);
 
         $data = [
             'utente' => [
@@ -40,7 +41,7 @@ class RegistoCirurgicoWizardTest extends TestCase
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
-                'tipo_de_abordagem' => TipoAbordagemEnum::CONVENCIONAL->value,
+                'tipo_de_abordagem_id' => (string) $tipoAbordagem->id,
                 'ambulatorio' => true,
                 'observacoes' => 'Cirurgia de urgência',
             ],
@@ -83,6 +84,7 @@ class RegistoCirurgicoWizardTest extends TestCase
         $tipoOrigem = TipoDeOrigem::factory()->create();
         $diagnostico = Diagnostico::factory()->create(['user_id' => $user->id]);
         $procedimento = Procedimento::factory()->create(['user_id' => $user->id]);
+        $tipoAbordagem = TipoDeAbordagem::factory()->create(['user_id' => $user->id]);
 
         $data = [
             'utente' => [
@@ -98,7 +100,7 @@ class RegistoCirurgicoWizardTest extends TestCase
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
-                'tipo_de_abordagem' => TipoAbordagemEnum::LAPAROSCOPICA->value,
+                'tipo_de_abordagem_id' => (string) $tipoAbordagem->id,
                 'ambulatorio' => false,
             ],
             'diagnosticos' => [
@@ -135,6 +137,7 @@ class RegistoCirurgicoWizardTest extends TestCase
         $procedimento1 = Procedimento::factory()->create(['user_id' => $user->id]);
         $procedimento2 = Procedimento::factory()->create(['user_id' => $user->id]);
         $procedimento3 = Procedimento::factory()->create(['user_id' => $user->id]);
+        $tipoAbordagem = TipoDeAbordagem::factory()->create(['user_id' => $user->id]);
 
         $data = [
             'utente' => [
@@ -150,7 +153,7 @@ class RegistoCirurgicoWizardTest extends TestCase
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
-                'tipo_de_abordagem' => TipoAbordagemEnum::ROBOTICA->value,
+                'tipo_de_abordagem_id' => (string) $tipoAbordagem->id,
                 'ambulatorio' => false,
             ],
             'diagnosticos' => [
@@ -210,6 +213,7 @@ class RegistoCirurgicoWizardTest extends TestCase
         $tipoOrigem = TipoDeOrigem::factory()->create();
         $diagnostico = Diagnostico::factory()->create(['user_id' => $user->id]);
         $procedimento = Procedimento::factory()->create(['user_id' => $user->id]);
+        $tipoAbordagem = TipoDeAbordagem::factory()->create(['user_id' => $user->id]);
 
         $data = [
             'utente' => [
@@ -225,7 +229,7 @@ class RegistoCirurgicoWizardTest extends TestCase
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
-                'tipo_de_abordagem' => TipoAbordagemEnum::ENDOSCOPICA->value,
+                'tipo_de_abordagem_id' => (string) $tipoAbordagem->id,
                 'ambulatorio' => false,
             ],
             'diagnosticos' => [
@@ -263,6 +267,7 @@ class RegistoCirurgicoWizardTest extends TestCase
         $tipoOrigem = TipoDeOrigem::factory()->create();
         $diagnostico = Diagnostico::factory()->create(['user_id' => $user->id]);
         $procedimento = Procedimento::factory()->create(['user_id' => $user->id]);
+        $tipoAbordagem = TipoDeAbordagem::factory()->create(['user_id' => $user->id]);
 
         $data = [
             'utente' => [
@@ -273,7 +278,7 @@ class RegistoCirurgicoWizardTest extends TestCase
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
-                'tipo_de_abordagem' => TipoAbordagemEnum::CONVENCIONAL->value,
+                'tipo_de_abordagem_id' => (string) $tipoAbordagem->id,
                 'ambulatorio' => false,
             ],
             'diagnosticos' => [
@@ -306,6 +311,7 @@ class RegistoCirurgicoWizardTest extends TestCase
         $utente = Utente::factory()->create();
         $tipo = TipoDeCirurgia::factory()->create();
         $tipoOrigem = TipoDeOrigem::factory()->create();
+        $tipoAbordagem = TipoDeAbordagem::factory()->create(['user_id' => $user->id]);
 
         $data = [
             'utente' => [
@@ -321,7 +327,7 @@ class RegistoCirurgicoWizardTest extends TestCase
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
-                'tipo_de_abordagem' => TipoAbordagemEnum::CONVENCIONAL->value,
+                'tipo_de_abordagem_id' => (string) $tipoAbordagem->id,
                 'ambulatorio' => false,
             ],
             'diagnosticos' => [],
@@ -339,6 +345,7 @@ class RegistoCirurgicoWizardTest extends TestCase
         $tipo = TipoDeCirurgia::factory()->create();
         $tipoOrigem = TipoDeOrigem::factory()->create();
         $diagnostico = Diagnostico::factory()->create();
+        $tipoAbordagem = TipoDeAbordagem::factory()->create(['user_id' => $user->id]);
 
         $data = [
             'utente' => [
@@ -354,7 +361,7 @@ class RegistoCirurgicoWizardTest extends TestCase
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
-                'tipo_de_abordagem' => TipoAbordagemEnum::CONVENCIONAL->value,
+                'tipo_de_abordagem_id' => (string) $tipoAbordagem->id,
                 'ambulatorio' => false,
             ],
             'diagnosticos' => [
@@ -378,6 +385,7 @@ class RegistoCirurgicoWizardTest extends TestCase
         $tipoOrigem = TipoDeOrigem::factory()->create();
         $diagnostico = Diagnostico::factory()->create(['user_id' => $user->id]);
         $procedimento = Procedimento::factory()->create(['user_id' => $user->id]);
+        $tipoAbordagem = TipoDeAbordagem::factory()->create(['user_id' => $user->id]);
 
         $data = [
             'utente' => [
@@ -393,7 +401,7 @@ class RegistoCirurgicoWizardTest extends TestCase
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
                 'tipo_de_origem_id' => (string) $tipoOrigem->id,
-                'tipo_de_abordagem' => TipoAbordagemEnum::LAPAROSCOPICA->value,
+                'tipo_de_abordagem_id' => (string) $tipoAbordagem->id,
                 'ambulatorio' => false,
             ],
             'diagnosticos' => [

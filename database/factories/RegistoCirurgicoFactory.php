@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Enums\TipoAbordagemEnum;
 use App\Models\RegistoCirurgico;
+use App\Models\TipoDeAbordagem;
 use App\Models\Utente;
 use App\Models\TipoDeCirurgia;
 use App\Models\TipoDeOrigem;
@@ -27,7 +27,7 @@ class RegistoCirurgicoFactory extends Factory
             'data_cirurgia' => fake()->dateTimeBetween('-2 years', 'now'),
             'tipo_de_cirurgia_id' => TipoDeCirurgia::factory(),
             'tipo_de_origem_id' => TipoDeOrigem::factory(),
-            'tipo_de_abordagem' => fake()->randomElement(TipoAbordagemEnum::cases())->value,
+            'tipo_de_abordagem_id' => TipoDeAbordagem::factory(),
             'ambulatorio' => fake()->boolean(),
             'observacoes' => fake()->optional()->sentence(),
         ];

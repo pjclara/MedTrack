@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Models;
 
-use App\Enums\TipoAbordagemEnum;
 use App\Models\RegistoCirurgico;
+use App\Models\TipoDeAbordagem;
 use App\Models\Utente;
 use App\Models\TipoDeCirurgia;
 use App\Models\Cirurgia;
@@ -14,15 +14,17 @@ class RegistoCirurgicoTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_registo_cirurgico_casts_tipo_de_abordagem_to_enum(): void
+    public function test_registo_cirurgico_has_tipo_de_abordagem_relationship(): void
     {
+        $tipoAbordagem = TipoDeAbordagem::factory()->create();
         $registo = RegistoCirurgico::factory()->create([
-            'tipo_de_abordagem' => TipoAbordagemEnum::LAPAROSCOPICA->value,
+            'tipo_de_abordagem_id' => $tipoAbordagem->id,
+            'user_id' => $tipoAbordagem->user_id,
         ]);
 
-        expect($registo->tipo_de_abordagem)
-            ->toBeInstanceOf(TipoAbordagemEnum::class)
-            ->and($registo->tipo_de_abordagem)->toBe(TipoAbordagemEnum::LAPAROSCOPICA);
+        expect($registo->tipoDeAbordagem)
+            ->toBeInstanceOf(TipoDeAbordagem::class)
+            ->and($registo->tipoDeAbordagem->id)->toBe($tipoAbordagem->id);
     }
 
     public function test_registo_cirurgico_casts_data_cirurgia_to_date(): void

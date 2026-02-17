@@ -1,7 +1,6 @@
 <?php
 
 use App\Enums\SexoEnum;
-use App\Enums\TipoAbordagemEnum;
 use App\Enums\FuncaoCirurgiaoEnum;
 use App\Enums\ClavienDindoEnum;
 use App\Enums\TipoAtividadeEnum;
@@ -15,13 +14,6 @@ return [
     |--------------------------------------------------------------------------
     */
     'sexo_options' => SexoEnum::values(),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Tipo de Abordagem Options
-    |--------------------------------------------------------------------------
-    */
-    'tipo_abordagem_options' => TipoAbordagemEnum::values(),
 
     /*
     |--------------------------------------------------------------------------

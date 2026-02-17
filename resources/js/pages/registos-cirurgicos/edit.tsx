@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/select';
 import { ArrowLeft, ArrowRight, Save, Plus, Trash2 } from 'lucide-react';
 import { type BreadcrumbItem } from '@/types';
-import { type TipoDeCirurgia, type TipoDeOrigem, type Diagnostico, type Procedimento, type Especialidade, type Hospital, type ZonaAnatomica } from '@/types/models';
+import { type TipoDeCirurgia, type TipoDeOrigem, type TipoDeAbordagem, type Diagnostico, type Procedimento, type Especialidade, type Hospital, type ZonaAnatomica } from '@/types/models';
 import { useState, FormEventHandler, useEffect } from 'react';
 import { QuickAddDiagnostico, QuickAddProcedimento } from '@/components/quick-add/QuickAddDialogs';
 import { Badge } from '@/components/ui/badge';
@@ -42,13 +42,14 @@ interface RegistoCirurgicoEditProps {
             tipo_de_cirurgia_id: string;
             tipo_de_origem_id: any;
             ambulatorio: boolean;
-            tipo_de_abordagem: string;
+            tipo_de_abordagem_id: string;
             observacoes: string;
         };
         diagnosticos: DiagnosticoData[];
     };
     tiposDeCirurgia: TipoDeCirurgia[];
     tiposDeOrigem: TipoDeOrigem[];
+    tiposDeAbordagem: TipoDeAbordagem[];
     diagnosticos: Diagnostico[];
     procedimentos: Procedimento[];
     especialidades: Especialidade[];
@@ -58,7 +59,6 @@ interface RegistoCirurgicoEditProps {
         sexo: string[];
         funcoes: string[];
         clavien: string[];
-        tipo_de_abordagem: string[];
         tipo_diagnostico: string[];
     };
 }
@@ -79,7 +79,7 @@ interface RegistoData {
     tipo_de_origem_id: string;
     ambulatorio: boolean;
     observacoes: string;
-    tipo_de_abordagem: string;
+    tipo_de_abordagem_id: string;
 }
 
 interface ProcedimentoData {
@@ -115,12 +115,13 @@ export default function RegistoCirurgicoEdit({
     registo,
     tiposDeCirurgia = [],
     tiposDeOrigem = [],
+    tiposDeAbordagem = [],
     diagnosticos = [],
     procedimentos = [],
     especialidades = [],
     hospitals = [],
     zonaAnatomicas = [],
-    enums = { sexo: [], funcoes: [], clavien: [], tipo_de_abordagem: [], tipo_diagnostico: [] },
+    enums = { sexo: [], funcoes: [], clavien: [], tipo_diagnostico: [] },
 }: RegistoCirurgicoEditProps) {
     const isMobile = useIsMobile();
     const [step, setStep] = useState(1);
@@ -210,7 +211,7 @@ export default function RegistoCirurgicoEdit({
             case 1:
                 return utenteData.processo && utenteData.data_nascimento && utenteData.sexo;
             case 2:
-                return registoData.hospital && registoData.especialidade && registoData.data_cirurgia && registoData.tipo_de_cirurgia_id && registoData.tipo_de_origem_id && registoData.tipo_de_abordagem;
+                return registoData.hospital && registoData.especialidade && registoData.data_cirurgia && registoData.tipo_de_cirurgia_id && registoData.tipo_de_origem_id && registoData.tipo_de_abordagem_id;
             case 3:
                 return diagnosticosList.length > 0;
             case 4:
@@ -458,20 +459,20 @@ export default function RegistoCirurgicoEdit({
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="tipo_de_abordagem">
+                                    <Label htmlFor="tipo_de_abordagem_id">
                                         Tipo de Abordagem <span className="text-destructive">*</span>
                                     </Label>
                                     <Select
-                                        value={registoData.tipo_de_abordagem}
-                                        onValueChange={(value) => setRegistoData({ ...registoData, tipo_de_abordagem: value })}
+                                        value={registoData.tipo_de_abordagem_id}
+                                        onValueChange={(value) => setRegistoData({ ...registoData, tipo_de_abordagem_id: value })}
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Selecione a abordagem" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {(enums?.tipo_de_abordagem || []).map((tipo) => (
-                                                <SelectItem key={tipo} value={tipo}>
-                                                    {tipo}
+                                            {(tiposDeAbordagem || []).map((tipo) => (
+                                                <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                                                    {tipo.nome}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
@@ -721,7 +722,7 @@ export default function RegistoCirurgicoEdit({
                                             <p><span className="text-muted-foreground mr-1">Data da Cirurgia:</span> {convertISOToPT(registoData.data_cirurgia)}</p>
                                             <p><span className="text-muted-foreground mr-1">Tipo de Cirurgia:</span> {tiposDeCirurgia.find(t => t.id.toString() === registoData.tipo_de_cirurgia_id)?.nome}</p>
                                             <p><span className="text-muted-foreground mr-1">Tipo de Origem:</span> {tiposDeOrigem.find(t => t.id.toString() === registoData.tipo_de_origem_id)?.nome}</p>
-                                            <p><span className="text-muted-foreground mr-1">Tipo de Abordagem:</span> {registoData.tipo_de_abordagem}</p>
+                                            <p><span className="text-muted-foreground mr-1">Tipo de Abordagem:</span> {tiposDeAbordagem.find(t => t.id.toString() === registoData.tipo_de_abordagem_id)?.nome || 'N/A'}</p>
                                             <p><span className="text-muted-foreground mr-1">Ambulatório:</span> {registoData.ambulatorio ? 'Sim' : 'Não'}</p>
                                             {registoData.observacoes && <p><span className="text-muted-foreground mr-1">Observações:</span> {registoData.observacoes}</p>}
                                         </div>

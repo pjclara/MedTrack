@@ -23,7 +23,7 @@ class RegistosCirurgicosExport implements FromQuery, WithHeadings, WithMapping
     {
         return RegistoCirurgico::query()
             ->where('user_id', $this->userId)
-            ->with(['utente', 'tipoDeCirurgia', 'tipoDeOrigem', 'cirurgias.diagnostico', 'cirurgias.procedimento'])
+            ->with(['utente', 'tipoDeCirurgia', 'tipoDeOrigem', 'tipoDeAbordagem', 'cirurgias.diagnostico', 'cirurgias.procedimento'])
             ->orderBy('data_cirurgia', 'desc');
     }
 
@@ -65,7 +65,7 @@ class RegistosCirurgicosExport implements FromQuery, WithHeadings, WithMapping
             $registo->especialidade,
             $registo->tipoDeCirurgia->nome,
             $registo->tipoDeOrigem->nome,
-            $registo->tipo_de_abordagem->value ?? $registo->tipo_de_abordagem,
+            $registo->tipoDeAbordagem->nome ?? 'N/A',
             $registo->ambulatorio ? 'Sim' : 'Não',
             $cirurgiasStr,
             $complicacoesStr ?: 'Nenhuma',

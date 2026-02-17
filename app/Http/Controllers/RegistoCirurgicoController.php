@@ -11,10 +11,10 @@ use App\Models\Procedimento;
 use App\Models\Especialidade;
 use App\Models\Hospital;
 use App\Models\ZonaAnatomica;
+use App\Models\TipoDeAbordagem;
 use App\Http\Requests\StoreRegistoCirurgicoRequest;
 use App\Http\Requests\UpdateRegistoCirurgicoRequest;
 use Illuminate\Support\Facades\DB;
-use App\Enums\TipoAbordagemEnum;
 use App\Enums\TipoDiagnosticoEnum;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Inertia\Inertia;
@@ -36,6 +36,7 @@ class RegistoCirurgicoController extends Controller
                 'utente:id,nome,processo',
                 'tipoDeCirurgia:id,nome',
                 'tipoDeOrigem:id,nome',
+                'tipoDeAbordagem:id,nome',
                 'user:id,name,email',
                 'cirurgias:id,registo_cirurgico_id,funcao,procedimento_id',
                 'cirurgias.procedimento:id,nome',
@@ -75,6 +76,7 @@ class RegistoCirurgicoController extends Controller
             'duplicateData' => $duplicateData,
             'tiposDeCirurgia' => TipoDeCirurgia::orderBy('nome')->get(['id', 'nome']),
             'tiposDeOrigem' => TipoDeOrigem::orderBy('nome')->get(['id', 'nome']),
+            'tiposDeAbordagem' => TipoDeAbordagem::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'diagnosticos' => Diagnostico::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'procedimentos' => Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'especialidades' => Especialidade::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
@@ -84,7 +86,6 @@ class RegistoCirurgicoController extends Controller
                 'sexo' => config('medfolio.sexo_options'),
                 'funcoes' => config('medfolio.funcao_options'),
                 'clavien' => config('medfolio.clavien_dindo_options'),
-                'tipo_de_abordagem' => TipoAbordagemEnum::values(),
                 'tipo_diagnostico' => TipoDiagnosticoEnum::values(),
             ],
         ]);
@@ -130,8 +131,7 @@ class RegistoCirurgicoController extends Controller
                 'tipo_de_origem_id' => $registoData['tipo_de_origem_id'],
                 'ambulatorio' => $registoData['ambulatorio'],
                 'observacoes' => $registoData['observacoes'] ?? null,
-                'tipo_de_abordagem' => $registoData['tipo_de_abordagem']
-                    ?? TipoAbordagemEnum::CONVENCIONAL->value,
+                'tipo_de_abordagem_id' => $registoData['tipo_de_abordagem_id'] ?? null,
             ]);
 
             foreach ($payload['diagnosticos'] as $diagnostico) {
@@ -165,6 +165,7 @@ class RegistoCirurgicoController extends Controller
             'utente',
             'tipoDeCirurgia',
             'tipoDeOrigem',
+            'tipoDeAbordagem',
             'cirurgias.diagnostico',
             'cirurgias.procedimento'
         ]);
@@ -189,6 +190,7 @@ class RegistoCirurgicoController extends Controller
             ),
             'tiposDeCirurgia' => TipoDeCirurgia::orderBy('nome')->get(['id', 'nome']),
             'tiposDeOrigem' => TipoDeOrigem::orderBy('nome')->get(['id', 'nome']),
+            'tiposDeAbordagem' => TipoDeAbordagem::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'diagnosticos' => Diagnostico::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'procedimentos' => Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'especialidades' => Especialidade::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
@@ -198,7 +200,6 @@ class RegistoCirurgicoController extends Controller
                 'sexo' => config('medfolio.sexo_options'),
                 'funcoes' => config('medfolio.funcao_options'),
                 'clavien' => config('medfolio.clavien_dindo_options'),
-                'tipo_de_abordagem' => TipoAbordagemEnum::values(),
                 'tipo_diagnostico' => TipoDiagnosticoEnum::values(),
             ],
         ]);
@@ -213,6 +214,7 @@ class RegistoCirurgicoController extends Controller
             'utente',
             'tipoDeCirurgia',
             'tipoDeOrigem',
+            'tipoDeAbordagem',
             'cirurgias.diagnostico',
             'cirurgias.procedimento'
         ]);
@@ -251,7 +253,7 @@ class RegistoCirurgicoController extends Controller
                 'tipo_de_cirurgia_id' => (string) $registo->tipo_de_cirurgia_id,
                 'tipo_de_origem_id' => (string) ($registo->tipo_de_origem_id ?? ''),
                 'ambulatorio' => $registo->ambulatorio,
-                'tipo_de_abordagem' => $registo->tipo_de_abordagem?->value ?? '',
+                'tipo_de_abordagem_id' => (string) ($registo->tipo_de_abordagem_id ?? ''),
                 'observacoes' => $registo->observacoes ?? '',
             ],
             'diagnosticos' => array_values($diagnosticosMap),
@@ -292,7 +294,7 @@ class RegistoCirurgicoController extends Controller
                 'tipo_de_origem_id' => $registoData['tipo_de_origem_id'],
                 'ambulatorio' => $registoData['ambulatorio'],
                 'observacoes' => $registoData['observacoes'] ?? null,
-                'tipo_de_abordagem' => $registoData['tipo_de_abordagem'],
+                'tipo_de_abordagem_id' => $registoData['tipo_de_abordagem_id'] ?? null,
             ]);
 
             // Delete old cirurgias

@@ -4,8 +4,8 @@ use App\Models\User;
 use App\Models\Utente;
 use App\Models\TipoDeCirurgia;
 use App\Models\TipoDeOrigem;
+use App\Models\TipoDeAbordagem;
 use App\Enums\SexoEnum;
-use App\Enums\TipoAbordagemEnum;
 use Tests\TestCase;
 
 beforeEach(function () {
@@ -40,6 +40,8 @@ test('authenticated users can create a surgical record with a new utente', funct
 
     $this->actingAs($user);
 
+    $tipoAbordagem = TipoDeAbordagem::factory()->create(['user_id' => $user->id]);
+
     $data = [
         'utente' => [
             'nome' => 'Novo Utente Teste',
@@ -54,7 +56,7 @@ test('authenticated users can create a surgical record with a new utente', funct
             'tipo_de_cirurgia_id' => $tipoCirurgia->id,
             'tipo_de_origem_id' => $tipoOrigem->id,
             'ambulatorio' => true,
-            'tipo_de_abordagem' => TipoAbordagemEnum::LAPAROSCOPICA->value,
+            'tipo_de_abordagem_id' => (string) $tipoAbordagem->id,
             'observacoes' => 'Teste de observações',
         ],
         'diagnosticos' => [

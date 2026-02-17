@@ -33,6 +33,7 @@ import {
     type Hospital,
     type Procedimento,
     type TipoDeCirurgia,
+    type TipoDeAbordagem,
     type TipoDeOrigem,
     type ZonaAnatomica,
 } from '@/types/models';
@@ -52,6 +53,7 @@ import { toast } from 'react-toastify';
 interface RegistoCirurgicoCreateProps {
     tiposDeCirurgia: TipoDeCirurgia[];
     tiposDeOrigem: TipoDeOrigem[];
+    tiposDeAbordagem: TipoDeAbordagem[];
     diagnosticos: Diagnostico[];
     procedimentos: Procedimento[];
     especialidades: Especialidade[];
@@ -86,7 +88,7 @@ interface RegistoData {
     tipo_de_origem_id: string;
     ambulatorio: boolean;
     observacoes: string;
-    tipo_de_abordagem: string;
+    tipo_de_abordagem_id: string;
 }
 
 interface ProcedimentoData {
@@ -120,6 +122,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function RegistoCirurgicoCreate({
     tiposDeCirurgia = [],
     tiposDeOrigem = [],
+    tiposDeAbordagem = [],
     diagnosticos = [],
     procedimentos = [],
     especialidades = [],
@@ -154,7 +157,7 @@ export default function RegistoCirurgicoCreate({
             tipo_de_origem_id: '',
             ambulatorio: false,
             observacoes: '',
-            tipo_de_abordagem: '',
+            tipo_de_abordagem_id: '',
         },
     );
 
@@ -350,7 +353,7 @@ export default function RegistoCirurgicoCreate({
                     registoData.data_cirurgia &&
                     registoData.tipo_de_cirurgia_id &&
                     registoData.tipo_de_origem_id &&
-                    registoData.tipo_de_abordagem
+                    registoData.tipo_de_abordagem_id
                 );
             case 3:
                 return (
@@ -780,7 +783,7 @@ export default function RegistoCirurgicoCreate({
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Label htmlFor="tipo_de_abordagem">
+                                        <Label htmlFor="tipo_de_abordagem_id">
                                             Tipo de Abordagem{' '}
                                             <span className="text-destructive">
                                                 *
@@ -788,12 +791,12 @@ export default function RegistoCirurgicoCreate({
                                         </Label>
                                         <Select
                                             value={
-                                                registoData.tipo_de_abordagem
+                                                registoData.tipo_de_abordagem_id
                                             }
                                             onValueChange={(value) =>
                                                 setRegistoData({
                                                     ...registoData,
-                                                    tipo_de_abordagem: value,
+                                                    tipo_de_abordagem_id: value,
                                                 })
                                             }
                                         >
@@ -801,21 +804,14 @@ export default function RegistoCirurgicoCreate({
                                                 <SelectValue placeholder="Selecione" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="Convencional">
-                                                    Convencional
-                                                </SelectItem>
-                                                <SelectItem value="Laparoscópica">
-                                                    Laparoscópica
-                                                </SelectItem>
-                                                <SelectItem value="Robótica">
-                                                    Robótica
-                                                </SelectItem>
-                                                <SelectItem value="Endoscópica">
-                                                    Endoscópica
-                                                </SelectItem>
-                                                <SelectItem value="Híbrida">
-                                                    Híbrida
-                                                </SelectItem>
+                                                {tiposDeAbordagem.map((tipo) => (
+                                                    <SelectItem
+                                                        key={tipo.id}
+                                                        value={tipo.id.toString()}
+                                                    >
+                                                        {tipo.nome}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
                                     </div>
@@ -1255,7 +1251,7 @@ export default function RegistoCirurgicoCreate({
                                                 <span className="mr-1 text-muted-foreground">
                                                     Abordagem:
                                                 </span>{' '}
-                                                {registoData.tipo_de_abordagem}
+                                                {tiposDeAbordagem.find(t => t.id.toString() === registoData.tipo_de_abordagem_id)?.nome || 'N/A'}
                                             </p>
                                             <p>
                                                 <span className="mr-1 text-muted-foreground">

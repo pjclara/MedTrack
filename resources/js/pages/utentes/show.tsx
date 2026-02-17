@@ -232,7 +232,7 @@ export default function UtenteShow({ utente }: UtenteShowProps) {
                                                 </TableCell>
                                                 <TableCell>
                                                     <Badge variant="outline">
-                                                        {registo.tipo_de_abordagem}
+                                                        {registo.tipo_de_abordagem?.nome || 'N/A'}
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell className="text-right">

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Enums\TipoAbordagemEnum;
 use App\Traits\BelongsToUser;
 
 class RegistoCirurgico extends Model
@@ -19,7 +18,7 @@ class RegistoCirurgico extends Model
         'data_cirurgia',
         'tipo_de_cirurgia_id',
         'tipo_de_origem_id',
-        'tipo_de_abordagem',
+        'tipo_de_abordagem_id',
         'ambulatorio',
         'observacoes',
     ];
@@ -28,10 +27,10 @@ class RegistoCirurgico extends Model
 
     protected $casts = [
         'data_cirurgia' => 'date',
-        'tipo_de_abordagem' => TipoAbordagemEnum::class,
         'ambulatorio' => 'boolean',
         'tipo_de_cirurgia_id' => 'integer',
         'tipo_de_origem_id' => 'integer',
+        'tipo_de_abordagem_id' => 'integer',
     ];
 
     /**
@@ -56,6 +55,14 @@ class RegistoCirurgico extends Model
     public function tipoDeOrigem()
     {
         return $this->belongsTo(TipoDeOrigem::class);
+    }
+
+    /**
+     * Relação com tipo de abordagem
+     */
+    public function tipoDeAbordagem()
+    {
+        return $this->belongsTo(TipoDeAbordagem::class);
     }
 
     /**
