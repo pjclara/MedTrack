@@ -58,7 +58,6 @@ class SeedMedfolioData extends Command
         $seeders = [
             'areas' => 'AreaSeeder',
             'tipos-cirurgia' => 'TipoDeCirurgiaSeeder',
-            'tipos-origem' => 'TipoDeOrigemSeeder',
             'diagnosticos' => 'DiagnosticoSeeder',
             'procedimentos' => 'ProcedimentoSeeder',
             'utentes' => 'UtenteSeeder',
@@ -87,13 +86,12 @@ class SeedMedfolioData extends Command
     {
         $this->info('📊 Populando todas as tabelas...');
         
-        $progressBar = $this->output->createProgressBar(8);
+        $progressBar = $this->output->createProgressBar(7);
         $progressBar->start();
 
         $seeders = [
             'AreaSeeder',
             'TipoDeCirurgiaSeeder',
-            'TipoDeOrigemSeeder',
             'DiagnosticoSeeder',
             'ProcedimentoSeeder',
             'UtenteSeeder',
@@ -118,7 +116,6 @@ class SeedMedfolioData extends Command
             [
                 ['Áreas', \App\Models\Area::count()],
                 ['Tipos de Cirurgia', \App\Models\TipoDeCirurgia::count()],
-                ['Tipos de Origem', \App\Models\TipoDeOrigem::count()],
                 ['Diagnósticos', \App\Models\Diagnostico::count()],
                 ['Procedimentos', \App\Models\Procedimento::count()],
                 ['Utentes', \App\Models\Utente::count()],

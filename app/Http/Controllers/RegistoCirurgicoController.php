@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\RegistoCirurgico;
 use App\Models\Utente;
 use App\Models\TipoDeCirurgia;
-use App\Models\TipoDeOrigem;
 use App\Models\Diagnostico;
 use App\Models\Procedimento;
 use App\Models\Especialidade;
@@ -35,7 +34,6 @@ class RegistoCirurgicoController extends Controller
         $registos = RegistoCirurgico::with([
                 'utente:id,nome,processo',
                 'tipoDeCirurgia:id,nome',
-                'tipoDeOrigem:id,nome',
                 'tipoDeAbordagem:id,nome',
                 'user:id,name,email',
                 'cirurgias:id,registo_cirurgico_id,funcao,procedimento_id',
@@ -75,7 +73,6 @@ class RegistoCirurgicoController extends Controller
         return Inertia::render('registos-cirurgicos/create', [
             'duplicateData' => $duplicateData,
             'tiposDeCirurgia' => TipoDeCirurgia::orderBy('nome')->get(['id', 'nome']),
-            'tiposDeOrigem' => TipoDeOrigem::orderBy('nome')->get(['id', 'nome']),
             'tiposDeAbordagem' => TipoDeAbordagem::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'diagnosticos' => Diagnostico::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'procedimentos' => Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
@@ -128,7 +125,6 @@ class RegistoCirurgicoController extends Controller
                 'especialidade' => $registoData['especialidade'] ?? null,
                 'data_cirurgia' => $registoData['data_cirurgia'],
                 'tipo_de_cirurgia_id' => $registoData['tipo_de_cirurgia_id'],
-                'tipo_de_origem_id' => $registoData['tipo_de_origem_id'],
                 'ambulatorio' => $registoData['ambulatorio'],
                 'observacoes' => $registoData['observacoes'] ?? null,
                 'tipo_de_abordagem_id' => $registoData['tipo_de_abordagem_id'] ?? null,
@@ -164,7 +160,6 @@ class RegistoCirurgicoController extends Controller
         $registo->load([
             'utente',
             'tipoDeCirurgia',
-            'tipoDeOrigem',
             'tipoDeAbordagem',
             'cirurgias.diagnostico',
             'cirurgias.procedimento'
@@ -189,7 +184,6 @@ class RegistoCirurgicoController extends Controller
                 $this->transformForWizard($registo)
             ),
             'tiposDeCirurgia' => TipoDeCirurgia::orderBy('nome')->get(['id', 'nome']),
-            'tiposDeOrigem' => TipoDeOrigem::orderBy('nome')->get(['id', 'nome']),
             'tiposDeAbordagem' => TipoDeAbordagem::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'diagnosticos' => Diagnostico::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'procedimentos' => Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
@@ -213,7 +207,6 @@ class RegistoCirurgicoController extends Controller
         $registo->load([
             'utente',
             'tipoDeCirurgia',
-            'tipoDeOrigem',
             'tipoDeAbordagem',
             'cirurgias.diagnostico',
             'cirurgias.procedimento'
@@ -251,7 +244,6 @@ class RegistoCirurgicoController extends Controller
                 'especialidade' => $registo->especialidade,
                 'data_cirurgia' => $registo->data_cirurgia?->format('Y-m-d'),
                 'tipo_de_cirurgia_id' => (string) $registo->tipo_de_cirurgia_id,
-                'tipo_de_origem_id' => (string) ($registo->tipo_de_origem_id ?? ''),
                 'ambulatorio' => $registo->ambulatorio,
                 'tipo_de_abordagem_id' => (string) ($registo->tipo_de_abordagem_id ?? ''),
                 'observacoes' => $registo->observacoes ?? '',
@@ -291,7 +283,6 @@ class RegistoCirurgicoController extends Controller
                 'especialidade' => $registoData['especialidade'] ?? null,
                 'data_cirurgia' => $registoData['data_cirurgia'],
                 'tipo_de_cirurgia_id' => $registoData['tipo_de_cirurgia_id'],
-                'tipo_de_origem_id' => $registoData['tipo_de_origem_id'],
                 'ambulatorio' => $registoData['ambulatorio'],
                 'observacoes' => $registoData['observacoes'] ?? null,
                 'tipo_de_abordagem_id' => $registoData['tipo_de_abordagem_id'] ?? null,

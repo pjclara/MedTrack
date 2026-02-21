@@ -6,7 +6,6 @@ use App\Models\RegistoCirurgico;
 use App\Models\TipoDeAbordagem;
 use App\Models\Utente;
 use App\Models\TipoDeCirurgia;
-use App\Models\TipoDeOrigem;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -26,7 +25,6 @@ class RegistoCirurgicoFactory extends Factory
             'especialidade' => fake()->randomElement(['Cirurgia Geral', 'Cirurgia Vascular', 'Cirurgia Cardiotorácica', 'Neurocirurgia']),
             'data_cirurgia' => fake()->dateTimeBetween('-2 years', 'now'),
             'tipo_de_cirurgia_id' => TipoDeCirurgia::factory(),
-            'tipo_de_origem_id' => TipoDeOrigem::factory(),
             'tipo_de_abordagem_id' => TipoDeAbordagem::factory(),
             'ambulatorio' => fake()->boolean(),
             'observacoes' => fake()->optional()->sentence(),

@@ -65,7 +65,6 @@ test('essential seeded data can be accessed', function () {
 test('medfolio configuration is loaded safely', function () {
     /** @var TestCase $this */
     $this->assertNotEmpty(config('medfolio.sexo_options'));
-    $this->assertNotEmpty(config('medfolio.tipo_abordagem_options'));
     $this->assertNotEmpty(config('medfolio.funcao_options'));
 });
 

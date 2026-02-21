@@ -28,6 +28,7 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
+            'is_active' => true,
             'hospital_de_origem' => fake()->company() . ' Hospital',
             'especialidade' => fake()->randomElement(['Cirurgia Geral', 'Cirurgia Vascular', 'Cirurgia Cardiotorácica', 'Neurocirurgia']),
             'remember_token' => Str::random(10),

@@ -3,7 +3,6 @@
 use App\Models\User;
 use App\Models\Utente;
 use App\Models\TipoDeCirurgia;
-use App\Models\TipoDeOrigem;
 use App\Models\TipoDeAbordagem;
 use App\Enums\SexoEnum;
 use Tests\TestCase;
@@ -17,10 +16,6 @@ beforeEach(function () {
     /** @var TipoDeCirurgia $tipoCirurgia */
     $tipoCirurgia = TipoDeCirurgia::factory()->create();
     $this->tipoCirurgia = $tipoCirurgia;
-
-    /** @var TipoDeOrigem $tipoOrigem */
-    $tipoOrigem = TipoDeOrigem::factory()->create();
-    $this->tipoOrigem = $tipoOrigem;
 });
 
 test('guests cannot create a surgical record', function () {
@@ -35,8 +30,6 @@ test('authenticated users can create a surgical record with a new utente', funct
     $user = $this->user;
     /** @var TipoDeCirurgia $tipoCirurgia */
     $tipoCirurgia = $this->tipoCirurgia;
-    /** @var TipoDeOrigem $tipoOrigem */
-    $tipoOrigem = $this->tipoOrigem;
 
     $this->actingAs($user);
 
@@ -54,7 +47,6 @@ test('authenticated users can create a surgical record with a new utente', funct
             'especialidade' => 'Cirurgia Geral',
             'data_cirurgia' => now()->format('Y-m-d'),
             'tipo_de_cirurgia_id' => $tipoCirurgia->id,
-            'tipo_de_origem_id' => $tipoOrigem->id,
             'ambulatorio' => true,
             'tipo_de_abordagem_id' => (string) $tipoAbordagem->id,
             'observacoes' => 'Teste de observações',

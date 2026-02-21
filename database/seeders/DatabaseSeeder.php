@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'pjclara@gmail.com'],
             [
-                'name' => 'Pedro Clara',
+                'name' => 'Paulo Clara',
                 'password' => 'password',
                 'email_verified_at' => now(),
             ]
@@ -54,7 +54,6 @@ class DatabaseSeeder extends Seeder
             HospitalSeeder::class,
             EspecialidadeSeeder::class,
             TipoDeCirurgiaSeeder::class,
-            TipoDeOrigemSeeder::class,
             TipoDeAbordagemSeeder::class,
             #DiagnosticoSeeder::class,
             #ProcedimentoSeeder::class,
@@ -90,7 +89,6 @@ class DatabaseSeeder extends Seeder
                 ['Especialidades', \App\Models\Especialidade::count()],
                 ['Zonas Anatómicas', \App\Models\ZonaAnatomica::count()],
                 ['Tipos de Cirurgia', \App\Models\TipoDeCirurgia::count()],
-                ['Tipos de Origem', \App\Models\TipoDeOrigem::count()],
                 ['Tipos de Abordagem', \App\Models\TipoDeAbordagem::count()],
                 ['Diagnósticos', \App\Models\Diagnostico::count()],
                 ['Procedimentos', \App\Models\Procedimento::count()],

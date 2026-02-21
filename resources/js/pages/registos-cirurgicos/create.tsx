@@ -34,7 +34,6 @@ import {
     type Procedimento,
     type TipoDeCirurgia,
     type TipoDeAbordagem,
-    type TipoDeOrigem,
     type ZonaAnatomica,
 } from '@/types/models';
 import { convertISOToPT } from '@/utils/date-formatters';
@@ -52,7 +51,6 @@ import { toast } from 'react-toastify';
 
 interface RegistoCirurgicoCreateProps {
     tiposDeCirurgia: TipoDeCirurgia[];
-    tiposDeOrigem: TipoDeOrigem[];
     tiposDeAbordagem: TipoDeAbordagem[];
     diagnosticos: Diagnostico[];
     procedimentos: Procedimento[];
@@ -85,7 +83,6 @@ interface RegistoData {
     especialidade: string;
     data_cirurgia: string;
     tipo_de_cirurgia_id: string;
-    tipo_de_origem_id: string;
     ambulatorio: boolean;
     observacoes: string;
     tipo_de_abordagem_id: string;
@@ -121,7 +118,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function RegistoCirurgicoCreate({
     tiposDeCirurgia = [],
-    tiposDeOrigem = [],
     tiposDeAbordagem = [],
     diagnosticos = [],
     procedimentos = [],
@@ -154,7 +150,6 @@ export default function RegistoCirurgicoCreate({
             especialidade: auth.user.especialidade || '',
             data_cirurgia: '',
             tipo_de_cirurgia_id: '',
-            tipo_de_origem_id: '',
             ambulatorio: false,
             observacoes: '',
             tipo_de_abordagem_id: '',
@@ -352,7 +347,6 @@ export default function RegistoCirurgicoCreate({
                     registoData.especialidade &&
                     registoData.data_cirurgia &&
                     registoData.tipo_de_cirurgia_id &&
-                    registoData.tipo_de_origem_id &&
                     registoData.tipo_de_abordagem_id
                 );
             case 3:
@@ -737,40 +731,6 @@ export default function RegistoCirurgicoCreate({
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {tiposDeCirurgia.map((tipo) => (
-                                                    <SelectItem
-                                                        key={tipo.id}
-                                                        value={tipo.id.toString()}
-                                                    >
-                                                        {tipo.nome}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="tipo_de_origem_id">
-                                            Origem{' '}
-                                            <span className="text-destructive">
-                                                *
-                                            </span>
-                                        </Label>
-                                        <Select
-                                            value={
-                                                registoData.tipo_de_origem_id
-                                            }
-                                            onValueChange={(value) =>
-                                                setRegistoData({
-                                                    ...registoData,
-                                                    tipo_de_origem_id: value,
-                                                })
-                                            }
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Selecione" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {tiposDeOrigem.map((tipo) => (
                                                     <SelectItem
                                                         key={tipo.id}
                                                         value={tipo.id.toString()}
@@ -1232,18 +1192,6 @@ export default function RegistoCirurgicoCreate({
                                                         (t) =>
                                                             t.id.toString() ===
                                                             registoData.tipo_de_cirurgia_id,
-                                                    )?.nome
-                                                }
-                                            </p>
-                                            <p>
-                                                <span className="mr-1 text-muted-foreground">
-                                                    Origem:
-                                                </span>{' '}
-                                                {
-                                                    tiposDeOrigem.find(
-                                                        (t) =>
-                                                            t.id.toString() ===
-                                                            registoData.tipo_de_origem_id,
                                                     )?.nome
                                                 }
                                             </p>

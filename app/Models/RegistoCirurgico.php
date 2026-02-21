@@ -17,7 +17,6 @@ class RegistoCirurgico extends Model
         'especialidade',
         'data_cirurgia',
         'tipo_de_cirurgia_id',
-        'tipo_de_origem_id',
         'tipo_de_abordagem_id',
         'ambulatorio',
         'observacoes',
@@ -29,7 +28,6 @@ class RegistoCirurgico extends Model
         'data_cirurgia' => 'date',
         'ambulatorio' => 'boolean',
         'tipo_de_cirurgia_id' => 'integer',
-        'tipo_de_origem_id' => 'integer',
         'tipo_de_abordagem_id' => 'integer',
     ];
 
@@ -47,14 +45,6 @@ class RegistoCirurgico extends Model
     public function tipoDeCirurgia()
     {
         return $this->belongsTo(TipoDeCirurgia::class);
-    }
-
-    /**
-     * Relação com tipo de origem
-     */
-    public function tipoDeOrigem()
-    {
-        return $this->belongsTo(TipoDeOrigem::class);
     }
 
     /**

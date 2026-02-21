@@ -41,7 +41,6 @@ class RegistoCirurgicoControllerTest extends TestCase
         $user = User::factory()->create();
         $utente = Utente::factory()->create(['user_id' => $user->id]);
         $tipo = TipoDeCirurgia::factory()->create();
-        $tipoOrigem = \App\Models\TipoDeOrigem::factory()->create();
         $tipoAbordagem = TipoDeAbordagem::factory()->create(['user_id' => $user->id]);
         $diagnostico = \App\Models\Diagnostico::factory()->create(['user_id' => $user->id]);
         $procedimento = \App\Models\Procedimento::factory()->create(['user_id' => $user->id]);
@@ -59,7 +58,6 @@ class RegistoCirurgicoControllerTest extends TestCase
                 'especialidade' => 'Cirurgia Geral',
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
-                'tipo_de_origem_id' => (string) $tipoOrigem->id,
                 'tipo_de_abordagem_id' => (string) $tipoAbordagem->id,
                 'ambulatorio' => false,
                 'observacoes' => 'Cirurgia eletiva',
@@ -103,7 +101,6 @@ class RegistoCirurgicoControllerTest extends TestCase
         $user = User::factory()->create();
         $utente = Utente::factory()->create(['user_id' => $user->id]);
         $tipo = TipoDeCirurgia::factory()->create();
-        $tipoOrigem = \App\Models\TipoDeOrigem::factory()->create();
         $diagnostico = \App\Models\Diagnostico::factory()->create(['user_id' => $user->id]);
         $procedimento = \App\Models\Procedimento::factory()->create(['user_id' => $user->id]);
 
@@ -120,7 +117,6 @@ class RegistoCirurgicoControllerTest extends TestCase
                 'especialidade' => 'Cirurgia Geral',
                 'data_cirurgia' => '2025-12-19',
                 'tipo_de_cirurgia_id' => (string) $tipo->id,
-                'tipo_de_origem_id' => (string) $tipoOrigem->id,
                 'tipo_de_abordagem_id' => '99999',
                 'ambulatorio' => false,
             ],
@@ -172,7 +168,6 @@ class RegistoCirurgicoControllerTest extends TestCase
                 'especialidade' => 'Cirurgia Vascular',
                 'data_cirurgia' => '2025-12-20',
                 'tipo_de_cirurgia_id' => $registo->tipo_de_cirurgia_id,
-                'tipo_de_origem_id' => $registo->tipo_de_origem_id,
                 'ambulatorio' => true,
                 'tipo_de_abordagem_id' => (string) $tipoAbordagem->id,
                 'observacoes' => 'Observações atualizadas',

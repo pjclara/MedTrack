@@ -30,7 +30,6 @@ class UpdateRegistoCirurgicoRequest extends FormRequest
             'registo.especialidade' => 'required|string|max:255',
             'registo.data_cirurgia' => 'required|date',
             'registo.tipo_de_cirurgia_id' => 'required|exists:tipo_de_cirurgias,id',
-            'registo.tipo_de_origem_id' => 'required|exists:tipo_de_origems,id',
             'registo.ambulatorio' => 'required|boolean',
             'registo.tipo_de_abordagem_id' => ['required', 'exists:tipo_de_abordagems,id'],
             'registo.observacoes' => 'nullable|string|max:2000',
@@ -57,7 +56,6 @@ class UpdateRegistoCirurgicoRequest extends FormRequest
 
             'registo.data_cirurgia.required' => 'A data da cirurgia é obrigatória.',
             'registo.tipo_de_cirurgia_id.required' => 'O tipo de cirurgia é obrigatório.',
-            'registo.tipo_de_origem_id.required' => 'O tipo de origem é obrigatório.',
             'registo.tipo_de_abordagem_id.required' => 'O tipo de abordagem é obrigatório.',
 
             'diagnosticos.required' => 'É necessário pelo menos um diagnóstico.',

@@ -6,7 +6,6 @@ use Illuminate\Database\Seeder;
 use App\Models\RegistoCirurgico;
 use App\Models\Utente;
 use App\Models\TipoDeCirurgia;
-use App\Models\TipoDeOrigem;
 use App\Models\TipoDeAbordagem;
 use App\Models\User;
 use Carbon\Carbon;
@@ -20,10 +19,9 @@ class RegistoCirurgicoSeeder extends Seeder
     {
         $users = User::all();
         $tiposDeCirurgia = TipoDeCirurgia::all();
-        $tiposDeOrigem = TipoDeOrigem::all();
 
-        if ($users->isEmpty() || $tiposDeCirurgia->isEmpty() || $tiposDeOrigem->isEmpty()) {
-            $this->command->warn('Execute UserSeeder, TipoDeCirurgiaSeeder e TipoDeOrigemSeeder primeiro!');
+        if ($users->isEmpty() || $tiposDeCirurgia->isEmpty()) {
+            $this->command->warn('Execute UserSeeder e TipoDeCirurgiaSeeder primeiro!');
             return;
         }
 
@@ -117,7 +115,6 @@ class RegistoCirurgicoSeeder extends Seeder
                 'user_id' => $user->id,
                 'utente_id' => $utente->id,
                 'tipo_de_cirurgia_id' => $tiposDeCirurgia->random()->id,
-                'tipo_de_origem_id' => $tiposDeOrigem->random()->id,
                 'tipo_de_abordagem_id' => $tipoAbordagem->id,
                 'hospital' => $hospital ? $hospital->nome : null,
                 'especialidade' => $especialidade ? $especialidade->nome : null,

@@ -7,7 +7,6 @@ use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 /**
  * @property \App\Models\User $user
  * @property \App\Models\TipoDeCirurgia $tipoCirurgia
- * @property \App\Models\TipoDeOrigem $tipoOrigem
  */
 abstract class TestCase extends BaseTestCase
 {

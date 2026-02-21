@@ -6,6 +6,8 @@ enum FuncaoCirurgiaoEnum: string
 {
     case CIRURGIAO_PRINCIPAL = 'Cirurgião Principal';
     case CIRURGIAO_ASSISTENTE = 'Cirurgião Assistente';
+    case RESIDENTE = 'Residente';
+    case INTERNO = 'Interno';
 
     /**
      * Obter todos os valores
