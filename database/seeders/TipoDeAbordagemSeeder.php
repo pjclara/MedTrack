@@ -19,8 +19,7 @@ class TipoDeAbordagemSeeder extends Seeder
                 ['nome' => 'Convencional', 'user_id' => $user->id],
                 ['nome' => 'Laparoscópica', 'user_id' => $user->id],
                 ['nome' => 'Robótica', 'user_id' => $user->id],
-                ['nome' => 'Endoscópica', 'user_id' => $user->id],
-                ['nome' => 'Híbrida', 'user_id' => $user->id],
+                ['nome' => 'Conversão', 'user_id' => $user->id],
             ];
 
             foreach ($tipos as $tipo) {

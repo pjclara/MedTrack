@@ -16,6 +16,7 @@ class TipoDeCirurgiaSeeder extends Seeder
             'Cirurgia Eletiva',
             'Cirurgia de Urgência',
             'Cirurgia Ambulatória',
+            'Pequena Cirurgia',
         ];
 
         foreach ($tipos as $tipo) {
