@@ -17,25 +17,9 @@ class HospitalSeeder extends Seeder
         foreach ($users as $user) {
             $hospitais = [
                 [
-                    'nome' => 'Hospital de Santa Maria',
+                    'nome' => 'Centro Hospitalar de Leiria',
                     'user_id' => $user->id,
-                ],
-                [
-                    'nome' => 'Hospital de São João',
-                    'user_id' => $user->id,
-                ],
-                [
-                    'nome' => 'Hospital de Santo António',
-                    'user_id' => $user->id,
-                ],
-                [
-                    'nome' => 'Hospital da Luz',
-                    'user_id' => $user->id,
-                ],
-                [
-                    'nome' => 'Hospital CUF Descobertas',
-                    'user_id' => $user->id,
-                ],
+                ]               
             ];
 
             foreach ($hospitais as $hospital) {

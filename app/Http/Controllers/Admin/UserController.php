@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Especialidade;
+use App\Models\Hospital;
 use App\Models\User;
 use App\Services\AdminLogService;
 use Illuminate\Http\Request;
@@ -32,7 +34,10 @@ class UserController extends Controller
 
     public function create()
     {
-        return Inertia::render('admin/users/create');
+        return Inertia::render('admin/users/create', [
+            'hospitals' => Hospital::orderBy('nome')->pluck('nome')->unique()->values(),
+            'especialidades' => Especialidade::orderBy('nome')->pluck('nome')->unique()->values(),
+        ]);
     }
 
     public function store(Request $request)
@@ -97,7 +102,9 @@ class UserController extends Controller
     public function edit(User $user)
     {
         return Inertia::render('admin/users/edit', [
-            'user' => $user
+            'user' => $user,
+            'hospitals' => Hospital::orderBy('nome')->pluck('nome')->unique()->values(),
+            'especialidades' => Especialidade::orderBy('nome')->pluck('nome')->unique()->values(),
         ]);
     }
 

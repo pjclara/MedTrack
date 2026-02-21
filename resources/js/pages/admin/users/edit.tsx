@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ChevronLeft, Save } from 'lucide-react';
 
 interface User {
@@ -18,9 +19,11 @@ interface User {
 
 interface UserEditProps {
     user: User;
+    hospitals: string[];
+    especialidades: string[];
 }
 
-export default function UserEdit({ user }: UserEditProps) {
+export default function UserEdit({ user, hospitals, especialidades }: UserEditProps) {
     const { data, setData, put, processing, errors } = useForm({
         name: user.name,
         email: user.email,
@@ -86,20 +89,30 @@ export default function UserEdit({ user }: UserEditProps) {
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="hospital">Hospital de Origem</Label>
-                                    <Input 
-                                        id="hospital" 
-                                        value={data.hospital_de_origem} 
-                                        onChange={e => setData('hospital_de_origem', e.target.value)} 
-                                    />
+                                    <Select value={data.hospital_de_origem} onValueChange={v => setData('hospital_de_origem', v)}>
+                                        <SelectTrigger id="hospital">
+                                            <SelectValue placeholder="Selecionar hospital" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {hospitals.map(h => (
+                                                <SelectItem key={h} value={h}>{h}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                     {errors.hospital_de_origem && <p className="text-sm text-red-500">{errors.hospital_de_origem}</p>}
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="especialidade">Especialidade</Label>
-                                    <Input 
-                                        id="especialidade" 
-                                        value={data.especialidade} 
-                                        onChange={e => setData('especialidade', e.target.value)} 
-                                    />
+                                    <Select value={data.especialidade} onValueChange={v => setData('especialidade', v)}>
+                                        <SelectTrigger id="especialidade">
+                                            <SelectValue placeholder="Selecionar especialidade" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {especialidades.map(e => (
+                                                <SelectItem key={e} value={e}>{e}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                     {errors.especialidade && <p className="text-sm text-red-500">{errors.especialidade}</p>}
                                 </div>
                             </div>
