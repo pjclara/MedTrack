@@ -74,7 +74,7 @@ interface UtenteData {
     id?: string;
     nome: string;
     processo: string;
-    data_nascimento: string;
+    idade: number;
     sexo: string;
 }
 
@@ -139,7 +139,7 @@ export default function RegistoCirurgicoCreate({
         duplicateData?.utente || {
             nome: '',
             processo: '',
-            data_nascimento: '',
+            idade: 0,
             sexo: '',
         },
     );
@@ -179,7 +179,7 @@ export default function RegistoCirurgicoCreate({
                 setUtenteData(data.utente);
                 setUtenteFound(true);
             } else {
-                setUtenteData({ ...utenteData, processo: searchProcesso });
+                setUtenteData({ ...utenteData, processo: searchProcesso, idade: 0 });
                 setUtenteFound(false);
             }
         } catch (error) {
@@ -338,7 +338,7 @@ export default function RegistoCirurgicoCreate({
             case 1:
                 return (
                     utenteData.processo &&
-                    utenteData.data_nascimento &&
+                    utenteData.idade &&
                     utenteData.sexo
                 );
             case 2:
@@ -531,23 +531,24 @@ export default function RegistoCirurgicoCreate({
                                             </div>
 
                                             <div className="space-y-2">
-                                                <Label htmlFor="data_nascimento">
-                                                    Data de Nascimento{' '}
+                                                <Label htmlFor="idade">
+                                                    Idade{' '}
                                                     <span className="text-destructive">
                                                         *
                                                     </span>
                                                 </Label>
                                                 <Input
-                                                    id="data_nascimento"
-                                                    type="date"
+                                                    id="idade"
+                                                    type="number"
                                                     value={
-                                                        utenteData.data_nascimento
+                                                        utenteData.idade
                                                     }
                                                     onChange={(e) =>
                                                         setUtenteData({
                                                             ...utenteData,
-                                                            data_nascimento:
+                                                            idade: parseInt(
                                                                 e.target.value,
+                                                            ),
                                                         })
                                                     }
                                                 />
@@ -1156,9 +1157,7 @@ export default function RegistoCirurgicoCreate({
                                                 <span className="mr-1 text-muted-foreground">
                                                     Data Nascimento:
                                                 </span>{' '}
-                                                {convertISOToPT(
-                                                    utenteData.data_nascimento,
-                                                )}
+                                                {utenteData.idade} anos
                                             </p>
                                             <p>
                                                 <span className="mr-1 text-muted-foreground">

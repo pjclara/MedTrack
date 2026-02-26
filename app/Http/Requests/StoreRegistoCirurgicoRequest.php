@@ -33,7 +33,7 @@ class StoreRegistoCirurgicoRequest extends FormRequest
                 'integer',
                 Rule::unique('utentes', 'processo')->ignore($this->input('utente.id')),
             ],
-            'utente.data_nascimento' => 'required|date',
+            'utente.idade' => 'required|integer',
             'utente.sexo' => ['required', Rule::enum(SexoEnum::class)],
 
             'registo.hospital' => 'required|string|max:255',
@@ -66,7 +66,7 @@ class StoreRegistoCirurgicoRequest extends FormRequest
         return [
             'utente.processo.required' => 'O nº de processo é obrigatório.',
             'utente.processo.unique' => 'Já existe um utente com este nº de processo.',
-            'utente.data_nascimento.required' => 'A data de nascimento é obrigatória.',
+            'utente.idade.required' => 'A idade é obrigatória.',
             'utente.sexo.required' => 'O sexo é obrigatório.',
 
             'registo.data_cirurgia.required' => 'A data da cirurgia é obrigatória.',

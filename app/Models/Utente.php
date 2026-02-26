@@ -13,7 +13,7 @@ class Utente extends Model
 
     protected $fillable = [
         'nome',
-        'data_nascimento',
+        'idade',
         'sexo',
         'processo',
         'user_id',
@@ -22,7 +22,6 @@ class Utente extends Model
     protected $guarded = ['id'];
 
     protected $casts = [
-        'data_nascimento' => 'date',
         'sexo' => SexoEnum::class,
     ];
 
@@ -33,22 +32,6 @@ class Utente extends Model
     public function registosCirurgicos()
     {
         return $this->hasMany(RegistoCirurgico::class);
-    }
-
-    /**
-     * Obtém a idade do utente
-     */
-    public function getIdadeAttribute()
-    {
-        return $this->data_nascimento->age;
-    }
-
-    /**
-     * Obtém a data de nascimento formatada (dd/mm/yyyy)
-     */
-    public function getDataNascimentoFormatadaAttribute()
-    {
-        return $this->data_nascimento->format('d/m/Y');
     }
 
     /**

@@ -10,7 +10,7 @@ export interface Utente {
     nome: string;
     processo: number;
     sexo: 'Masculino' | 'Feminino' | 'Outro';
-    data_nascimento: string;
+    idade: number;
     created_at: string;
     updated_at: string;
     registos_cirurgicos_count?: number;

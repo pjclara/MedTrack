@@ -22,7 +22,7 @@ class UpdateRegistoCirurgicoRequest extends FormRequest
             'utente.id' => 'nullable|exists:utentes,id',
             'utente.nome' => 'nullable|string|max:255',
             'utente.processo' => 'required|max:50',
-            'utente.data_nascimento' => 'required|date',
+            'utente.idade' => 'required|integer',
             'utente.sexo' => ['required', Rule::enum(SexoEnum::class)],
 
             // Registo data
@@ -51,7 +51,7 @@ class UpdateRegistoCirurgicoRequest extends FormRequest
     {
         return [
             'utente.processo.required' => 'O número de processo é obrigatório.',
-            'utente.data_nascimento.required' => 'A data de nascimento é obrigatória.',
+            'utente.idade.required' => 'A idade é obrigatória.',
             'utente.sexo.required' => 'O sexo é obrigatório.',
 
             'registo.data_cirurgia.required' => 'A data da cirurgia é obrigatória.',

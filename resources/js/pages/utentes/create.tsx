@@ -30,7 +30,7 @@ export default function UtenteCreate() {
         nome: '',
         processo: '',
         sexo: '' as 'Masculino' | 'Feminino' | 'Outro' | '',
-        data_nascimento: '',
+        idade: '',
     });
 
     const handleSubmit: FormEventHandler = (e) => {
@@ -133,18 +133,18 @@ export default function UtenteCreate() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="data_nascimento">
-                                        Data de Nascimento <span className="text-destructive">*</span>
+                                    <Label htmlFor="idade">
+                                        Idade <span className="text-destructive">*</span>
                                     </Label>
                                     <Input
-                                        id="data_nascimento"
-                                        type="date"
-                                        value={data.data_nascimento}
-                                        onChange={(e) => setData('data_nascimento', e.target.value)}
-                                        className={errors.data_nascimento ? 'border-destructive' : ''}
+                                        id="idade"
+                                        type="number"
+                                        value={data.idade}
+                                        onChange={(e) => setData('idade', e.target.value)}
+                                        className={errors.idade ? 'border-destructive' : ''}
                                     />
-                                    {errors.data_nascimento && (
-                                        <p className="text-sm text-destructive">{errors.data_nascimento}</p>
+                                    {errors.idade && (
+                                        <p className="text-sm text-destructive">{errors.idade}</p>
                                     )}
                                 </div>
                             </div>

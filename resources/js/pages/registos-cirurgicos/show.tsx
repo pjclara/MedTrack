@@ -136,8 +136,8 @@ export default function RegistoCirurgicoShow({ registo }: RegistoCirurgicoShowPr
                                     </div>
                                     <Separator />
                                     <div>
-                                        <p className="text-sm font-medium text-muted-foreground">Data de Nascimento</p>
-                                        <p className="text-lg">{formatDateToPT(registo.utente.data_nascimento)}</p>
+                                        <p className="text-sm font-medium text-muted-foreground">Idade</p>
+                                        <p className="text-lg">{registo.utente.idade}</p>
                                     </div>
                                     <Separator />
                                     <div>

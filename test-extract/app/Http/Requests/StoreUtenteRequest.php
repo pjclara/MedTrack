@@ -25,7 +25,7 @@ class StoreUtenteRequest extends FormRequest
     {
         return [
             'nome' => 'nullable|string|max:255',
-            'data_nascimento' => 'required|date|before:today',
+            'idade' => 'required|integer|min:0',
             'sexo' => ['required', Rule::enum(SexoEnum::class)],
             'processo' => 'required|integer|unique:utentes,processo|min:1',
         ];
@@ -39,8 +39,9 @@ class StoreUtenteRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'data_nascimento.required' => 'A data de nascimento é obrigatória.',
-            'data_nascimento.before' => 'A data de nascimento deve ser anterior a hoje.',
+            'idade.required' => 'A idade é obrigatória.',
+            'idade.integer' => 'A idade deve ser um número inteiro.',
+            'idade.min' => 'A idade deve ser um número positivo.',
             'sexo.required' => 'O sexo é obrigatório.',
             'sexo.in' => 'O sexo deve ser Masculino, Feminino ou Outro.',
             'processo.required' => 'O número de processo é obrigatório.',

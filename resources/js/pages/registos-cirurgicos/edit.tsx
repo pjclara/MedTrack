@@ -32,7 +32,7 @@ interface RegistoCirurgicoEditProps {
             id: string;
             nome: string;
             processo: string;
-            data_nascimento: string;
+            idade: number;
             sexo: string;
         };
         registo: {
@@ -65,7 +65,7 @@ interface UtenteData {
     id?: string;
     nome: string;
     processo: string;
-    data_nascimento: string;
+    idade: number;
     sexo: string;
 }
 
@@ -205,7 +205,7 @@ export default function RegistoCirurgicoEdit({
     const canAdvance = () => {
         switch (step) {
             case 1:
-                return utenteData.processo && utenteData.data_nascimento && utenteData.sexo;
+                return utenteData.processo && utenteData.idade && utenteData.sexo;
             case 2:
                 return registoData.hospital && registoData.especialidade && registoData.data_cirurgia && registoData.tipo_de_cirurgia_id && registoData.tipo_de_abordagem_id;
             case 3:
@@ -311,14 +311,14 @@ export default function RegistoCirurgicoEdit({
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="data_nascimento">
-                                        Data de Nascimento <span className="text-destructive">*</span>
+                                    <Label htmlFor="idade">
+                                        Idade <span className="text-destructive">*</span>
                                     </Label>
                                     <Input
-                                        id="data_nascimento"
-                                        type="date"
-                                        value={utenteData.data_nascimento ? new Date(utenteData.data_nascimento).toISOString().split('T')[0] : ''}
-                                        onChange={(e) => setUtenteData({ ...utenteData, data_nascimento: e.target.value })}
+                                        id="idade"
+                                        type="number"
+                                        value={utenteData.idade || ''}
+                                        onChange={(e) => setUtenteData({ ...utenteData, idade: parseInt(e.target.value) })}
                                     />
                                 </div>
 
@@ -686,7 +686,7 @@ export default function RegistoCirurgicoEdit({
                                         <div className="rounded-md border p-4 space-y-1 text-sm bg-muted/30">
                                             <p><span className="text-muted-foreground mr-1">Nome:</span> {utenteData.nome}</p>
                                             <p><span className="text-muted-foreground mr-1">Processo:</span> {utenteData.processo}</p>
-                                            <p><span className="text-muted-foreground mr-1">Data de Nascimento:</span> {convertISOToPT(utenteData.data_nascimento)}</p>
+                                            <p><span className="text-muted-foreground mr-1">Idade:</span> {utenteData.idade}</p>
                                             <p><span className="text-muted-foreground mr-1">Sexo:</span> {utenteData.sexo}</p>
                                         </div>
                                     </div>

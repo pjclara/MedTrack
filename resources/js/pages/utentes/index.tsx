@@ -152,7 +152,7 @@ export default function UtenteIndex({ utentes, filters }: UtenteIndexProps) {
                                         <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground border-t pt-3">
                                             <div className="flex items-center gap-2">
                                                 <Calendar className="h-4 w-4 shrink-0 text-emerald-600" />
-                                                <span>{formatDateToPT(utente.data_nascimento)}</span>
+                                                <span>{utente.idade} anos</span>
                                             </div>
                                             <div className="flex items-center gap-2 justify-end">
                                                 <Stethoscope className="h-4 w-4 shrink-0 text-emerald-600" />
@@ -186,7 +186,7 @@ export default function UtenteIndex({ utentes, filters }: UtenteIndexProps) {
                                             <TableHead>Processo</TableHead>
                                             <TableHead>Nome</TableHead>
                                             <TableHead>Sexo</TableHead>
-                                            <TableHead>Data Nascimento</TableHead>
+                                            <TableHead>Idade</TableHead>
                                             {isAdmin && <TableHead>Registado Por</TableHead>}
                                             <TableHead>Cirurgias</TableHead>
                                             <TableHead className="text-right">Ações</TableHead>
@@ -212,7 +212,7 @@ export default function UtenteIndex({ utentes, filters }: UtenteIndexProps) {
                                                         </Badge>
                                                     </TableCell>
                                                     <TableCell>
-                                                        {formatDateToPT(utente.data_nascimento)}
+                                                        {utente.idade} anos
                                                     </TableCell>
                                                     {isAdmin && (
                                                         <TableCell>

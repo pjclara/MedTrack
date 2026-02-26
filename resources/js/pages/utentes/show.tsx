@@ -166,12 +166,12 @@ export default function UtenteShow({ utente }: UtenteShowProps) {
                         <CardContent className="space-y-4">
                             <div>
                                 <p className="text-sm font-medium text-muted-foreground">Data de Nascimento</p>
-                                <p className="text-lg">{formatDateToPT(utente.data_nascimento)}</p>
+                                <p className="text-lg">{utente.idade}</p>
                             </div>
                             <Separator />
                             <div>
                                 <p className="text-sm font-medium text-muted-foreground">Idade</p>
-                                <p className="text-lg">{calculateAge(utente.data_nascimento)} anos</p>
+                                <p className="text-lg">{utente.idade} anos</p>
                             </div>
                             <Separator />
                             <div>

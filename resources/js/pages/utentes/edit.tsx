@@ -34,7 +34,7 @@ export default function UtenteEdit({ utente }: UtenteEditProps) {
         nome: utente.nome,
         processo: utente.processo.toString(),
         sexo: utente.sexo,
-        data_nascimento: utente.data_nascimento,
+        idade: utente.idade,
     });
 
     const handleSubmit: FormEventHandler = (e) => {
@@ -134,26 +134,18 @@ export default function UtenteEdit({ utente }: UtenteEditProps) {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="data_nascimento">
+                                    <Label htmlFor="idade">
                                         Data de Nascimento <span className="text-destructive">*</span>
                                     </Label>
                                     <Input
-                                        id="data_nascimento"
-                                        type="date"
-                                        value={data.data_nascimento ? new Date(data.data_nascimento).toISOString().split('T')[0] : ''}
-                                        onChange={(e) => {
-                                            const date = new Date(e.target.value);
-                                            const formattedDate = date.toLocaleDateString('pt-PT', {
-                                                day: '2-digit',
-                                                month: '2-digit',
-                                                year: 'numeric'
-                                            }).split('/').join('-');
-                                            setData('data_nascimento', formattedDate);
-                                        }}
-                                        className={errors.data_nascimento ? 'border-destructive' : ''}
+                                        id="idade"
+                                        type="number"
+                                        value={data.idade}
+                                        onChange={(e) => setData('idade', parseInt(e.target.value))}
+                                        className={errors.idade ? 'border-destructive' : ''}
                                     />
-                                    {errors.data_nascimento && (
-                                        <p className="text-sm text-destructive">{errors.data_nascimento}</p>
+                                    {errors.idade && (
+                                        <p className="text-sm text-destructive">{errors.idade}</p>
                                     )}
                                 </div>
                             </div>

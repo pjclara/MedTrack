@@ -64,7 +64,7 @@ class RegistoCirurgicoController extends Controller
             $duplicateData['utente'] = [
                 'nome' => '',
                 'processo' => '',
-                'data_nascimento' => '',
+                'idade' => '',
                 'sexo' => '',
             ];
             $duplicateData['registo']['data_cirurgia'] = '';
@@ -103,7 +103,7 @@ class RegistoCirurgicoController extends Controller
             $utenteAttributes = [
                 'nome' => $utenteData['nome'],
                 'processo' => $utenteData['processo'],
-                'data_nascimento' => $utenteData['data_nascimento'],
+                'idade' => $utenteData['idade'],
                 'sexo' => $utenteData['sexo'],
             ];
 
@@ -236,7 +236,7 @@ class RegistoCirurgicoController extends Controller
                 'id' => (string) $registo->utente->id,
                 'nome' => $registo->utente->nome,
                 'processo' => $registo->utente->processo,
-                'data_nascimento' => $registo->utente->data_nascimento,
+                'idade' => $registo->utente->idade,
                 'sexo' => $registo->utente->sexo,
             ],
             'registo' => [
@@ -270,7 +270,7 @@ class RegistoCirurgicoController extends Controller
                 $utenteAttributes = [
                     'nome' => $utenteData['nome'],
                     'processo' => $utenteData['processo'],
-                    'data_nascimento' => $utenteData['data_nascimento'],
+                    'idade' => $utenteData['idade'],
                     'sexo' => $utenteData['sexo'],
                 ];
                 $utente->update($utenteAttributes);
