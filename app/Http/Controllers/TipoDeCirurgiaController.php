@@ -45,33 +45,33 @@ class TipoDeCirurgiaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(TipoDeCirurgia $tipoDeCirurgia)
+    public function show(TipoDeCirurgia $tiposDeCirurgium)
     {
         return Inertia::render('tipos-de-cirurgia/show', [
-            'tipo' => $tipoDeCirurgia
+            'tipo' => $tiposDeCirurgium
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(TipoDeCirurgia $tipoDeCirurgia)
+    public function edit(TipoDeCirurgia $tiposDeCirurgium)
     {
         return Inertia::render('tipos-de-cirurgia/edit', [
-            'tipo' => $tipoDeCirurgia
+            'tipo' => $tiposDeCirurgium
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, TipoDeCirurgia $tipoDeCirurgia)
+    public function update(Request $request, TipoDeCirurgia $tiposDeCirurgium)
     {
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
         ]);
 
-        $tipoDeCirurgia->update($validated);
+        $tiposDeCirurgium->update($validated);
 
         return redirect()->route('tipos-de-cirurgia.index')
             ->with('success', 'Tipo de cirurgia atualizado com sucesso.');
@@ -80,9 +80,9 @@ class TipoDeCirurgiaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(TipoDeCirurgia $tipoDeCirurgia)
+    public function destroy(TipoDeCirurgia $tiposDeCirurgium)
     {
-        $tipoDeCirurgia->delete();
+        $tiposDeCirurgium->delete();
 
         return redirect()->route('tipos-de-cirurgia.index')
             ->with('success', 'Tipo de cirurgia removido com sucesso.');

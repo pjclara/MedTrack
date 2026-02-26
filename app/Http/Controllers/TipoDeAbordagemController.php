@@ -38,34 +38,35 @@ class TipoDeAbordagemController extends Controller
             ->with('success', 'Tipo de abordagem criado com sucesso.');
     }
 
-    public function show(TipoDeAbordagem $tipoDeAbordagem)
+    public function show(TipoDeAbordagem $tiposDeAbordagem)
     {
-        $tipoDeAbordagem->loadCount('registosCirurgicos');
+        $tiposDeAbordagem->loadCount('registosCirurgicos');
         return Inertia::render('tipos-de-abordagem/show', [
-            'tipo' => $tipoDeAbordagem
+            'tipo' => $tiposDeAbordagem
         ]);
     }
 
-    public function edit(TipoDeAbordagem $tipoDeAbordagem)
+    public function edit(TipoDeAbordagem $tiposDeAbordagem)
     {
+
         return Inertia::render('tipos-de-abordagem/edit', [
-            'tipo' => $tipoDeAbordagem
+            'tipo' => $tiposDeAbordagem
         ]);
     }
 
-    public function update(Request $request, TipoDeAbordagem $tipoDeAbordagem)
+    public function update(Request $request, TipoDeAbordagem $tiposDeAbordagem)
     {
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
         ]);
 
-        $tipoDeAbordagem->update($validated);
+        $tiposDeAbordagem->update($validated);
 
         return redirect()->route('tipos-de-abordagem.index')
             ->with('success', 'Tipo de abordagem atualizado com sucesso.');
     }
 
-    public function destroy(TipoDeAbordagem $tipoDeAbordagem)
+    public function destroy(TipoDeAbordagem $tiposDeAbordagem)
     {
         $tipoDeAbordagem->delete();
 

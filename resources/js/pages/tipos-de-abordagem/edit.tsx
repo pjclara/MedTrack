@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
+import React, { useEffect } from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,12 +23,23 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function TipoDeAbordagemEdit({ tipo }: TipoDeAbordagemEditProps) {
     const { data, setData, patch, processing, errors } = useForm({
-        nome: tipo.nome,
+        nome: tipo?.nome ?? (Array.isArray(tipo) ? tipo[0]?.nome ?? '' : ''),
     });
+
+    console.log('Tipo de Abordagem recebido:', tipo);
+
+    // Sync form state if the `tipo` prop arrives later or is an array
+    useEffect(() => {
+        const nome = tipo?.nome ?? (Array.isArray(tipo) ? tipo[0]?.nome ?? '' : '');
+        setData('nome', nome);
+    }, [tipo]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        patch(`/tipos-de-abordagem/${tipo.id}`, {
+        const id = tipo?.id ?? (Array.isArray(tipo) ? tipo[0]?.id : undefined);
+        if (!id) return;
+
+        patch(`/tipos-de-abordagem/${id}`, {
             onSuccess: () => toast.success('Tipo de abordagem atualizado com sucesso!'),
         });
     };
