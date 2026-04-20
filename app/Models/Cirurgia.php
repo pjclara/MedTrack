@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Enums\FuncaoCirurgiaoEnum;
 use App\Enums\ClavienDindoEnum;
 
 class Cirurgia extends Model
@@ -16,7 +15,7 @@ class Cirurgia extends Model
         'diagnostico_id',
         'procedimento_id',
         'tipo',
-        'funcao',
+        'funcao_cirurgiao_id',
         'clavien-dindo',
         'anatomia_patologica',
         'observacoes',
@@ -25,9 +24,16 @@ class Cirurgia extends Model
     protected $guarded = ['id'];
 
     protected $casts = [
-        'funcao' => FuncaoCirurgiaoEnum::class,
         'clavien-dindo' => ClavienDindoEnum::class,
     ];
+
+    /**
+     * Relação com função do cirurgião
+     */
+    public function funcaoCirurgiao()
+    {
+        return $this->belongsTo(FuncaoCirurgiao::class);
+    }
 
     /**
      * Relação com registo cirúrgico
@@ -86,8 +92,8 @@ class Cirurgia extends Model
     }
 
     // is Cirurgia principal
-    public function isPrincipal()
+    public function isPrincipal(): bool
     {
-        return $this->funcao === FuncaoCirurgiaoEnum::CIRURGIAO_PRINCIPAL;
+        return $this->funcaoCirurgiao?->nome === 'Cirurgião Principal';
     }
 }

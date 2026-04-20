@@ -55,7 +55,7 @@ interface RegistoCirurgicoEditProps {
     zonaAnatomicas: ZonaAnatomica[];
     enums: {
         sexo: string[];
-        funcoes: string[];
+        funcoes: { id: number; nome: string }[];
         clavien: string[];
         tipo_diagnostico: string[];
     };
@@ -569,8 +569,8 @@ export default function RegistoCirurgicoEdit({
                                                                         </SelectTrigger>
                                                                         <SelectContent>
                                                                             {(enums?.funcoes || []).map((f) => (
-                                                                                <SelectItem key={f} value={f}>
-                                                                                    {f}
+                                                                                <SelectItem key={f.id} value={f.id.toString()}>
+                                                                                    {f.nome}
                                                                                 </SelectItem>
                                                                             ))}
                                                                         </SelectContent>
@@ -722,9 +722,10 @@ export default function RegistoCirurgicoEdit({
                                                 <ul className="list-disc list-inside text-sm space-y-1 ml-4">
                                                     {diag.procedimentos.map((proc, procIndex) => {
                                                         const procedimentoNome = procedimentos.find(p => p.id.toString() === proc.procedimento_id)?.nome;
+                                                        const funcaoNome = enums.funcoes.find(f => f.id.toString() === proc.funcao)?.nome ?? proc.funcao;
                                                         return (
                                                             <li key={procIndex}>
-                                                                {procedimentoNome} ({proc.funcao})
+                                                                {procedimentoNome} ({funcaoNome})
                                                                 {proc.clavien_dindo && proc.clavien_dindo !== 'none' && ` - Clavien-Dindo: ${proc.clavien_dindo}`}
                                                             </li>
                                                         );

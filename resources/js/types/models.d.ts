@@ -52,8 +52,8 @@ export interface Cirurgia {
     registo_cirurgico_id: number;
     diagnostico_id: number;
     procedimento_id: number;
-    funcao: 'Cirurgião Principal' | 'Cirurgião Assistente' | 'Residente' | 'Interno';
-    funcao_cirurgiao?: string;
+    funcao_cirurgiao_id: number | null;
+    funcao_cirurgiao?: FuncaoCirurgiao;
     duracao_minutos?: number;
     clavien_dindo?: 'I' | 'II' | 'IIIa' | 'IIIb' | 'IVa' | 'IVb' | 'V';
     tipo?: string;
@@ -113,6 +113,14 @@ export interface TipoDeAbordagem {
     nome: string;
     created_at: string;
     updated_at: string;
+}
+
+export interface FuncaoCirurgiao {
+    id: number;
+    nome: string;
+    created_at: string;
+    updated_at: string;
+    cirurgias_count?: number;
 }
 
 export interface PaginatedData<T> {

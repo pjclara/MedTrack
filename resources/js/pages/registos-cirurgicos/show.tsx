@@ -244,9 +244,9 @@ export default function RegistoCirurgicoShow({ registo }: RegistoCirurgicoShowPr
                                                     {cirurgia.procedimento?.nome || '-'}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {cirurgia.funcao ? (
+                                                    {cirurgia.funcao_cirurgiao?.nome ? (
                                                         <Badge variant="secondary">
-                                                            {cirurgia.funcao}
+                                                            {cirurgia.funcao_cirurgiao.nome}
                                                         </Badge>
                                                     ) : (
                                                         '-'

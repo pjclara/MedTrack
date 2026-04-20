@@ -13,7 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, FileText, GraduationCap, Award, Settings, Layers, Activity, ClipboardList, Building2, Scissors, Crosshair } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, FileText, GraduationCap, Award, Settings, Layers, Activity, ClipboardList, Building2, Scissors, Crosshair, UserCheck } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -80,6 +80,11 @@ const adminNavItems: NavItem[] = [
         title: 'Tipos de Abordagem',
         href: '/tipos-de-abordagem',
         icon: Crosshair,
+    },
+    {
+        title: 'Funções do Cirurgião',
+        href: '/funcoes-cirurgiao',
+        icon: UserCheck,
     },
 ];
 

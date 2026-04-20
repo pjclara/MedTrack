@@ -1,7 +1,9 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
+import { useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import {
     Table,
     TableBody,
@@ -11,14 +13,17 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { PlusCircle, Edit, Eye, Clock, FileDown, Hospital, User, Activity, Copy, Stethoscope, Timer, Scissors, UserCog, UserCheck, GraduationCap, UserCircle } from 'lucide-react';
+import { PlusCircle, Edit, Eye, FileDown, Hospital, User, Activity, Copy, Stethoscope, Scissors, UserCheck, UserCircle, Search, X, ClipboardList } from 'lucide-react';
 import { type BreadcrumbItem } from '@/types';
-import { type RegistoCirurgico, type PaginatedData } from '@/types/models';
+import { type RegistoCirurgico, type PaginatedData, type Diagnostico, type Procedimento } from '@/types/models';
 import registosCirurgicos from '@/routes/registos-cirurgicos';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface RegistoCirurgicoIndexProps {
     registos: PaginatedData<RegistoCirurgico>;
+    filters: { search?: string; data_inicio?: string; data_fim?: string; diagnostico_id?: string; procedimento_id?: string };
+    diagnosticos: Diagnostico[];
+    procedimentos: Procedimento[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -26,8 +31,36 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Registos Cirúrgicos', href: '/registos-cirurgicos' },
 ];
 
-export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoIndexProps) {
+export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos, procedimentos }: RegistoCirurgicoIndexProps) {
     const isMobile = useIsMobile();
+
+    const [search, setSearch] = useState(filters.search ?? '');
+    const [dataInicio, setDataInicio] = useState(filters.data_inicio ?? '');
+    const [dataFim, setDataFim] = useState(filters.data_fim ?? '');
+    const [diagnosticoId, setDiagnosticoId] = useState(filters.diagnostico_id ?? '');
+    const [procedimentoId, setProcedimentoId] = useState(filters.procedimento_id ?? '');
+
+    const handleFilter = () => {
+        router.get('/registos-cirurgicos', {
+            ...(search && { search }),
+            ...(dataInicio && { data_inicio: dataInicio }),
+            ...(dataFim && { data_fim: dataFim }),
+            ...(diagnosticoId && { diagnostico_id: diagnosticoId }),
+            ...(procedimentoId && { procedimento_id: procedimentoId }),
+        }, { preserveState: true, replace: true });
+    };
+
+    const handleClear = () => {
+        setSearch('');
+        setDataInicio('');
+        setDataFim('');
+        setDiagnosticoId('');
+        setProcedimentoId('');
+        router.get('/registos-cirurgicos', {}, { preserveState: true, replace: true });
+    };
+
+    const hasFilters = !!(filters.search || filters.data_inicio || filters.data_fim || filters.diagnostico_id || filters.procedimento_id);
+
     const formatDate = (date: string) => {
         return new Date(date).toLocaleDateString('pt-PT');
     };
@@ -42,7 +75,7 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
     };
 
     const getFuncaoText = (cirurgia: any) => {
-        return cirurgia.funcao || 'N/A';
+        return cirurgia.funcao_cirurgiao?.nome || 'N/A';
     };
 
     return (
@@ -79,6 +112,67 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                         <CardDescription>
                             Total de {registos.total} registos cirúrgicos
                         </CardDescription>
+                        {/* Filtros */}
+                        <div className={`flex flex-wrap gap-2 pt-2 ${isMobile ? 'flex-col' : 'items-end'}`}>
+                            <div className="relative flex-1 min-w-[180px]">
+                                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    placeholder="Pesquisar utente, processo, hospital..."
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleFilter()}
+                                    className="pl-8"
+                                />
+                            </div>
+                            <div className="flex gap-2 flex-wrap">
+                                <Input
+                                    type="date"
+                                    value={dataInicio}
+                                    onChange={(e) => setDataInicio(e.target.value)}
+                                    className="w-36"
+                                    title="Data início"
+                                />
+                                <Input
+                                    type="date"
+                                    value={dataFim}
+                                    onChange={(e) => setDataFim(e.target.value)}
+                                    className="w-36"
+                                    title="Data fim"
+                                />
+                                <select
+                                    value={diagnosticoId}
+                                    onChange={(e) => setDiagnosticoId(e.target.value)}
+                                    className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring w-44"
+                                >
+                                    <option value="">Todos os diagnósticos</option>
+                                    {diagnosticos.map((d) => (
+                                        <option key={d.id} value={d.id}>{d.nome}</option>
+                                    ))}
+                                </select>
+                                <select
+                                    value={procedimentoId}
+                                    onChange={(e) => setProcedimentoId(e.target.value)}
+                                    className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring w-44"
+                                >
+                                    <option value="">Todas as intervenções</option>
+                                    {procedimentos.map((p) => (
+                                        <option key={p.id} value={p.id}>{p.nome}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="flex gap-2">
+                                <Button onClick={handleFilter} className="bg-emerald-600 hover:bg-emerald-700">
+                                    <Search className="mr-2 h-4 w-4" />
+                                    Filtrar
+                                </Button>
+                                {hasFilters && (
+                                    <Button variant="outline" onClick={handleClear}>
+                                        <X className="mr-2 h-4 w-4" />
+                                        Limpar
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
                     </CardHeader>
                     <CardContent className={isMobile ? 'px-2 pb-4' : ''}>
                         {!isMobile ? (
@@ -89,15 +183,15 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                             <TableHead>Data</TableHead>
                                             <TableHead>Utente</TableHead>
                                             <TableHead>Tipo Cirurgia</TableHead>
+                                            <TableHead>Diagnósticos</TableHead>
                                             <TableHead>Cirurgias</TableHead>
-                                            <TableHead>Abordagem</TableHead>
                                             <TableHead className="text-right">Ações</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
                                         {registos.data.length === 0 ? (
                                             <TableRow>
-                                                <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
+                                        <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
                                                     Nenhum registo encontrado
                                                 </TableCell>
                                             </TableRow>
@@ -120,16 +214,27 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                                         {registo.tipo_de_cirurgia?.nome || '-'}
                                                     </TableCell>
                                                     <TableCell>
+                                                        <div className="flex flex-col gap-1">
+                                                            {registo.cirurgias && registo.cirurgias.length > 0
+                                                                ? [...new Map(registo.cirurgias.filter(c => c.diagnostico).map(c => [c.diagnostico!.id, c.diagnostico!.nome])).values()].map((nome, i) => (
+                                                                    <Badge key={i} variant="secondary" className="text-xs font-normal">
+                                                                        <ClipboardList className="h-3 w-3 mr-1" />
+                                                                        {nome}
+                                                                    </Badge>
+                                                                ))
+                                                                : <span className="text-muted-foreground">-</span>
+                                                            }
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell>
                                                         <div className="space-y-1">
-                                                            <div className="flex items-center gap-2">
-                                                                <Badge variant="secondary" className="font-mono text-xs">
-                                                                    {registo.cirurgias_count || 0} cirurgia{registo.cirurgias_count !== 1 ? 's' : ''}
-                                                                </Badge>
-                                                            </div>
+                                                            <Badge variant="secondary" className="font-mono text-xs">
+                                                                {registo.cirurgias_count || 0} cirurgia{registo.cirurgias_count !== 1 ? 's' : ''}
+                                                            </Badge>
                                                             {registo.cirurgias && registo.cirurgias.length > 0 && (
                                                                 <div className="flex flex-col gap-1 mt-1">
                                                                     {registo.cirurgias.map((cirurgia, idx) => {
-                                                                        const FuncaoIcon = getFuncaoIcon(cirurgia.funcao);
+                                                                        const FuncaoIcon = getFuncaoIcon(cirurgia.funcao_cirurgiao?.nome);
                                                                         return (
                                                                         <div key={idx} className="flex items-center gap-2 text-xs">
                                                                             <div className="flex items-center gap-1 text-muted-foreground">
@@ -147,11 +252,6 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                                                 </div>
                                                             )}
                                                         </div>
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <Badge variant="outline">
-                                                            {registo.tipo_de_abordagem?.nome || 'N/A'}
-                                                        </Badge>
                                                     </TableCell>
 
                                                     <TableCell className="text-right">
@@ -197,9 +297,17 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                                         {registo.utente?.nome || 'Utente s/ Nome'}
                                                     </h3>
                                                 </div>
-                                                <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
-                                                    {registo.tipo_de_abordagem?.nome || 'N/A'}
-                                                </Badge>
+                                                <div className="flex flex-col gap-1 items-end">
+                                                    {registo.cirurgias && registo.cirurgias.length > 0
+                                                        ? [...new Map(registo.cirurgias.filter(c => c.diagnostico).map(c => [c.diagnostico!.id, c.diagnostico!.nome])).values()].map((nome, i) => (
+                                                            <Badge key={i} variant="secondary" className="text-xs">
+                                                                <ClipboardList className="h-3 w-3 mr-1" />
+                                                                {nome}
+                                                            </Badge>
+                                                        ))
+                                                        : <Badge variant="outline">Sem diagnósticos</Badge>
+                                                    }
+                                                </div>
                                             </div>
                                             
                                             <div className="grid grid-cols-1 gap-2 text-sm">
@@ -218,7 +326,7 @@ export default function RegistoCirurgicoIndex({ registos }: RegistoCirurgicoInde
                                                             {registo.cirurgias_count} Cirurgia{registo.cirurgias_count !== 1 ? 's' : ''}
                                                         </div>
                                                         {registo.cirurgias.map((cirurgia, idx) => {
-                                                            const FuncaoIcon = getFuncaoIcon(cirurgia.funcao);
+                                                            const FuncaoIcon = getFuncaoIcon(cirurgia.funcao_cirurgiao?.nome);
                                                             return (
                                                             <div key={idx} className="text-xs pl-4 space-y-0.5">
                                                                 <div className="flex items-center gap-2 text-muted-foreground">

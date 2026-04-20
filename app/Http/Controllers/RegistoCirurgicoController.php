@@ -11,6 +11,7 @@ use App\Models\Especialidade;
 use App\Models\Hospital;
 use App\Models\ZonaAnatomica;
 use App\Models\TipoDeAbordagem;
+use App\Models\FuncaoCirurgiao;
 use App\Http\Requests\StoreRegistoCirurgicoRequest;
 use App\Http\Requests\UpdateRegistoCirurgicoRequest;
 use Illuminate\Support\Facades\DB;
@@ -27,23 +28,62 @@ class RegistoCirurgicoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
         $this->authorize('viewAny', RegistoCirurgico::class);
 
-        $registos = RegistoCirurgico::with([
+        $filters = $request->only(['search', 'data_inicio', 'data_fim', 'diagnostico_id', 'procedimento_id']);
+
+        $query = RegistoCirurgico::with([
                 'utente:id,nome,processo',
                 'tipoDeCirurgia:id,nome',
                 'tipoDeAbordagem:id,nome',
                 'user:id,name,email',
-                'cirurgias:id,registo_cirurgico_id,funcao,procedimento_id',
+                'cirurgias:id,registo_cirurgico_id,diagnostico_id,funcao_cirurgiao_id,procedimento_id',
                 'cirurgias.procedimento:id,nome',
+                'cirurgias.funcaoCirurgiao:id,nome',
+                'cirurgias.diagnostico:id,nome',
             ])
             ->withCount('cirurgias')
-            ->orderBy('data_cirurgia', 'desc')
-            ->paginate(15);
+            ->orderBy('data_cirurgia', 'desc');
+
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('utente', function ($q2) use ($search) {
+                    $q2->where('nome', 'like', "%{$search}%")
+                       ->orWhere('processo', 'like', "%{$search}%");
+                })->orWhere('hospital', 'like', "%{$search}%");
+            });
+        }
+
+        if (!empty($filters['data_inicio'])) {
+            $query->whereDate('data_cirurgia', '>=', $filters['data_inicio']);
+        }
+
+        if (!empty($filters['data_fim'])) {
+            $query->whereDate('data_cirurgia', '<=', $filters['data_fim']);
+        }
+
+        if (!empty($filters['diagnostico_id'])) {
+            $query->whereHas('cirurgias', function ($q) use ($filters) {
+                $q->where('diagnostico_id', $filters['diagnostico_id']);
+            });
+        }
+
+        if (!empty($filters['procedimento_id'])) {
+            $query->whereHas('cirurgias', function ($q) use ($filters) {
+                $q->where('procedimento_id', $filters['procedimento_id']);
+            });
+        }
+
+        $registos = $query->paginate(15)->withQueryString();
+
         return Inertia::render('registos-cirurgicos/index', [
-            'registos' => $registos
+            'registos'     => $registos,
+            'filters'      => $filters,
+            'diagnosticos' => \App\Models\Diagnostico::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
+            'procedimentos' => \App\Models\Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
         ]);
     }
 
@@ -81,7 +121,7 @@ class RegistoCirurgicoController extends Controller
             'zonaAnatomicas' => ZonaAnatomica::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'enums' => [
                 'sexo' => config('medfolio.sexo_options'),
-                'funcoes' => config('medfolio.funcao_options'),
+                'funcoes' => FuncaoCirurgiao::orderBy('nome')->get(['id', 'nome']),
                 'clavien' => config('medfolio.clavien_dindo_options'),
                 'tipo_diagnostico' => TipoDiagnosticoEnum::values(),
             ],
@@ -136,7 +176,7 @@ class RegistoCirurgicoController extends Controller
                         'diagnostico_id' => $diagnostico['diagnostico_id'],
                         'tipo' => $diagnostico['tipo'] ?? null,
                         'procedimento_id' => $procedimento['procedimento_id'],
-                        'funcao' => $procedimento['funcao'],
+                        'funcao_cirurgiao_id' => $procedimento['funcao'],
                         'clavien-dindo' => $procedimento['clavien_dindo'] ?? null,
                         'anatomia_patologica' => $procedimento['anatomia_patologica'] ?? null,
                         'observacoes' => $procedimento['observacoes'] ?? null,
@@ -162,7 +202,8 @@ class RegistoCirurgicoController extends Controller
             'tipoDeCirurgia',
             'tipoDeAbordagem',
             'cirurgias.diagnostico',
-            'cirurgias.procedimento'
+            'cirurgias.procedimento',
+            'cirurgias.funcaoCirurgiao',
         ]);
         return Inertia::render('registos-cirurgicos/show', [
             'registo' => $registo->toArray() + [
@@ -192,7 +233,7 @@ class RegistoCirurgicoController extends Controller
             'zonaAnatomicas' => ZonaAnatomica::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'enums' => [
                 'sexo' => config('medfolio.sexo_options'),
-                'funcoes' => config('medfolio.funcao_options'),
+                'funcoes' => FuncaoCirurgiao::orderBy('nome')->get(['id', 'nome']),
                 'clavien' => config('medfolio.clavien_dindo_options'),
                 'tipo_diagnostico' => TipoDiagnosticoEnum::values(),
             ],
@@ -209,7 +250,8 @@ class RegistoCirurgicoController extends Controller
             'tipoDeCirurgia',
             'tipoDeAbordagem',
             'cirurgias.diagnostico',
-            'cirurgias.procedimento'
+            'cirurgias.procedimento',
+            'cirurgias.funcaoCirurgiao',
         ]);
 
         $diagnosticosMap = [];
@@ -224,7 +266,7 @@ class RegistoCirurgicoController extends Controller
             }
             $diagnosticosMap[$diagId]['procedimentos'][] = [
                 'procedimento_id' => (string) $cirurgia->procedimento_id,
-                'funcao' => $cirurgia->funcao,
+                'funcao' => (string) $cirurgia->funcao_cirurgiao_id,
                 'clavien_dindo' => $cirurgia->{'clavien-dindo'} ?? '',
                 'anatomia_patologica' => $cirurgia->anatomia_patologica ?? '',
                 'observacoes' => $cirurgia->observacoes ?? '',
@@ -298,7 +340,7 @@ class RegistoCirurgicoController extends Controller
                         'diagnostico_id' => $diagnostico['diagnostico_id'],
                         'tipo' => $diagnostico['tipo'] ?? null,
                         'procedimento_id' => $procedimento['procedimento_id'],
-                        'funcao' => $procedimento['funcao'],
+                        'funcao_cirurgiao_id' => $procedimento['funcao'],
                         'clavien-dindo' => $procedimento['clavien_dindo'] ?? null,
                         'anatomia_patologica' => $procedimento['anatomia_patologica'] ?? null,
                         'observacoes' => $procedimento['observacoes'] ?? null,

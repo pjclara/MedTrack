@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Enums\FuncaoCirurgiaoEnum;
 use App\Enums\ClavienDindoEnum;
 use App\Enums\SexoEnum;
 
@@ -40,7 +39,7 @@ class UpdateRegistoCirurgicoRequest extends FormRequest
             'diagnosticos.*.tipo' => 'nullable|string',
             'diagnosticos.*.procedimentos' => 'required|array|min:1',
             'diagnosticos.*.procedimentos.*.procedimento_id' => 'required|exists:procedimentos,id',
-            'diagnosticos.*.procedimentos.*.funcao' => ['required', Rule::enum(FuncaoCirurgiaoEnum::class)],
+            'diagnosticos.*.procedimentos.*.funcao' => ['required', 'exists:funcao_cirurgiaos,id'],
             'diagnosticos.*.procedimentos.*.clavien_dindo' => ['nullable', Rule::enum(ClavienDindoEnum::class)],
             'diagnosticos.*.procedimentos.*.anatomia_patologica' => 'nullable|string|max:2000',
             'diagnosticos.*.procedimentos.*.observacoes' => 'nullable|string|max:2000',

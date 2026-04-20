@@ -59,7 +59,7 @@ interface RegistoCirurgicoCreateProps {
     zonaAnatomicas: ZonaAnatomica[];
     enums: {
         sexo: string[];
-        funcoes: string[];
+        funcoes: { id: number; nome: string }[];
         clavien: string[];
         tipo_diagnostico: string[];
     };
@@ -1082,14 +1082,14 @@ export default function RegistoCirurgicoCreate({
                                                                             ) => (
                                                                                 <SelectItem
                                                                                     key={
-                                                                                        f
+                                                                                        f.id
                                                                                     }
                                                                                     value={
-                                                                                        f
+                                                                                        f.id.toString()
                                                                                     }
                                                                                 >
                                                                                     {
-                                                                                        f
+                                                                                        f.nome
                                                                                     }
                                                                                 </SelectItem>
                                                                             ),
@@ -1297,7 +1297,7 @@ export default function RegistoCirurgicoCreate({
                                                                                     Função:
                                                                                 </strong>{' '}
                                                                                 {
-                                                                                    proc.funcao
+                                                                                    enums.funcoes.find(f => f.id.toString() === proc.funcao)?.nome ?? proc.funcao
                                                                                 }
                                                                             </p>
                                                                             {proc.clavien_dindo &&
