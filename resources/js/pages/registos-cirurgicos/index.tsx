@@ -1,5 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,15 +15,16 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { PlusCircle, Edit, Eye, FileDown, Hospital, User, Activity, Copy, Stethoscope, Scissors, UserCheck, UserCircle, Search, X, ClipboardList } from 'lucide-react';
 import { type BreadcrumbItem } from '@/types';
-import { type RegistoCirurgico, type PaginatedData, type Diagnostico, type Procedimento } from '@/types/models';
+import { type RegistoCirurgico, type PaginatedData, type Diagnostico, type Procedimento, type TipoDeCirurgia } from '@/types/models';
 import registosCirurgicos from '@/routes/registos-cirurgicos';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface RegistoCirurgicoIndexProps {
     registos: PaginatedData<RegistoCirurgico>;
-    filters: { search?: string; data_inicio?: string; data_fim?: string; diagnostico_id?: string; procedimento_id?: string };
+    filters: { search?: string; data_inicio?: string; data_fim?: string; diagnostico_id?: string; procedimento_id?: string; tipo_de_cirurgia_ids?: string[] };
     diagnosticos: Diagnostico[];
     procedimentos: Procedimento[];
+    tipos_cirurgia: TipoDeCirurgia[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -31,7 +32,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Registos Cirúrgicos', href: '/registos-cirurgicos' },
 ];
 
-export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos, procedimentos }: RegistoCirurgicoIndexProps) {
+export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos, procedimentos, tipos_cirurgia }: RegistoCirurgicoIndexProps) {
     const isMobile = useIsMobile();
 
     const [search, setSearch] = useState(filters.search ?? '');
@@ -39,6 +40,25 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
     const [dataFim, setDataFim] = useState(filters.data_fim ?? '');
     const [diagnosticoId, setDiagnosticoId] = useState(filters.diagnostico_id ?? '');
     const [procedimentoId, setProcedimentoId] = useState(filters.procedimento_id ?? '');
+    const [tipoCirurgiaIds, setTipoCirurgiaIds] = useState<string[]>(filters.tipo_de_cirurgia_ids ?? []);
+    const [tipoCirurgiaOpen, setTipoCirurgiaOpen] = useState(false);
+    const tipoCirurgiaRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (tipoCirurgiaRef.current && !tipoCirurgiaRef.current.contains(e.target as Node)) {
+                setTipoCirurgiaOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const toggleTipoCirurgia = (id: string) => {
+        setTipoCirurgiaIds((prev) =>
+            prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id]
+        );
+    };
 
     const handleFilter = () => {
         router.get('/registos-cirurgicos', {
@@ -47,6 +67,7 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
             ...(dataFim && { data_fim: dataFim }),
             ...(diagnosticoId && { diagnostico_id: diagnosticoId }),
             ...(procedimentoId && { procedimento_id: procedimentoId }),
+            ...(tipoCirurgiaIds.length > 0 && { tipo_de_cirurgia_ids: tipoCirurgiaIds }),
         }, { preserveState: true, replace: true });
     };
 
@@ -56,10 +77,11 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
         setDataFim('');
         setDiagnosticoId('');
         setProcedimentoId('');
+        setTipoCirurgiaIds([]);
         router.get('/registos-cirurgicos', {}, { preserveState: true, replace: true });
     };
 
-    const hasFilters = !!(filters.search || filters.data_inicio || filters.data_fim || filters.diagnostico_id || filters.procedimento_id);
+    const hasFilters = !!(filters.search || filters.data_inicio || filters.data_fim || filters.diagnostico_id || filters.procedimento_id || filters.tipo_de_cirurgia_ids?.length);
 
     const formatDate = (date: string) => {
         return new Date(date).toLocaleDateString('pt-PT');
@@ -159,6 +181,54 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
                                         <option key={p.id} value={p.id}>{p.nome}</option>
                                     ))}
                                 </select>
+                                {/* Multiselect Tipo Cirurgia */}
+                                <div className="relative" ref={tipoCirurgiaRef}>
+                                    <button
+                                        type="button"
+                                        onClick={() => setTipoCirurgiaOpen((v) => !v)}
+                                        className="h-9 min-w-[160px] max-w-[200px] rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm text-left flex items-center justify-between gap-2 focus:outline-none focus:ring-1 focus:ring-ring"
+                                    >
+                                        <span className="truncate">
+                                            {tipoCirurgiaIds.length === 0
+                                                ? 'Tipo de Cirurgia'
+                                                : tipoCirurgiaIds.length === 1
+                                                    ? tipos_cirurgia.find((t) => t.id.toString() === tipoCirurgiaIds[0])?.nome ?? '1 tipo'
+                                                    : `${tipoCirurgiaIds.length} tipos`}
+                                        </span>
+                                        <svg className="h-4 w-4 shrink-0 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                    </button>
+                                    {tipoCirurgiaOpen && (
+                                        <div className="absolute z-50 mt-1 w-52 rounded-md border border-input bg-background shadow-md">
+                                            <div className="max-h-56 overflow-y-auto py-1">
+                                                {tipos_cirurgia.map((t) => (
+                                                    <label
+                                                        key={t.id}
+                                                        className="flex items-center gap-2 px-3 py-2 text-sm cursor-pointer hover:bg-muted"
+                                                    >
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={tipoCirurgiaIds.includes(t.id.toString())}
+                                                            onChange={() => toggleTipoCirurgia(t.id.toString())}
+                                                            className="accent-emerald-600"
+                                                        />
+                                                        {t.nome}
+                                                    </label>
+                                                ))}
+                                            </div>
+                                            {tipoCirurgiaIds.length > 0 && (
+                                                <div className="border-t px-3 py-1.5">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setTipoCirurgiaIds([])}
+                                                        className="text-xs text-muted-foreground hover:text-foreground"
+                                                    >
+                                                        Limpar seleção
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                             <div className="flex gap-2">
                                 <Button onClick={handleFilter} className="bg-emerald-600 hover:bg-emerald-700">
@@ -184,6 +254,7 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
                                             <TableHead>Utente</TableHead>
                                             <TableHead>Tipo Cirurgia</TableHead>
                                             <TableHead>Diagnósticos</TableHead>
+                                            <TableHead>Função</TableHead>
                                             <TableHead>Cirurgias</TableHead>
                                             <TableHead className="text-right">Ações</TableHead>
                                         </TableRow>
@@ -191,7 +262,7 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
                                     <TableBody>
                                         {registos.data.length === 0 ? (
                                             <TableRow>
-                                        <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
+                                        <TableCell colSpan={7} className="text-center text-muted-foreground py-10">
                                                     Nenhum registo encontrado
                                                 </TableCell>
                                             </TableRow>
@@ -227,19 +298,30 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
                                                         </div>
                                                     </TableCell>
                                                     <TableCell>
+                                                        <div className="flex flex-col gap-1">
+                                                            {registo.cirurgias && registo.cirurgias.length > 0
+                                                                ? [...new Map(registo.cirurgias.filter(c => c.funcao_cirurgiao).map(c => [c.funcao_cirurgiao!.id, c.funcao_cirurgiao!.nome])).values()].map((nome, i) => {
+                                                                    const FuncaoIcon = getFuncaoIcon(nome);
+                                                                    return (
+                                                                        <Badge key={i} variant="outline" className="text-xs font-normal">
+                                                                            <FuncaoIcon className="h-3 w-3 mr-1" />
+                                                                            {nome}
+                                                                        </Badge>
+                                                                    );
+                                                                })
+                                                                : <span className="text-muted-foreground">-</span>
+                                                            }
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell>
                                                         <div className="space-y-1">
                                                             <Badge variant="secondary" className="font-mono text-xs">
                                                                 {registo.cirurgias_count || 0} cirurgia{registo.cirurgias_count !== 1 ? 's' : ''}
                                                             </Badge>
                                                             {registo.cirurgias && registo.cirurgias.length > 0 && (
                                                                 <div className="flex flex-col gap-1 mt-1">
-                                                                    {registo.cirurgias.map((cirurgia, idx) => {
-                                                                        const FuncaoIcon = getFuncaoIcon(cirurgia.funcao_cirurgiao?.nome);
-                                                                        return (
-                                                                        <div key={idx} className="flex items-center gap-2 text-xs">
-                                                                            <div className="flex items-center gap-1 text-muted-foreground">
-                                                                                <FuncaoIcon className="h-3 w-3" />
-                                                                            </div>
+                                                                    {registo.cirurgias.map((cirurgia, idx) => (
+                                                                        <div key={idx} className="flex items-center gap-1 text-xs">
                                                                             {cirurgia.procedimento && (
                                                                                 <Badge variant="secondary" className="text-xs font-normal">
                                                                                     <Scissors className="h-3 w-3 mr-1" />
@@ -247,8 +329,7 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
                                                                                 </Badge>
                                                                             )}
                                                                         </div>
-                                                                        );
-                                                                    })}
+                                                                    ))}
                                                                 </div>
                                                             )}
                                                         </div>

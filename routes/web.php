@@ -42,23 +42,58 @@ Route::middleware(['auth', 'active', 'verified'])->group(function () {
                 'complicacoes' => \App\Models\Cirurgia::whereHas('registoCirurgico', function ($q) use ($userId) {
                     $q->where('user_id', $userId);
                 })->whereNotNull('clavien-dindo')
-                ->where('clavien-dindo', '!=', 'Sem Complicações')
-                ->count(),
+                    ->where('clavien-dindo', '!=', 'Sem Complicações')
+                    ->count(),
                 'totalPublicacoes' => \App\Models\AtividadeCientifica::where('user_id', $userId)->count(),
                 'formacoes' => \App\Models\Formacao::where('user_id', $userId)->count(),
                 'horasFormacao' => \App\Models\Formacao::where('user_id', $userId)->sum('duracao_horas') ?? 0,
                 'creditosFormacao' => \App\Models\Formacao::where('user_id', $userId)->sum('creditos') ?? 0,
                 'totalMeusRegistosPrincipais' =>
                 \App\Models\RegistoCirurgico::where('user_id', $userId)
+                    ->whereDoesntHave('tipoDeCirurgia', fn($q) => $q->where('nome', 'Pequena Cirurgia'))
+                    ->count(),
+
+                'totalSemPequenaCirurgia' =>
+                \App\Models\RegistoCirurgico::where('user_id', $userId)
+                    ->whereDoesntHave('tipoDeCirurgia', fn($q) => $q->where('nome', 'Pequena Cirurgia'))
+                    ->count(),
+
+                'totalPrincipalSemPequenaCirurgia' =>
+                \App\Models\RegistoCirurgico::where('user_id', $userId)
+                    ->whereDoesntHave(
+                        'tipoDeCirurgia',
+                        fn($q) =>
+                        $q->where('nome', 'Pequena Cirurgia')
+                    )
                     ->whereHas('cirurgias', function ($q) {
                         $q->whereHas('funcaoCirurgiao', function ($q2) {
-                            $q2->where('nome', 'Cirurgião Principal');
+                            $q2->where('nome', 'Principal'); // corrigido
                         });
                     })
                     ->count(),
 
+                "totalNãoPrincipalSemPequenaCirurgia" => \App\Models\RegistoCirurgico::where('user_id', $userId)
+                    ->whereDoesntHave(
+                        'tipoDeCirurgia',
+                        fn($q) =>
+                        $q->where('nome', 'Pequena Cirurgia')
+                    )
+                    ->whereHas('cirurgias', function ($q) {
+                        $q->whereHas('funcaoCirurgiao', function ($q2) {
+                            $q2->where('nome', '!=', 'Principal'); // corrigido
+                        });
+                    })
+                    ->count(),
+
+
+
             ],
             'recentRegistos' => \App\Models\RegistoCirurgico::where('user_id', $userId)
+                ->whereDoesntHave(
+                    'tipoDeCirurgia',
+                    fn($q) =>
+                    $q->where('nome', 'Pequena Cirurgia')
+                )
                 ->with(['utente', 'tipoDeCirurgia', 'cirurgias.procedimento'])
                 ->latest('data_cirurgia')
                 ->take(5)

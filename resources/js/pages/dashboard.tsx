@@ -1,11 +1,20 @@
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { useIsMobile } from '@/hooks/use-mobile';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import { Activity, Users, FileText, TrendingUp, Calendar, AlertTriangle, GraduationCap, Award, Clock, ArrowUpRight, BookOpen } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { useIsMobile } from '@/hooks/use-mobile';
+import {
+    Activity,
+    ArrowUpRight,
+    Award,
+    Calendar,
+    FileText,
+    GraduationCap,
+    TrendingUp,
+    Users,
+} from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -24,6 +33,9 @@ interface DashboardStats {
     horasFormacao: number;
     creditosFormacao: number;
     totalMeusRegistosPrincipais: number;
+    totalSemPequenaCirurgia: number;
+    totalPrincipalSemPequenaCirurgia: number;
+    totalNãoPrincipalSemPequenaCirurgia: number;
 }
 
 interface RecentRegisto {
@@ -44,34 +56,58 @@ interface DashboardProps {
 export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
     const isMobile = useIsMobile();
     // Calcular taxa de complicações
-    const complicationRate = stats.totalRegistos > 0 
-        ? ((stats.complicacoes / stats.totalMeusRegistosPrincipais) * 100).toFixed(1)
-        : 0;
+    const complicationRate =
+        stats.totalRegistos > 0
+            ? (
+                  (stats.complicacoes / stats.totalMeusRegistosPrincipais) *
+                  100
+              ).toFixed(1)
+            : 0;
 
     // Média de horas por formação
-    const avgHoursPerTraining = stats.formacoes > 0
-        ? (stats.horasFormacao / stats.formacoes).toFixed(1)
-        : 0;
+    const avgHoursPerTraining =
+        stats.formacoes > 0
+            ? (stats.horasFormacao / stats.formacoes).toFixed(1)
+            : 0;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Painel de Controlo" />
-            <div className={`flex h-full flex-1 flex-col gap-6 ${isMobile ? 'p-4' : 'p-6'}`}>
+            <div
+                className={`flex h-full flex-1 flex-col gap-6 ${isMobile ? 'p-4' : 'p-6'}`}
+            >
                 {/* Welcome Section */}
-                <div className={`rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 ${isMobile ? 'p-6 text-center' : 'p-8'} text-white shadow-lg`}>
+                <div
+                    className={`rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 ${isMobile ? 'p-6 text-center' : 'p-8'} text-white shadow-lg`}
+                >
                     <div className="flex items-center justify-between">
                         <div>
-                            <h1 className={`mb-2 ${isMobile ? 'text-2xl' : 'text-3xl'} font-bold`}>Currículo Cirúrgico</h1>
-                            <p className={`${isMobile ? 'text-emerald-100 text-sm' : 'text-emerald-100 text-lg'}`}>
-                                Mantenha o seu currículo sempre atualizado - by SurgTuga
+                            <h1
+                                className={`mb-2 ${isMobile ? 'text-2xl' : 'text-3xl'} font-bold`}
+                            >
+                                Currículo Cirúrgico
+                            </h1>
+                            <p
+                                className={`${isMobile ? 'text-sm text-emerald-100' : 'text-lg text-emerald-100'}`}
+                            >
+                                Mantenha o seu currículo sempre atualizado - by
+                                SurgTuga
                             </p>
                         </div>
-                        <div className="hidden md:block text-right">
-                            <p className="text-emerald-100 text-sm">Total de Atividades</p>
-                            <div className="flex gap-6 mt-2">
+                        <div className="hidden text-right md:block">
+                            <p className="text-sm text-emerald-100">
+                                Total de Atividades
+                            </p>
+                            <div className="mt-2 flex gap-6">
                                 <div>
-                                    <p className="text-3xl font-bold">{stats.totalRegistos + stats.formacoes + stats.totalPublicacoes}</p>
-                                    <p className="text-emerald-200 text-sm">Registos no Currículo</p>
+                                    <p className="text-3xl font-bold">
+                                        {stats.totalRegistos +
+                                            stats.formacoes +
+                                            stats.totalPublicacoes}
+                                    </p>
+                                    <p className="text-sm text-emerald-200">
+                                        Registos no Currículo
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -80,64 +116,92 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
 
                 {/* Stats Grid */}
                 <div>
-                    <h2 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Atividade Cirúrgica</h2>
-                    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                        <Link href="/registos-cirurgicos" className="group">
-                            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md hover:border-emerald-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-emerald-600">
-                                <div className="flex items-start justify-between mb-3">
-                                    <div className="rounded-lg bg-emerald-100 p-3 dark:bg-emerald-900/30">
-                                        <FileText className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-                                    </div>
-                                    <ArrowUpRight className="h-4 w-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <h2 className="mb-3 text-lg font-semibold text-gray-900 dark:text-white">
+                        Atividade Cirúrgica
+                    </h2>
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-emerald-600">
+                            <div className="mb-3 flex items-start justify-between">
+                                <div className="rounded-lg bg-emerald-100 p-3 dark:bg-emerald-900/30">
+                                    <FileText className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                                 </div>
-                                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.totalRegistos}</h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">Registos Cirúrgicos</p>
+                                <ArrowUpRight className="h-4 w-4 text-gray-400 opacity-0 transition-opacity group-hover:opacity-100" />
                             </div>
-                        </Link>
-
+                            <h3 className="mb-1 text-3xl font-bold text-gray-900 dark:text-white">
+                                {stats.totalSemPequenaCirurgia}
+                            </h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                Total de Cirurgias
+                            </p>
+                            <p className="mt-0.5 text-xs text-gray-400 dark:text-gray-500">
+                                excluindo pequena cirurgia
+                            </p>
+                        </div>
 
                         <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                            <div className="flex items-start justify-between mb-3">
+                            <div className="mb-3 flex items-start justify-between">
                                 <div className="rounded-lg bg-purple-100 p-3 dark:bg-purple-900/30">
-                                    <Activity className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                                    <Users className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                                 </div>
                             </div>
-                            <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.cirurgiasMes}</h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Cirurgias Este Mês</p>
-                            {stats.totalRegistos > 0 && (
+                            <h3 className="mb-1 text-3xl font-bold text-gray-900 dark:text-white">
+                                {stats.totalPrincipalSemPequenaCirurgia}
+                            </h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                Como Principal
+                            </p>
+                            {stats.totalSemPequenaCirurgia > 0 && (
                                 <div className="mt-3">
-                                    <Progress value={(stats.cirurgiasMes / stats.totalRegistos) * 100} className="h-1.5" />
+                                    <Progress
+                                        value={
+                                            (stats.totalPrincipalSemPequenaCirurgia /
+                                                stats.totalSemPequenaCirurgia) *
+                                            100
+                                        }
+                                        className="h-1.5"
+                                    />
+                                    <p className="mt-1 text-xs text-gray-500">
+                                        {(
+                                            (stats.totalPrincipalSemPequenaCirurgia /
+                                                stats.totalSemPequenaCirurgia) *
+                                            100
+                                        ).toFixed(0)}
+                                        % do total
+                                    </p>
                                 </div>
                             )}
                         </div>
 
                         <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                            <div className="flex items-start justify-between mb-3">
-                                <div className="rounded-lg bg-cyan-100 p-3 dark:bg-cyan-900/30">
-                                    <Activity className="h-6 w-6 text-cyan-600 dark:text-cyan-400" />
+                            <div className="mb-3 flex items-start justify-between">
+                                <div className="rounded-lg bg-purple-100 p-3 dark:bg-purple-900/30">
+                                    <Users className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                                 </div>
                             </div>
-                            <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.totalMeusRegistosPrincipais}</h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Como Cirurgião Principal</p>
-                            {stats.totalRegistos > 0 && (
+                            <h3 className="mb-1 text-3xl font-bold text-gray-900 dark:text-white">
+                                {stats.totalNãoPrincipalSemPequenaCirurgia}
+                            </h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                Como Ajudante
+                            </p>
+                            {stats.totalSemPequenaCirurgia > 0 && (
                                 <div className="mt-3">
-                                    <Progress value={(stats.totalMeusRegistosPrincipais / stats.totalRegistos) * 100} className="h-1.5" />
-                                    <p className="text-xs text-gray-500 mt-1">{((stats.totalMeusRegistosPrincipais / stats.totalRegistos) * 100).toFixed(0)}% do total</p>
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                            <div className="flex items-start justify-between mb-3">
-                                <div className="rounded-lg bg-orange-100 p-3 dark:bg-orange-900/30">
-                                    <AlertTriangle className="h-6 w-6 text-orange-600 dark:text-orange-400" />
-                                </div>
-                            </div>
-                            <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.complicacoes}</h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Complicações ({complicationRate}%)</p>
-                            {stats.totalRegistos > 0 && (
-                                <div className="mt-3">
-                                    <Progress value={Number(complicationRate)} className="h-1.5" />
+                                    <Progress
+                                        value={
+                                            (stats.totalNãoPrincipalSemPequenaCirurgia /
+                                                stats.totalSemPequenaCirurgia) *
+                                            100
+                                        }
+                                        className="h-1.5"
+                                    />
+                                    <p className="mt-1 text-xs text-gray-500">
+                                        {(
+                                            ((stats.totalNãoPrincipalSemPequenaCirurgia) /
+                                                stats.totalSemPequenaCirurgia) *
+                                            100
+                                        ).toFixed(0)}
+                                        % do total
+                                    </p>
                                 </div>
                             )}
                         </div>
@@ -146,39 +210,48 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
 
                 {/* Academic & Training Stats */}
                 <div>
-                    <h2 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Desenvolvimento Profissional</h2>
+                    <h2 className="mb-3 text-lg font-semibold text-gray-900 dark:text-white">
+                        Desenvolvimento Profissional
+                    </h2>
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                         <Link href="/atividades-cientificas" className="group">
-                            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md hover:border-teal-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-teal-600">
-                                <div className="flex items-start justify-between mb-3">
+                            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:border-teal-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-teal-600">
+                                <div className="mb-3 flex items-start justify-between">
                                     <div className="rounded-lg bg-teal-100 p-3 dark:bg-teal-900/30">
                                         <GraduationCap className="h-6 w-6 text-teal-600 dark:text-teal-400" />
                                     </div>
-                                    <ArrowUpRight className="h-4 w-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    <ArrowUpRight className="h-4 w-4 text-gray-400 opacity-0 transition-opacity group-hover:opacity-100" />
                                 </div>
-                                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.totalPublicacoes}</h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">Publicações Científicas</p>
+                                <h3 className="mb-1 text-3xl font-bold text-gray-900 dark:text-white">
+                                    {stats.totalPublicacoes}
+                                </h3>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    Publicações Científicas
+                                </p>
                             </div>
                         </Link>
 
                         <Link href="/formacoes" className="group">
-                            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md hover:border-blue-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-600">
-                                <div className="flex items-start justify-between mb-3">
+                            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:border-blue-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-600">
+                                <div className="mb-3 flex items-start justify-between">
                                     <div className="rounded-lg bg-blue-100 p-3 dark:bg-blue-900/30">
                                         <Award className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                                     </div>
-                                    <ArrowUpRight className="h-4 w-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    <ArrowUpRight className="h-4 w-4 text-gray-400 opacity-0 transition-opacity group-hover:opacity-100" />
                                 </div>
-                                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.formacoes}</h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">Formações Completadas</p>
+                                <h3 className="mb-1 text-3xl font-bold text-gray-900 dark:text-white">
+                                    {stats.formacoes}
+                                </h3>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    Formações Completadas
+                                </p>
                             </div>
                         </Link>
-
                     </div>
                 </div>
 
                 {/* Recent Activity */}
-                <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                     <div className="lg:col-span-2">
                         <Card>
                             <CardHeader>
@@ -187,7 +260,10 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
                                         <Calendar className="h-5 w-5 text-emerald-600" />
                                         Cirurgias Recentes
                                     </CardTitle>
-                                    <Link href="/registos-cirurgicos" className="text-sm text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
+                                    <Link
+                                        href="/registos-cirurgicos"
+                                        className="flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
+                                    >
                                         Ver todas
                                         <ArrowUpRight className="h-3 w-3" />
                                     </Link>
@@ -196,12 +272,16 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
                             <CardContent>
                                 <div className="space-y-3">
                                     {recentRegistos.length === 0 ? (
-                                        <div className="text-center py-8">
-                                            <FileText className="h-12 w-12 text-gray-300 mx-auto mb-3" />
+                                        <div className="py-8 text-center">
+                                            <FileText className="mx-auto mb-3 h-12 w-12 text-gray-300" />
                                             <p className="text-sm text-gray-600 dark:text-gray-400">
-                                                Ainda não existem registos cirúrgicos.
+                                                Ainda não existem registos
+                                                cirúrgicos.
                                             </p>
-                                            <Link href="/registos-cirurgicos/create" className="inline-block mt-3">
+                                            <Link
+                                                href="/registos-cirurgicos/create"
+                                                className="mt-3 inline-block"
+                                            >
                                                 <button className="text-sm text-emerald-600 hover:text-emerald-700 dark:text-emerald-400">
                                                     Criar primeiro registo
                                                 </button>
@@ -221,30 +301,63 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
                                                         </div>
                                                         <div>
                                                             <p className="font-medium text-gray-900 dark:text-white">
-                                                                Processo: {registo.processo_numero}
+                                                                Processo:{' '}
+                                                                {
+                                                                    registo.processo_numero
+                                                                }
                                                             </p>
                                                             <p className="text-sm text-gray-600 dark:text-gray-400">
                                                                 {registo.tipo}
                                                             </p>
-                                                            {registo.procedimentos && registo.procedimentos.length > 0 && (
-                                                                <div className="flex flex-wrap gap-1 mt-1">
-                                                                    {registo.procedimentos.slice(0, 2).map((proc, idx) => (
-                                                                        <span key={idx} className="text-xs px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                                                                            {proc}
-                                                                        </span>
-                                                                    ))}
-                                                                    {registo.procedimentos.length > 2 && (
-                                                                        <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-                                                                            +{registo.procedimentos.length - 2}
-                                                                        </span>
-                                                                    )}
-                                                                </div>
-                                                            )}
+                                                            {registo.procedimentos &&
+                                                                registo
+                                                                    .procedimentos
+                                                                    .length >
+                                                                    0 && (
+                                                                    <div className="mt-1 flex flex-wrap gap-1">
+                                                                        {registo.procedimentos
+                                                                            .slice(
+                                                                                0,
+                                                                                2,
+                                                                            )
+                                                                            .map(
+                                                                                (
+                                                                                    proc,
+                                                                                    idx,
+                                                                                ) => (
+                                                                                    <span
+                                                                                        key={
+                                                                                            idx
+                                                                                        }
+                                                                                        className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+                                                                                    >
+                                                                                        {
+                                                                                            proc
+                                                                                        }
+                                                                                    </span>
+                                                                                ),
+                                                                            )}
+                                                                        {registo
+                                                                            .procedimentos
+                                                                            .length >
+                                                                            2 && (
+                                                                            <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                                                                                +
+                                                                                {registo
+                                                                                    .procedimentos
+                                                                                    .length -
+                                                                                    2}
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+                                                                )}
                                                         </div>
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-sm text-gray-500 dark:text-gray-400">
-                                                            {registo.data_cirurgia}
+                                                            {
+                                                                registo.data_cirurgia
+                                                            }
                                                         </span>
                                                         <ArrowUpRight className="h-4 w-4 text-gray-400" />
                                                     </div>
@@ -268,53 +381,97 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
                             <CardContent className="space-y-4">
                                 {/* Taxa de Sucesso */}
                                 <div>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Taxa de Sucesso</span>
+                                    <div className="mb-2 flex items-center justify-between">
+                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                            Taxa de Sucesso
+                                        </span>
                                         <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
-                                            {stats.totalRegistos > 0 ? (100 - Number(complicationRate)).toFixed(1) : 100}%
+                                            {stats.totalRegistos > 0
+                                                ? (
+                                                      100 -
+                                                      Number(complicationRate)
+                                                  ).toFixed(1)
+                                                : 100}
+                                            %
                                         </span>
                                     </div>
-                                    <Progress value={stats.totalRegistos > 0 ? (100 - Number(complicationRate)) : 100} className="h-2" />
+                                    <Progress
+                                        value={
+                                            stats.totalRegistos > 0
+                                                ? 100 - Number(complicationRate)
+                                                : 100
+                                        }
+                                        className="h-2"
+                                    />
                                 </div>
 
                                 {/* Atividade Mensal */}
                                 <div>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Atividade Mensal</span>
+                                    <div className="mb-2 flex items-center justify-between">
+                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                            Atividade Mensal
+                                        </span>
                                         <span className="text-sm font-bold text-purple-600 dark:text-purple-400">
-                                            {stats.cirurgiasMes}/{stats.totalRegistos}
+                                            {stats.cirurgiasMes}/
+                                            {stats.totalRegistos}
                                         </span>
                                     </div>
-                                    <Progress 
-                                        value={stats.totalRegistos > 0 ? (stats.cirurgiasMes / stats.totalRegistos) * 100 : 0} 
-                                        className="h-2" 
+                                    <Progress
+                                        value={
+                                            stats.totalRegistos > 0
+                                                ? (stats.cirurgiasMes /
+                                                      stats.totalRegistos) *
+                                                  100
+                                                : 0
+                                        }
+                                        className="h-2"
                                     />
                                 </div>
 
                                 {/* Desenvolvimento */}
                                 <div>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Desenvolvimento</span>
+                                    <div className="mb-2 flex items-center justify-between">
+                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                            Desenvolvimento
+                                        </span>
                                         <span className="text-sm font-bold text-blue-600 dark:text-blue-400">
-                                            {stats.totalPublicacoes + stats.formacoes} atividades
+                                            {stats.totalPublicacoes +
+                                                stats.formacoes}{' '}
+                                            atividades
                                         </span>
                                     </div>
-                                    <Progress 
-                                        value={Math.min(((stats.totalPublicacoes + stats.formacoes) / 50) * 100, 100)} 
-                                        className="h-2" 
+                                    <Progress
+                                        value={Math.min(
+                                            ((stats.totalPublicacoes +
+                                                stats.formacoes) /
+                                                50) *
+                                                100,
+                                            100,
+                                        )}
+                                        className="h-2"
                                     />
-                                    <p className="text-xs text-gray-500 mt-1">Meta anual: 50 atividades</p>
+                                    <p className="mt-1 text-xs text-gray-500">
+                                        Meta anual: 50 atividades
+                                    </p>
                                 </div>
 
-                                <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+                                <div className="border-t border-gray-200 pt-3 dark:border-gray-700">
                                     <div className="grid grid-cols-2 gap-3 text-center">
                                         <div className="rounded-lg bg-emerald-50 p-3 dark:bg-emerald-900/20">
-                                            <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{stats.totalRegistos}</p>
-                                            <p className="text-xs text-gray-600 dark:text-gray-400">Cirurgias</p>
+                                            <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                                                {stats.totalRegistos}
+                                            </p>
+                                            <p className="text-xs text-gray-600 dark:text-gray-400">
+                                                Cirurgias
+                                            </p>
                                         </div>
                                         <div className="rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20">
-                                            <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{stats.formacoes}</p>
-                                            <p className="text-xs text-gray-600 dark:text-gray-400">Formações</p>
+                                            <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                                                {stats.formacoes}
+                                            </p>
+                                            <p className="text-xs text-gray-600 dark:text-gray-400">
+                                                Formações
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
