@@ -33,7 +33,21 @@ class RegistoCirurgicoController extends Controller
         $this->authorize('viewAny', RegistoCirurgico::class);
 
         $filters = $request->only(['search', 'data_inicio', 'data_fim', 'diagnostico_id', 'procedimento_id']);
-        $filters['tipo_de_cirurgia_ids'] = $request->input('tipo_de_cirurgia_ids', []);
+
+        $tiposDeCirurgia = TipoDeCirurgia::orderBy('nome')->get(['id', 'nome']);
+
+        if ($request->has('tipo_de_cirurgia_ids')) {
+            // Filtro explicitamente enviado pelo utilizador (pode ser array vazio = mostrar todos)
+            $filters['tipo_de_cirurgia_ids'] = $request->input('tipo_de_cirurgia_ids', []);
+        } else {
+            // Por defeito: todos os tipos exceto "Pequena Cirurgia"
+            $filters['tipo_de_cirurgia_ids'] = $tiposDeCirurgia
+                ->filter(fn($t) => $t->nome !== 'Pequena Cirurgia')
+                ->pluck('id')
+                ->map(fn($id) => (string) $id)
+                ->values()
+                ->toArray();
+        }
 
         $query = RegistoCirurgico::with([
                 'utente:id,nome,processo',
@@ -89,7 +103,7 @@ class RegistoCirurgicoController extends Controller
             'filters'          => $filters,
             'diagnosticos'     => \App\Models\Diagnostico::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'procedimentos'    => \App\Models\Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
-            'tipos_cirurgia'   => TipoDeCirurgia::orderBy('nome')->get(['id', 'nome']),
+            'tipos_cirurgia'   => $tiposDeCirurgia,
         ]);
     }
 

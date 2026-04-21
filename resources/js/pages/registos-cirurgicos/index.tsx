@@ -67,7 +67,7 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
             ...(dataFim && { data_fim: dataFim }),
             ...(diagnosticoId && { diagnostico_id: diagnosticoId }),
             ...(procedimentoId && { procedimento_id: procedimentoId }),
-            ...(tipoCirurgiaIds.length > 0 && { tipo_de_cirurgia_ids: tipoCirurgiaIds }),
+            tipo_de_cirurgia_ids: tipoCirurgiaIds,
         }, { preserveState: true, replace: true });
     };
 
