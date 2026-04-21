@@ -60,6 +60,20 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
         );
     };
 
+    const clearTipoCirurgia = () => {
+        const allIds = tipos_cirurgia.map((t) => t.id.toString());
+        setTipoCirurgiaIds(allIds);
+        setTipoCirurgiaOpen(false);
+        router.get('/registos-cirurgicos', {
+            ...(search && { search }),
+            ...(dataInicio && { data_inicio: dataInicio }),
+            ...(dataFim && { data_fim: dataFim }),
+            ...(diagnosticoId && { diagnostico_id: diagnosticoId }),
+            ...(procedimentoId && { procedimento_id: procedimentoId }),
+            tipo_de_cirurgia_ids: allIds,
+        }, { preserveState: true, replace: true });
+    };
+
     const handleFilter = () => {
         router.get('/registos-cirurgicos', {
             ...(search && { search }),
@@ -189,7 +203,7 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
                                         className="h-9 min-w-[160px] max-w-[200px] rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm text-left flex items-center justify-between gap-2 focus:outline-none focus:ring-1 focus:ring-ring"
                                     >
                                         <span className="truncate">
-                                            {tipoCirurgiaIds.length === 0
+                                            {tipoCirurgiaIds.length === 0 || tipoCirurgiaIds.length === tipos_cirurgia.length
                                                 ? 'Tipo de Cirurgia'
                                                 : tipoCirurgiaIds.length === 1
                                                     ? tipos_cirurgia.find((t) => t.id.toString() === tipoCirurgiaIds[0])?.nome ?? '1 tipo'
@@ -215,11 +229,11 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
                                                     </label>
                                                 ))}
                                             </div>
-                                            {tipoCirurgiaIds.length > 0 && (
+                                            {tipoCirurgiaIds.length > 0 && tipoCirurgiaIds.length < tipos_cirurgia.length && (
                                                 <div className="border-t px-3 py-1.5">
                                                     <button
                                                         type="button"
-                                                        onClick={() => setTipoCirurgiaIds([])}
+                                                        onClick={clearTipoCirurgia}
                                                         className="text-xs text-muted-foreground hover:text-foreground"
                                                     >
                                                         Limpar seleção

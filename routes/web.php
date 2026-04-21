@@ -16,7 +16,6 @@ use App\Http\Controllers\ProcedimentoController;
 use App\Http\Controllers\RegistoCirurgicoController;
 use App\Http\Controllers\AtividadeCientificaController;
 use App\Http\Controllers\FormacaoController;
-use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return Inertia::render('welcome', [
@@ -84,8 +83,38 @@ Route::middleware(['auth', 'active', 'verified'])->group(function () {
                         });
                     })
                     ->count(),
+                "totalPequenaCirurgia" => \App\Models\RegistoCirurgico::where('user_id', $userId)
+                    ->whereHas(
+                        'tipoDeCirurgia',
+                        fn($q) =>
+                        $q->where('nome', 'Pequena Cirurgia')
+                    )
+                    ->count(),
 
-
+                "totalPrincipalPequenaCirurgia" => \App\Models\RegistoCirurgico::where('user_id', $userId)
+                    ->whereHas(
+                        'tipoDeCirurgia',
+                        fn($q) =>
+                        $q->where('nome', 'Pequena Cirurgia')
+                    )
+                    ->whereHas('cirurgias', function ($q) {
+                        $q->whereHas('funcaoCirurgiao', function ($q2) {
+                            $q2->where('nome', 'Principal'); // corrigido
+                        });
+                    })
+                    ->count(),
+                "totalNãoPrincipalPequenaCirurgia" => \App\Models\RegistoCirurgico::where('user_id', $userId)
+                    ->whereHas(
+                        'tipoDeCirurgia',
+                        fn($q) =>
+                        $q->where('nome', 'Pequena Cirurgia')
+                    )
+                    ->whereHas('cirurgias', function ($q) {
+                        $q->whereHas('funcaoCirurgiao', function ($q2) {
+                            $q2->where('nome', '!=', 'Principal'); // corrigido
+                        });
+                    })
+                    ->count(),
 
             ],
             'recentRegistos' => \App\Models\RegistoCirurgico::where('user_id', $userId)

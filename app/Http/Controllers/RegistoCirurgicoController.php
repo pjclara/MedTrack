@@ -42,7 +42,6 @@ class RegistoCirurgicoController extends Controller
         } else {
             // Por defeito: todos os tipos exceto "Pequena Cirurgia"
             $filters['tipo_de_cirurgia_ids'] = $tiposDeCirurgia
-                ->filter(fn($t) => $t->nome !== 'Pequena Cirurgia')
                 ->pluck('id')
                 ->map(fn($id) => (string) $id)
                 ->values()
@@ -103,7 +102,7 @@ class RegistoCirurgicoController extends Controller
             'filters'          => $filters,
             'diagnosticos'     => \App\Models\Diagnostico::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'procedimentos'    => \App\Models\Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
-            'tipos_cirurgia'   => $tiposDeCirurgia,
+            'tipos_cirurgia'   => TipoDeCirurgia::orderBy('nome')->get(['id', 'nome']),
         ]);
     }
 
