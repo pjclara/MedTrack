@@ -40,7 +40,7 @@ class RegistoCirurgicoController extends Controller
                 'tipoDeCirurgia:id,nome',
                 'tipoDeAbordagem:id,nome',
                 'user:id,name,email',
-                'cirurgias:id,registo_cirurgico_id,diagnostico_id,funcao_cirurgiao_id,procedimento_id',
+                'cirurgias',
                 'cirurgias.procedimento:id,nome',
                 'cirurgias.funcaoCirurgiao:id,nome',
                 'cirurgias.diagnostico:id,nome',

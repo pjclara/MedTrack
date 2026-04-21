@@ -267,8 +267,12 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
                                                 </TableCell>
                                             </TableRow>
                                         ) : (
-                                            registos.data.map((registo) => (
-                                                <TableRow key={registo.id}>
+                                            registos.data.map((registo) => {
+                                                const semClavien = registo.cirurgias?.some(
+                                                    (c) => c.funcao_cirurgiao?.nome?.toLowerCase().includes('principal') && !c.clavien_dindo
+                                                ) ?? false;
+                                                return (
+                                                <TableRow key={registo.id} className={semClavien ? 'bg-orange-50 dark:bg-orange-950/20' : ''}>
                                                     <TableCell className="font-medium text-nowrap">
                                                         {formatDate(registo.data_cirurgia)}
                                                     </TableCell>
@@ -302,11 +306,22 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
                                                             {registo.cirurgias && registo.cirurgias.length > 0
                                                                 ? [...new Map(registo.cirurgias.filter(c => c.funcao_cirurgiao).map(c => [c.funcao_cirurgiao!.id, c.funcao_cirurgiao!.nome])).values()].map((nome, i) => {
                                                                     const FuncaoIcon = getFuncaoIcon(nome);
+                                                                    const isPrincipal = nome.toLowerCase().includes('principal');
+                                                                    const clavien = isPrincipal
+                                                                        ? registo.cirurgias!.find(c => c.funcao_cirurgiao?.nome === nome)?.clavien_dindo
+                                                                        : undefined;
                                                                     return (
-                                                                        <Badge key={i} variant="outline" className="text-xs font-normal">
-                                                                            <FuncaoIcon className="h-3 w-3 mr-1" />
-                                                                            {nome}
-                                                                        </Badge>
+                                                                        <div key={i} className="flex flex-col gap-0.5">
+                                                                            <Badge variant="outline" className="text-xs font-normal">
+                                                                                <FuncaoIcon className="h-3 w-3 mr-1" />
+                                                                                {nome}
+                                                                            </Badge>
+                                                                            {isPrincipal && clavien && (
+                                                                                <Badge variant={['IIIa','IIIb','IVa','IVb','V'].includes(clavien) ? 'destructive' : 'secondary'} className="text-xs font-normal">
+                                                                                    CD: {clavien}
+                                                                                </Badge>
+                                                                            )}
+                                                                        </div>
                                                                     );
                                                                 })
                                                                 : <span className="text-muted-foreground">-</span>
@@ -355,7 +370,8 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
                                                         </div>
                                                     </TableCell>
                                                 </TableRow>
-                                            ))
+                                                );
+                                            })
                                         )}
                                     </TableBody>
                                 </Table>

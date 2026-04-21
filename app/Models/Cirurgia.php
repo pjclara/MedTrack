@@ -23,9 +23,24 @@ class Cirurgia extends Model
 
     protected $guarded = ['id'];
 
+    protected $appends = ['clavien_dindo'];
+
     protected $casts = [
         'clavien-dindo' => ClavienDindoEnum::class,
     ];
+
+    /**
+     * Accessor para expor clavien-dindo como clavien_dindo no JSON
+     */
+    public function getClavienDindoAttribute(): ?string
+    {
+        $raw = $this->getAttributes()['clavien-dindo'] ?? null;
+        if ($raw === null) {
+            return null;
+        }
+        $enum = ClavienDindoEnum::tryFrom($raw);
+        return $enum ? $enum->value : $raw;
+    }
 
     /**
      * Relação com função do cirurgião
