@@ -286,7 +286,7 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
                                                     (c) => c.funcao_cirurgiao?.nome?.toLowerCase().includes('principal') && !c.clavien_dindo
                                                 ) ?? false;
                                                 return (
-                                                <TableRow key={registo.id} className={semClavien ? 'bg-orange-50 dark:bg-orange-950/20' : ''}>
+                                                <TableRow key={registo.id} className={semClavien ? 'bg-orange-300 dark:bg-orange-50' : ''}>
                                                     <TableCell className="font-medium text-nowrap">
                                                         {formatDate(registo.data_cirurgia)}
                                                     </TableCell>
