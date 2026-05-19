@@ -14,13 +14,21 @@ class ProcedimentoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $search = $request->input('search');
+
         $procedimentos = Procedimento::withCount('cirurgias')
+            ->when($search, function ($query, $search) {
+                $query->where('nome', 'like', "%{$search}%");
+            })
             ->orderBy('nome')
-            ->paginate(15);
+            ->paginate(15)
+            ->withQueryString();
+
         return Inertia::render('procedimentos/index', [
-            'procedimentos' => $procedimentos
+            'procedimentos' => $procedimentos,
+            'filters' => ['search' => $search],
         ]);
     }
 

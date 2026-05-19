@@ -1,6 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { BreadcrumbItem, Procedimento, PaginatedData } from '@/types';
+import { useState, useEffect } from 'react';
 import { 
     Table, 
     TableBody, 
@@ -21,6 +22,9 @@ import { Input } from '@/components/ui/input';
 
 interface ProcedimentoIndexProps {
     procedimentos: PaginatedData<Procedimento>;
+    filters: {
+        search?: string;
+    };
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -34,7 +38,22 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function ProcedimentoIndex({ procedimentos }: ProcedimentoIndexProps) {
+export default function ProcedimentoIndex({ procedimentos, filters }: ProcedimentoIndexProps) {
+    const [searchTerm, setSearchTerm] = useState(filters.search || '');
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (searchTerm !== (filters.search || '')) {
+                router.get(
+                    '/procedimentos',
+                    { search: searchTerm },
+                    { preserveState: true, preserveScroll: true, replace: true }
+                );
+            }
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [searchTerm]);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Procedimentos" />
@@ -63,6 +82,8 @@ export default function ProcedimentoIndex({ procedimentos }: ProcedimentoIndexPr
                                     type="search"
                                     placeholder="Procurar procedimentos..."
                                     className="pl-8"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
                                 />
                             </div>
                         </div>
@@ -115,11 +136,26 @@ export default function ProcedimentoIndex({ procedimentos }: ProcedimentoIndexPr
                             </Table>
                         </div>
 
-                        {/* Pagination placeholder */}
                         {procedimentos.last_page > 1 && (
-                            <div className="flex items-center justify-end space-x-2 py-4">
-                                <div className="text-sm text-muted-foreground">
-                                    Página {procedimentos.current_page} de {procedimentos.last_page}
+                            <div className="flex items-center justify-between py-4">
+                                <p className="text-sm text-muted-foreground">
+                                    A mostrar {procedimentos.from} a {procedimentos.to} de {procedimentos.total} resultados
+                                </p>
+                                <div className="flex gap-2">
+                                    {procedimentos.links.map((link, index) => (
+                                        <Link
+                                            key={index}
+                                            href={link.url || '#'}
+                                            preserveScroll
+                                        >
+                                            <Button
+                                                variant={link.active ? 'default' : 'outline'}
+                                                size="sm"
+                                                disabled={!link.url}
+                                                dangerouslySetInnerHTML={{ __html: link.label }}
+                                            />
+                                        </Link>
+                                    ))}
                                 </div>
                             </div>
                         )}
