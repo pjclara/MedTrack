@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Diagnostico;
 use App\Models\ZonaAnatomica;
+use App\Models\Cirurgia;
 use App\Enums\TipoDiagnosticoEnum;
 use App\Http\Requests\StoreDiagnosticoRequest;
 use Illuminate\Http\Request;
@@ -15,13 +16,24 @@ class DiagnosticoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $diagnosticos = Diagnostico::withCount('cirurgias')
+        $search = $request->input('search');
+
+        $diagnosticos = Diagnostico::addSelect([
+                'registos_cirurgicos_count' => Cirurgia::selectRaw('COUNT(DISTINCT registo_cirurgico_id)')
+                    ->whereColumn('diagnostico_id', 'diagnosticos.id'),
+            ])
+            ->when($search, function ($query, $search) {
+                $query->where('nome', 'like', "%{$search}%");
+            })
             ->orderBy('nome')
-            ->paginate(15);
+            ->paginate(15)
+            ->withQueryString();
+
         return Inertia::render('diagnosticos/index', [
-            'diagnosticos' => $diagnosticos
+            'diagnosticos' => $diagnosticos,
+            'filters' => ['search' => $search],
         ]);
     }
 

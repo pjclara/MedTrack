@@ -32,7 +32,7 @@ class RegistoCirurgicoController extends Controller
     {
         $this->authorize('viewAny', RegistoCirurgico::class);
 
-        $filters = $request->only(['search', 'data_inicio', 'data_fim', 'diagnostico_id', 'procedimento_id']);
+        $filters = $request->only(['search', 'data_inicio', 'data_fim', 'diagnostico_id', 'procedimento_id', 'funcao_cirurgiao_id']);
 
         $tiposDeCirurgia = TipoDeCirurgia::orderBy('nome')->get(['id', 'nome']);
 
@@ -95,14 +95,21 @@ class RegistoCirurgicoController extends Controller
             });
         }
 
+        if (!empty($filters['funcao_cirurgiao_id'])) {
+            $query->whereHas('cirurgias', function ($q) use ($filters) {
+                $q->where('funcao_cirurgiao_id', $filters['funcao_cirurgiao_id']);
+            });
+        }
+
         $registos = $query->paginate(15)->withQueryString();
 
         return Inertia::render('registos-cirurgicos/index', [
-            'registos'         => $registos,
-            'filters'          => $filters,
-            'diagnosticos'     => \App\Models\Diagnostico::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
-            'procedimentos'    => \App\Models\Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
-            'tipos_cirurgia'   => TipoDeCirurgia::orderBy('nome')->get(['id', 'nome']),
+            'registos'           => $registos,
+            'filters'            => $filters,
+            'diagnosticos'       => \App\Models\Diagnostico::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
+            'procedimentos'      => \App\Models\Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
+            'tipos_cirurgia'     => TipoDeCirurgia::orderBy('nome')->get(['id', 'nome']),
+            'funcoes_cirurgiao'  => FuncaoCirurgiao::orderBy('nome')->get(['id', 'nome']),
         ]);
     }
 

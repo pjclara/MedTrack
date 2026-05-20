@@ -52,7 +52,7 @@ export default function DiagnosticoEdit({ diagnostico, tipos, zonaAnatomicas }: 
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(route('diagnosticos.update', diagnostico.id));
+        put(`/diagnosticos/${diagnostico.id}`);
     };
 
     return (

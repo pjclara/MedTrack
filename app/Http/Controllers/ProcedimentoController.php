@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Procedimento;
 use App\Models\Especialidade;
+use App\Models\Cirurgia;
 use App\Http\Requests\StoreProcedimentoRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -18,7 +19,10 @@ class ProcedimentoController extends Controller
     {
         $search = $request->input('search');
 
-        $procedimentos = Procedimento::withCount('cirurgias')
+        $procedimentos = Procedimento::addSelect([
+                'registos_cirurgicos_count' => Cirurgia::selectRaw('COUNT(DISTINCT registo_cirurgico_id)')
+                    ->whereColumn('procedimento_id', 'procedimentos.id'),
+            ])
             ->when($search, function ($query, $search) {
                 $query->where('nome', 'like', "%{$search}%");
             })

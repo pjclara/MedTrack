@@ -1,6 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { BreadcrumbItem, Diagnostico, PaginatedData } from '@/types';
+import { useState, useEffect } from 'react';
 import { 
     Table, 
     TableBody, 
@@ -18,9 +19,24 @@ import {
     CardTitle 
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { toast } from 'react-toastify';
 
 interface DiagnosticoIndexProps {
     diagnosticos: PaginatedData<Diagnostico>;
+    filters: {
+        search?: string;
+    };
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -34,7 +50,28 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function DiagnosticoIndex({ diagnosticos }: DiagnosticoIndexProps) {
+export default function DiagnosticoIndex({ diagnosticos, filters }: DiagnosticoIndexProps) {
+    const [searchTerm, setSearchTerm] = useState(filters.search || '');
+
+    const handleDelete = (id: number) => {
+        router.delete(`/diagnosticos/${id}`, {
+            onSuccess: () => toast.success('Diagnóstico removido com sucesso!'),
+        });
+    };
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (searchTerm !== (filters.search || '')) {
+                router.get(
+                    '/diagnosticos',
+                    { search: searchTerm },
+                    { preserveState: true, preserveScroll: true, replace: true }
+                );
+            }
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [searchTerm]);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Diagnósticos" />
@@ -63,6 +100,8 @@ export default function DiagnosticoIndex({ diagnosticos }: DiagnosticoIndexProps
                                     type="search"
                                     placeholder="Procurar diagnósticos..."
                                     className="pl-8"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
                                 />
                             </div>
                         </div>
@@ -101,6 +140,9 @@ export default function DiagnosticoIndex({ diagnosticos }: DiagnosticoIndexProps
                                                         </span>
                                                     ) : '-'}
                                                 </TableCell>
+                                                <TableCell className="text-center">
+                                                    {diagnostico.registos_cirurgicos_count ?? 0}
+                                                </TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">
                                                         <Button variant="ghost" size="icon" asChild title="Editar">
@@ -108,9 +150,31 @@ export default function DiagnosticoIndex({ diagnosticos }: DiagnosticoIndexProps
                                                                 <Edit className="h-4 w-4" />
                                                             </Link>
                                                         </Button>
-                                                        <Button variant="ghost" size="icon" className="text-destructive" title="Apagar">
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </Button>
+                                                        <AlertDialog>
+                                                            <AlertDialogTrigger asChild>
+                                                                <Button variant="ghost" size="icon" className="text-destructive" title="Apagar">
+                                                                    <Trash2 className="h-4 w-4" />
+                                                                </Button>
+                                                            </AlertDialogTrigger>
+                                                            <AlertDialogContent>
+                                                                <AlertDialogHeader>
+                                                                    <AlertDialogTitle>Tem a certeza?</AlertDialogTitle>
+                                                                    <AlertDialogDescription>
+                                                                        Esta ação não pode ser desfeita. Isto irá eliminar permanentemente o diagnóstico
+                                                                        "{diagnostico.nome}".
+                                                                    </AlertDialogDescription>
+                                                                </AlertDialogHeader>
+                                                                <AlertDialogFooter>
+                                                                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                                    <AlertDialogAction
+                                                                        onClick={() => handleDelete(diagnostico.id)}
+                                                                        className="bg-destructive text-white hover:bg-destructive/90"
+                                                                    >
+                                                                        Eliminar
+                                                                    </AlertDialogAction>
+                                                                </AlertDialogFooter>
+                                                            </AlertDialogContent>
+                                                        </AlertDialog>
                                                     </div>
                                                 </TableCell>
                                             </TableRow>
@@ -121,9 +185,25 @@ export default function DiagnosticoIndex({ diagnosticos }: DiagnosticoIndexProps
                         </div>
 
                         {diagnosticos.last_page > 1 && (
-                            <div className="flex items-center justify-end space-x-2 py-4">
-                                <div className="text-sm text-muted-foreground">
-                                    Página {diagnosticos.current_page} de {diagnosticos.last_page}
+                            <div className="flex items-center justify-between py-4">
+                                <p className="text-sm text-muted-foreground">
+                                    A mostrar {diagnosticos.from} a {diagnosticos.to} de {diagnosticos.total} resultados
+                                </p>
+                                <div className="flex gap-2">
+                                    {diagnosticos.links.map((link, index) => (
+                                        <Link
+                                            key={index}
+                                            href={link.url || '#'}
+                                            preserveScroll
+                                        >
+                                            <Button
+                                                variant={link.active ? 'default' : 'outline'}
+                                                size="sm"
+                                                disabled={!link.url}
+                                                dangerouslySetInnerHTML={{ __html: link.label }}
+                                            />
+                                        </Link>
+                                    ))}
                                 </div>
                             </div>
                         )}

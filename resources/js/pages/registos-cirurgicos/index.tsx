@@ -19,12 +19,18 @@ import { type RegistoCirurgico, type PaginatedData, type Diagnostico, type Proce
 import registosCirurgicos from '@/routes/registos-cirurgicos';
 import { useIsMobile } from '@/hooks/use-mobile';
 
+interface FuncaoCirurgiao {
+    id: number;
+    nome: string;
+}
+
 interface RegistoCirurgicoIndexProps {
     registos: PaginatedData<RegistoCirurgico>;
-    filters: { search?: string; data_inicio?: string; data_fim?: string; diagnostico_id?: string; procedimento_id?: string; tipo_de_cirurgia_ids?: string[] };
+    filters: { search?: string; data_inicio?: string; data_fim?: string; diagnostico_id?: string; procedimento_id?: string; tipo_de_cirurgia_ids?: string[]; funcao_cirurgiao_id?: string };
     diagnosticos: Diagnostico[];
     procedimentos: Procedimento[];
     tipos_cirurgia: TipoDeCirurgia[];
+    funcoes_cirurgiao: FuncaoCirurgiao[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -32,7 +38,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Registos Cirúrgicos', href: '/registos-cirurgicos' },
 ];
 
-export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos, procedimentos, tipos_cirurgia }: RegistoCirurgicoIndexProps) {
+export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos, procedimentos, tipos_cirurgia, funcoes_cirurgiao }: RegistoCirurgicoIndexProps) {
     const isMobile = useIsMobile();
 
     const [search, setSearch] = useState(filters.search ?? '');
@@ -41,6 +47,7 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
     const [diagnosticoId, setDiagnosticoId] = useState(filters.diagnostico_id ?? '');
     const [procedimentoId, setProcedimentoId] = useState(filters.procedimento_id ?? '');
     const [tipoCirurgiaIds, setTipoCirurgiaIds] = useState<string[]>(filters.tipo_de_cirurgia_ids ?? []);
+    const [funcaoCirurgiaoId, setFuncaoCirurgiaoId] = useState(filters.funcao_cirurgiao_id ?? '');
     const [tipoCirurgiaOpen, setTipoCirurgiaOpen] = useState(false);
     const tipoCirurgiaRef = useRef<HTMLDivElement>(null);
 
@@ -66,6 +73,7 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
         setTipoCirurgiaOpen(false);
         router.get('/registos-cirurgicos', {
             ...(search && { search }),
+            ...(funcaoCirurgiaoId && { funcao_cirurgiao_id: funcaoCirurgiaoId }),
             ...(dataInicio && { data_inicio: dataInicio }),
             ...(dataFim && { data_fim: dataFim }),
             ...(diagnosticoId && { diagnostico_id: diagnosticoId }),
@@ -77,6 +85,7 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
     const handleFilter = () => {
         router.get('/registos-cirurgicos', {
             ...(search && { search }),
+            ...(funcaoCirurgiaoId && { funcao_cirurgiao_id: funcaoCirurgiaoId }),
             ...(dataInicio && { data_inicio: dataInicio }),
             ...(dataFim && { data_fim: dataFim }),
             ...(diagnosticoId && { diagnostico_id: diagnosticoId }),
@@ -92,10 +101,11 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
         setDiagnosticoId('');
         setProcedimentoId('');
         setTipoCirurgiaIds([]);
+        setFuncaoCirurgiaoId('');
         router.get('/registos-cirurgicos', {}, { preserveState: true, replace: true });
     };
 
-    const hasFilters = !!(filters.search || filters.data_inicio || filters.data_fim || filters.diagnostico_id || filters.procedimento_id || filters.tipo_de_cirurgia_ids?.length);
+    const hasFilters = !!(filters.search || filters.data_inicio || filters.data_fim || filters.diagnostico_id || filters.procedimento_id || filters.tipo_de_cirurgia_ids?.length || filters.funcao_cirurgiao_id);
 
     const formatDate = (date: string) => {
         return new Date(date).toLocaleDateString('pt-PT');
@@ -193,6 +203,16 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
                                     <option value="">Todas as intervenções</option>
                                     {procedimentos.map((p) => (
                                         <option key={p.id} value={p.id}>{p.nome}</option>
+                                    ))}
+                                </select>
+                                <select
+                                    value={funcaoCirurgiaoId}
+                                    onChange={(e) => setFuncaoCirurgiaoId(e.target.value)}
+                                    className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring w-44"
+                                >
+                                    <option value="">Todas as funções</option>
+                                    {funcoes_cirurgiao.map((f) => (
+                                        <option key={f.id} value={f.id}>{f.nome}</option>
                                     ))}
                                 </select>
                                 {/* Multiselect Tipo Cirurgia */}

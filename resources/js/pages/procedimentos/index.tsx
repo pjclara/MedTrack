@@ -19,6 +19,18 @@ import {
     CardTitle 
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { toast } from 'react-toastify';
 
 interface ProcedimentoIndexProps {
     procedimentos: PaginatedData<Procedimento>;
@@ -40,6 +52,12 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function ProcedimentoIndex({ procedimentos, filters }: ProcedimentoIndexProps) {
     const [searchTerm, setSearchTerm] = useState(filters.search || '');
+
+    const handleDelete = (id: number) => {
+        router.delete(`/procedimentos/${id}`, {
+            onSuccess: () => toast.success('Procedimento removido com sucesso!'),
+        });
+    };
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -115,7 +133,7 @@ export default function ProcedimentoIndex({ procedimentos, filters }: Procedimen
                                                     {procedimento.especialidade || 'N/A'}
                                                 </TableCell>
                                                 <TableCell className="text-center">
-                                                    {procedimento.cirurgias_count || 0}
+                                                    {procedimento.registos_cirurgicos_count || 0}
                                                 </TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">
@@ -124,9 +142,31 @@ export default function ProcedimentoIndex({ procedimentos, filters }: Procedimen
                                                                 <Edit className="h-4 w-4" />
                                                             </Link>
                                                         </Button>
-                                                        <Button variant="ghost" size="icon" className="text-destructive" title="Apagar">
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </Button>
+                                                        <AlertDialog>
+                                                            <AlertDialogTrigger asChild>
+                                                                <Button variant="ghost" size="icon" className="text-destructive" title="Apagar">
+                                                                    <Trash2 className="h-4 w-4" />
+                                                                </Button>
+                                                            </AlertDialogTrigger>
+                                                            <AlertDialogContent>
+                                                                <AlertDialogHeader>
+                                                                    <AlertDialogTitle>Tem a certeza?</AlertDialogTitle>
+                                                                    <AlertDialogDescription>
+                                                                        Esta ação não pode ser desfeita. Isto irá eliminar permanentemente o procedimento
+                                                                        "{procedimento.nome}".
+                                                                    </AlertDialogDescription>
+                                                                </AlertDialogHeader>
+                                                                <AlertDialogFooter>
+                                                                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                                    <AlertDialogAction
+                                                                        onClick={() => handleDelete(procedimento.id)}
+                                                                        className="bg-destructive text-white hover:bg-destructive/90"
+                                                                    >
+                                                                        Eliminar
+                                                                    </AlertDialogAction>
+                                                                </AlertDialogFooter>
+                                                            </AlertDialogContent>
+                                                        </AlertDialog>
                                                     </div>
                                                 </TableCell>
                                             </TableRow>
