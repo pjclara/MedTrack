@@ -191,18 +191,6 @@ export default function RegistoCirurgicoShow({ registo }: RegistoCirurgicoShowPr
                     <CardContent>
                         <div className="grid gap-4 md:grid-cols-3">
                             <div>
-                                <p className="text-sm font-medium text-muted-foreground">ASA Score</p>
-                                <div className="mt-2">
-                                    {registo.asa_score ? (
-                                        <Badge variant="secondary" className="text-lg">
-                                            ASA {registo.asa_score}
-                                        </Badge>
-                                    ) : (
-                                        <span className="text-muted-foreground">Não especificado</span>
-                                    )}
-                                </div>
-                            </div>
-                            <div>
                                 <p className="text-sm font-medium text-muted-foreground">Tipo de Cirurgia</p>
                                 <div className="mt-2">
                                     {registo.cirurgia_urgente ? (
@@ -232,6 +220,7 @@ export default function RegistoCirurgicoShow({ registo }: RegistoCirurgicoShowPr
                                             <TableHead>Diagnóstico</TableHead>
                                             <TableHead>Procedimento</TableHead>
                                             <TableHead>Função</TableHead>
+                                            <TableHead>Clavien-Dindo</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -250,6 +239,15 @@ export default function RegistoCirurgicoShow({ registo }: RegistoCirurgicoShowPr
                                                         </Badge>
                                                     ) : (
                                                         '-'
+                                                    )}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {cirurgia.clavien_dindo ? (
+                                                        <Badge variant={['IIIa','IIIb','IVa','IVb','V'].includes(cirurgia.clavien_dindo) ? 'destructive' : 'secondary'}>
+                                                            {cirurgia.clavien_dindo}
+                                                        </Badge>
+                                                    ) : (
+                                                        <span className="text-muted-foreground text-sm">-</span>
                                                     )}
                                                 </TableCell>
                                             </TableRow>
