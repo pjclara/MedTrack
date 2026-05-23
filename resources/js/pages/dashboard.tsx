@@ -39,6 +39,8 @@ interface DashboardStats {
     totalPequenaCirurgia: number;
     totalPrincipalPequenaCirurgia: number;
     totalNãoPrincipalPequenaCirurgia: number;
+    totalProcedimentosPrincipal: number;
+    totalProcedimentosAjudante: number;
 }
 
 interface RecentRegisto {
@@ -117,156 +119,207 @@ export default function Dashboard({ stats, recentRegistos }: DashboardProps) {
                     </div>
                 </div>
 
-                {/* Stats Grid */}
                 <div>
                     <h2 className="mb-3 text-lg font-semibold text-gray-900 dark:text-white">
                         Atividade Cirúrgica
                     </h2>
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
-                        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-emerald-600">
+
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {/* Total Cirurgias */}
+                        <div className="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-emerald-600">
                             <div className="mb-3 flex items-start justify-between">
                                 <div className="rounded-lg bg-emerald-100 p-3 dark:bg-emerald-900/30">
                                     <FileText className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                                 </div>
+
                                 <ArrowUpRight className="h-4 w-4 text-gray-400 opacity-0 transition-opacity group-hover:opacity-100" />
                             </div>
+
                             <h3 className="mb-1 text-3xl font-bold text-gray-900 dark:text-white">
                                 {stats.totalSemPequenaCirurgia}
                             </h3>
+
                             <p className="text-sm text-gray-600 dark:text-gray-400">
                                 Total de Cirurgias
                             </p>
+
                             <p className="mt-0.5 text-xs text-gray-400 dark:text-gray-500">
                                 excluindo pequena cirurgia
                             </p>
                         </div>
 
+                        {/* Pequena Cirurgia */}
                         <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                             <div className="mb-3 flex items-start justify-between">
                                 <div className="rounded-lg bg-purple-100 p-3 dark:bg-purple-900/30">
                                     <Users className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                                 </div>
                             </div>
-                            <h3 className="mb-1 text-3xl font-bold text-gray-900 dark:text-white">
-                                {stats.totalPrincipalSemPequenaCirurgia}
-                            </h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Como Principal
-                            </p>
-                            {stats.totalSemPequenaCirurgia > 0 && (
-                                <div className="mt-3">
-                                    <Progress
-                                        value={
-                                            (stats.totalPrincipalSemPequenaCirurgia /
-                                                stats.totalSemPequenaCirurgia) *
-                                            100
-                                        }
-                                        className="h-1.5"
-                                    />
-                                    <p className="mt-1 text-xs text-gray-500">
-                                        {(
-                                            (stats.totalPrincipalSemPequenaCirurgia /
-                                                stats.totalSemPequenaCirurgia) *
-                                            100
-                                        ).toFixed(0)}
-                                        % do total
-                                    </p>
-                                </div>
-                            )}
-                        </div>
 
-                        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                            <div className="mb-3 flex items-start justify-between">
-                                <div className="rounded-lg bg-purple-100 p-3 dark:bg-purple-900/30">
-                                    <Users className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-                                </div>
-                            </div>
-                            <h3 className="mb-1 text-3xl font-bold text-gray-900 dark:text-white">
-                                {stats.totalNãoPrincipalSemPequenaCirurgia}
-                            </h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Como Ajudante
-                            </p>
-                            {stats.totalSemPequenaCirurgia > 0 && (
-                                <div className="mt-3">
-                                    <Progress
-                                        value={
-                                            (stats.totalNãoPrincipalSemPequenaCirurgia /
-                                                stats.totalSemPequenaCirurgia) *
-                                            100
-                                        }
-                                        className="h-1.5"
-                                    />
-                                    <p className="mt-1 text-xs text-gray-500">
-                                        {(
-                                            (stats.totalNãoPrincipalSemPequenaCirurgia /
-                                                stats.totalSemPequenaCirurgia) *
-                                            100
-                                        ).toFixed(0)}
-                                        % do total
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                            <div className="mb-3 flex items-start justify-between">
-                                <div className="rounded-lg bg-purple-100 p-3 dark:bg-purple-900/30">
-                                    <Users className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-                                </div>
-                            </div>
                             <h3 className="mb-1 text-3xl font-bold text-gray-900 dark:text-white">
                                 {stats.totalPequenaCirurgia}
                             </h3>
+
                             <p className="text-sm text-gray-600 dark:text-gray-400">
                                 Pequena cirurgia
                             </p>
+
                             {stats.totalPequenaCirurgia > 0 && (
-    <div className="mt-3">
-        {(() => {
-            const total = stats.totalPequenaCirurgia;
+                                <div className="mt-3">
+                                    {(() => {
+                                        const total =
+                                            stats.totalPequenaCirurgia;
 
-            const naoPrincipal = stats.totalNãoPrincipalPequenaCirurgia;
-            const principal = stats.totalPrincipalPequenaCirurgia;
+                                        const naoPrincipal =
+                                            stats.totalNãoPrincipalPequenaCirurgia;
 
-            const percentNaoPrincipal = (naoPrincipal / total) * 100;
-            const percentPrincipal = (principal / total) * 100;
+                                        const principal =
+                                            stats.totalPrincipalPequenaCirurgia;
 
-            return (
-                <>
-                    {/* Barra segmentada */}
-                    <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
-                        <div
-                            className="bg-purple-500"
-                            style={{ width: `${percentNaoPrincipal}%` }}
-                        />
-                        <div
-                            className="bg-green-500"
-                            style={{ width: `${percentPrincipal}%` }}
-                        />
-                    </div>
+                                        const percentNaoPrincipal =
+                                            (naoPrincipal / total) * 100;
 
-                    {/* Legenda com números + percentagem */}
-                    <div className="mt-2 space-y-1 text-xs text-gray-500">
-                        <div className="flex justify-between">
-                            <span>Não principal</span>
-                            <span>
-                                {naoPrincipal} ({percentNaoPrincipal.toFixed(0)}%)
-                            </span>
+                                        const percentPrincipal =
+                                            (principal / total) * 100;
+
+                                        return (
+                                            <>
+                                                <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+                                                    <div
+                                                        className="bg-purple-500"
+                                                        style={{
+                                                            width: `${percentNaoPrincipal}%`,
+                                                        }}
+                                                    />
+
+                                                    <div
+                                                        className="bg-green-500"
+                                                        style={{
+                                                            width: `${percentPrincipal}%`,
+                                                        }}
+                                                    />
+                                                </div>
+
+                                                <div className="mt-2 space-y-1 text-xs text-gray-500">
+                                                    <div className="flex justify-between">
+                                                        <span>
+                                                            Não principal
+                                                        </span>
+
+                                                        <span>
+                                                            {naoPrincipal} (
+                                                            {percentNaoPrincipal.toFixed(
+                                                                0,
+                                                            )}
+                                                            %)
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="flex justify-between">
+                                                        <span>Principal</span>
+
+                                                        <span>
+                                                            {principal} (
+                                                            {percentPrincipal.toFixed(
+                                                                0,
+                                                            )}
+                                                            %)
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        );
+                                    })()}
+                                </div>
+                            )}
                         </div>
 
-                        <div className="flex justify-between">
-                            <span>Principal</span>
-                            <span>
-                                {principal} ({percentPrincipal.toFixed(0)}%)
-                            </span>
-                        </div>
-                    </div>
-                </>
-            );
-        })()}
-    </div>
-)}
+                        {/* Procedimentos */}
+                        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                            <div className="mb-3 flex items-start justify-between">
+                                <div className="rounded-lg bg-emerald-100 p-3 dark:bg-emerald-900/30">
+                                    <Activity className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+                                </div>
+                            </div>
+
+                            <h3 className="mb-1 text-3xl font-bold text-gray-900 dark:text-white">
+                                {stats.totalProcedimentosPrincipal +
+                                    stats.totalProcedimentosAjudante}
+                            </h3>
+
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                Total de Procedimentos
+                            </p>
+
+                            {stats.totalProcedimentosPrincipal +
+                                stats.totalProcedimentosAjudante >
+                                0 && (
+                                <div className="mt-3">
+                                    {(() => {
+                                        const total =
+                                            stats.totalProcedimentosPrincipal +
+                                            stats.totalProcedimentosAjudante;
+
+                                        const principal =
+                                            stats.totalProcedimentosPrincipal;
+
+                                        const ajudante =
+                                            stats.totalProcedimentosAjudante;
+
+                                        const percentPrincipal =
+                                            (principal / total) * 100;
+
+                                        const percentAjudante =
+                                            (ajudante / total) * 100;
+
+                                        return (
+                                            <>
+                                                <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+                                                    <div
+                                                        className="bg-purple-500"
+                                                        style={{
+                                                            width: `${percentAjudante}%`,
+                                                        }}
+                                                    />
+
+                                                    <div
+                                                        className="bg-green-500"
+                                                        style={{
+                                                            width: `${percentPrincipal}%`,
+                                                        }}
+                                                    />
+                                                </div>
+
+                                                <div className="mt-2 space-y-1 text-xs text-gray-500">
+                                                    <div className="flex justify-between">
+                                                        <span>Ajudante</span>
+
+                                                        <span>
+                                                            {ajudante} (
+                                                            {percentAjudante.toFixed(
+                                                                0,
+                                                            )}
+                                                            %)
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="flex justify-between">
+                                                        <span>Principal</span>
+
+                                                        <span>
+                                                            {principal} (
+                                                            {percentPrincipal.toFixed(
+                                                                0,
+                                                            )}
+                                                            %)
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        );
+                                    })()}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

@@ -115,7 +115,17 @@ Route::middleware(['auth', 'active', 'verified'])->group(function () {
                         });
                     })
                     ->count(),
+                'totalProcedimentosPrincipal' => \App\Models\Cirurgia::whereHas('registoCirurgico', fn($q) => $q->where('user_id', $userId)
+                        ->whereDoesntHave('tipoDeCirurgia', fn($q2) => $q2->where('nome', 'Pequena Cirurgia')))
+                    ->whereNotNull('procedimento_id')
+                    ->whereHas('funcaoCirurgiao', fn($q) => $q->where('nome', 'Principal'))
+                    ->count(),
 
+                'totalProcedimentosAjudante' => \App\Models\Cirurgia::whereHas('registoCirurgico', fn($q) => $q->where('user_id', $userId)
+                        ->whereDoesntHave('tipoDeCirurgia', fn($q2) => $q2->where('nome', 'Pequena Cirurgia')))
+                    ->whereNotNull('procedimento_id')
+                    ->whereHas('funcaoCirurgiao', fn($q) => $q->where('nome', '!=', 'Principal'))
+                    ->count(),
             ],
             'recentRegistos' => \App\Models\RegistoCirurgico::where('user_id', $userId)
                 ->whereDoesntHave(
