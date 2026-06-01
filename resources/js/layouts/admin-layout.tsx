@@ -21,6 +21,7 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ children, breadcrumbs }: AdminLayoutProps) {
     const { auth } = usePage().props as any;
+    const userRole = auth?.user?.role ?? (auth?.is_admin ? 'admin' : 'utilizador');
 
     const navItems = [
         { name: 'Dashboard', icon: LayoutDashboard, href: '/admin/dashboard' },
@@ -59,7 +60,7 @@ export default function AdminLayout({ children, breadcrumbs }: AdminLayoutProps)
                         <UserCircle className="h-8 w-8 text-neutral-400" />
                         <div className="flex flex-col min-w-0">
                             <span className="text-sm font-medium truncate">{auth.user.name}</span>
-                            <span className="text-xs text-slate-500 truncate capitalize">{auth.user.role}</span>
+                            <span className="text-xs text-slate-500 truncate capitalize">{userRole}</span>
                         </div>
                     </div>
                     <Link href="/admin/logout" method="post" as="button" className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">

@@ -35,14 +35,19 @@ ssh_run() {
 log()  { echo -e "\033[1;32m[DEPLOY]\033[0m $*"; }
 err()  { echo -e "\033[1;31m[ERROR]\033[0m $*"; exit 1; }
 
+NPM_BIN="$(command -v npm 2>/dev/null || command -v npm.cmd 2>/dev/null || true)"
+if [[ -z "$NPM_BIN" ]]; then
+    err "npm não foi encontrado no PATH. Instala o Node.js/NPM ou executa o deploy num terminal onde o npm esteja disponível."
+fi
+
 # ---------------------------------------------------------------------------
 # 1. Build local
 # ---------------------------------------------------------------------------
 log "Instalando dependências NPM..."
-npm ci --silent
+"$NPM_BIN" ci --silent
 
 log "A compilar assets (npm run build)..."
-npm run build
+"$NPM_BIN" run build
 
 log "Assets compilados."
 

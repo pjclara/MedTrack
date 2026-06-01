@@ -15,7 +15,7 @@ class AuthController extends Controller
      */
     public function showLogin()
     {
-        if (Auth::guard('admin')->check()) {
+        if (Auth::guard('admin')->check() || (Auth::guard('web')->check() && Auth::guard('web')->user()?->hasRole('admin'))) {
             return redirect()->route('admin.dashboard');
         }
         return Inertia::render('admin/login');
@@ -51,7 +51,14 @@ class AuthController extends Controller
     {
         AdminLogService::log('Admin Logout');
 
-        Auth::guard('admin')->logout();
+        if (Auth::guard('admin')->check()) {
+            Auth::guard('admin')->logout();
+        }
+
+        if (Auth::guard('web')->check() && Auth::guard('web')->user()?->hasRole('admin')) {
+            Auth::guard('web')->logout();
+        }
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

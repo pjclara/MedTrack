@@ -14,10 +14,20 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::guard('admin')->check()) {
+        $adminGuardAuthenticated = Auth::guard('admin')->check();
+
+        $webUser = Auth::guard('web')->user();
+        $webUserIsAdmin = $webUser && method_exists($webUser, 'hasRole') && $webUser->hasRole('admin');
+
+        if (!$adminGuardAuthenticated && !$webUserIsAdmin) {
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'Unauthorized.'], 401);
             }
+
+            if (Auth::guard('web')->check()) {
+                return redirect()->route('dashboard');
+            }
+
             return redirect()->route('admin.login');
         }
 

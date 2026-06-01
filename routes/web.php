@@ -25,7 +25,13 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'active', 'verified'])->group(function () {
     Route::get('dashboard', function () {
-        $userId = auth()->id();
+        $user = request()->user();
+
+        if ($user?->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        $userId = $user->id;
         $currentMonth = now()->startOfMonth();
 
         return Inertia::render('dashboard', [

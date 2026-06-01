@@ -13,8 +13,14 @@ class AdminLogService
      */
     public static function log(string $action, ?string $targetType = null, ?int $targetId = null, ?array $details = null)
     {
+        $adminUserId = Auth::guard('admin')->id();
+
+        if (!$adminUserId) {
+            return;
+        }
+
         AdminActivityLog::create([
-            'admin_user_id' => Auth::guard('admin')->id(),
+            'admin_user_id' => $adminUserId,
             'action' => $action,
             'target_type' => $targetType,
             'target_id' => $targetId,

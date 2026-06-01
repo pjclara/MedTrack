@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\AdminUser;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class AdminUserSeeder extends Seeder
 {
@@ -13,18 +12,22 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        AdminUser::create([
-            'name' => 'Super Admin',
-            'email' => 'admin@medfolio.com',
-            'password' => 'admin123',
-            'role' => 'super_admin',
-        ]);
-        
-        AdminUser::create([
-            'name' => 'Gestor Medfolio',
-            'email' => 'gestor@medfolio.com',
-            'password' => 'admin123',
-            'role' => 'admin',
-        ]);
+        AdminUser::firstOrCreate(
+            ['email' => 'admin@medtrack.com'],
+            [
+                'name' => 'Administrador MedTrack',
+                'password' => 'password',
+                'role' => 'super_admin',
+            ]
+        );
+
+        AdminUser::firstOrCreate(
+            ['email' => 'gestor@medtrack.com'],
+            [
+                'name' => 'Gestor MedTrack',
+                'password' => 'password',
+                'role' => 'admin',
+            ]
+        );
     }
 }

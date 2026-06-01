@@ -38,6 +38,11 @@ const mainNavItems: NavItem[] = [
         href: '/formacoes',
         icon: Award,
     },
+    {
+        title: 'Administração Global',
+        href: '/admin/dashboard',
+        icon: Settings,
+    },
 ];
 
 const adminNavItems: NavItem[] = [
@@ -93,6 +98,9 @@ const footerNavItems: NavItem[] = [];
 export function AppSidebar() {
     const { auth } = usePage().props as any;
     const isAdmin = auth.is_admin;
+    const visibleMainNavItems = isAdmin
+        ? mainNavItems
+        : mainNavItems.filter((item) => item.href !== '/admin/dashboard');
 
     return (
         <Sidebar collapsible="icon" variant="inset">
@@ -109,11 +117,13 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} title="Plataforma" />
-                <NavMain 
-                    items={adminNavItems} 
-                    title={isAdmin ? "Gestão do Sistema" : "Gestão de Dados"} 
-                />
+                <NavMain items={visibleMainNavItems} title="Plataforma" />
+                {isAdmin && (
+                    <NavMain
+                        items={adminNavItems}
+                        title="Gestão do Sistema"
+                    />
+                )}
             </SidebarContent>
 
             <SidebarFooter>
