@@ -10,7 +10,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
+import { dashboard } from '@/routes/index';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Users, FileText, GraduationCap, Award, Settings, Layers, Activity, ClipboardList, Building2, Scissors, Crosshair, UserCheck } from 'lucide-react';
@@ -37,11 +37,6 @@ const mainNavItems: NavItem[] = [
         title: 'Formações',
         href: '/formacoes',
         icon: Award,
-    },
-    {
-        title: 'Administração Global',
-        href: '/admin/dashboard',
-        icon: Settings,
     },
 ];
 
@@ -98,9 +93,6 @@ const footerNavItems: NavItem[] = [];
 export function AppSidebar() {
     const { auth } = usePage().props as any;
     const isAdmin = auth.is_admin;
-    const visibleMainNavItems = isAdmin
-        ? mainNavItems
-        : mainNavItems.filter((item) => item.href !== '/admin/dashboard');
 
     return (
         <Sidebar collapsible="icon" variant="inset">
@@ -117,13 +109,11 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={visibleMainNavItems} title="Plataforma" />
-                {isAdmin && (
-                    <NavMain
-                        items={adminNavItems}
-                        title="Gestão do Sistema"
-                    />
-                )}
+                <NavMain items={mainNavItems} title="Plataforma" />
+                <NavMain 
+                    items={adminNavItems} 
+                    title={isAdmin ? "Gestão do Sistema" : "Gestão de Dados"} 
+                />
             </SidebarContent>
 
             <SidebarFooter>
