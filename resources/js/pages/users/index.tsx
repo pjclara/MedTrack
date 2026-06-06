@@ -108,8 +108,8 @@ export default function UserIndex({ users }: UserIndexProps) {
                                                     </div>
                                                 </TableCell>
                                                 <TableCell>{user.email}</TableCell>
-                                                <TableCell>{user.hospital_de_origem || '-'}</TableCell>
-                                                <TableCell>{user.especialidade || '-'}</TableCell>
+                                                <TableCell>{user.hospital?.nome || '-'}</TableCell>
+                                                <TableCell>{user.especialidade?.nome || '-'}</TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">
                                                         <Link href={`/users/${user.id}/edit`}>

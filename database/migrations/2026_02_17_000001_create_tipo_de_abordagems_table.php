@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('tipo_de_abordagems', function (Blueprint $table) {
+        Schema::create('tipo_de_abordagens', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
@@ -18,6 +18,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('tipo_de_abordagems');
+        Schema::dropIfExists('tipo_de_abordagens');
     }
 };

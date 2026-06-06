@@ -129,6 +129,12 @@ export default function RegistoCirurgicoCreate({
 }: RegistoCirurgicoCreateProps) {
     const isMobile = useIsMobile();
     const { auth } = usePage<SharedData>().props;
+    const defaultHospitalId =
+        auth.user.hospital_id?.toString() ??
+        '';
+    const defaultEspecialidadeId =
+        auth.user.especialidade_id?.toString() ??
+        '';
     const [step, setStep] = useState(1);
     const [searchProcesso, setSearchProcesso] = useState(
         duplicateData?.utente?.processo || '',
@@ -146,8 +152,8 @@ export default function RegistoCirurgicoCreate({
 
     const [registoData, setRegistoData] = useState<RegistoData>(
         duplicateData?.registo || {
-            hospital: auth.user.hospital_de_origem || '',
-            especialidade: auth.user.especialidade || '',
+            hospital: defaultHospitalId,
+            especialidade: defaultEspecialidadeId,
             data_cirurgia: '',
             tipo_de_cirurgia_id: '',
             ambulatorio: false,
@@ -628,7 +634,7 @@ export default function RegistoCirurgicoCreate({
                                                     hospitals.map((h) => (
                                                         <SelectItem
                                                             key={h.id}
-                                                            value={h.nome}
+                                                            value={h.id.toString()}
                                                         >
                                                             {h.nome}
                                                         </SelectItem>
@@ -670,7 +676,7 @@ export default function RegistoCirurgicoCreate({
                                                     especialidades.map((a) => (
                                                         <SelectItem
                                                             key={a.id}
-                                                            value={a.nome}
+                                                            value={a.id.toString()}
                                                         >
                                                             {a.nome}
                                                         </SelectItem>

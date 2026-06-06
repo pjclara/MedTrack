@@ -21,6 +21,7 @@ class UserController extends Controller
                 $query->where('name', 'like', "%{$search}%")
                       ->orWhere('email', 'like', "%{$search}%");
             })
+            ->with(['hospital:id,nome', 'especialidade:id,nome'])
             ->withCount(['registosCirurgicos', 'atividadesCientificas', 'formacoes'])
             ->orderBy('created_at', 'desc')
             ->paginate(10)
@@ -35,8 +36,8 @@ class UserController extends Controller
     public function create()
     {
         return Inertia::render('admin/users/create', [
-            'hospitals' => Hospital::orderBy('nome')->pluck('nome')->unique()->values(),
-            'especialidades' => Especialidade::orderBy('nome')->pluck('nome')->unique()->values(),
+            'hospitals' => Hospital::orderBy('nome')->get(['id', 'nome']),
+            'especialidades' => Especialidade::orderBy('nome')->get(['id', 'nome']),
         ]);
     }
 
@@ -46,8 +47,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
-            'hospital_de_origem' => 'nullable|string|max:255',
-            'especialidade' => 'nullable|string|max:255',
+            'hospital_id' => 'nullable|integer|exists:hospitals,id',
+            'especialidade_id' => 'nullable|integer|exists:especialidades,id',
             'is_active' => 'boolean',
         ]);
 
@@ -64,6 +65,8 @@ class UserController extends Controller
 
     public function show(User $user)
     {
+        $user->load(['hospital:id,nome', 'especialidade:id,nome']);
+
         $user->loadCount([
             'registosCirurgicos as registos_count', 
             'atividadesCientificas as atividades_count', 
@@ -102,9 +105,9 @@ class UserController extends Controller
     public function edit(User $user)
     {
         return Inertia::render('admin/users/edit', [
-            'user' => $user,
-            'hospitals' => Hospital::orderBy('nome')->pluck('nome')->unique()->values(),
-            'especialidades' => Especialidade::orderBy('nome')->pluck('nome')->unique()->values(),
+            'user' => $user->load(['hospital:id,nome', 'especialidade:id,nome']),
+            'hospitals' => Hospital::orderBy('nome')->get(['id', 'nome']),
+            'especialidades' => Especialidade::orderBy('nome')->get(['id', 'nome']),
         ]);
     }
 
@@ -113,8 +116,8 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'hospital_de_origem' => 'nullable|string|max:255',
-            'especialidade' => 'nullable|string|max:255',
+            'hospital_id' => 'nullable|integer|exists:hospitals,id',
+            'especialidade_id' => 'nullable|integer|exists:especialidades,id',
             'is_active' => 'boolean',
         ]);
 

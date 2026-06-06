@@ -70,11 +70,11 @@ class DatabaseSeeder extends Seeder
             $especialidade = \App\Models\Especialidade::where('user_id', $user->id)->first();
 
             if ($hospital) {
-                $user->hospital_de_origem = $hospital->nome;
+                $user->hospital_id = $hospital->id;
             }
 
             if ($especialidade) {
-                $user->especialidade = $especialidade->nome;
+                $user->especialidade_id = $especialidade->id;
             }
 
             $user->save();

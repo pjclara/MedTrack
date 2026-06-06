@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -23,8 +24,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'hospital_de_origem',
-        'especialidade',
+        'hospital_id',
+        'especialidade_id',
         'is_active',
     ];
 
@@ -52,7 +53,25 @@ class User extends Authenticatable
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
             'is_active' => 'boolean',
+            'hospital_id' => 'integer',
+            'especialidade_id' => 'integer',
         ];
+    }
+
+    /**
+     * Hospital associado ao utilizador.
+     */
+    public function hospital(): BelongsTo
+    {
+        return $this->belongsTo(Hospital::class);
+    }
+
+    /**
+     * Especialidade associada ao utilizador.
+     */
+    public function especialidade(): BelongsTo
+    {
+        return $this->belongsTo(Especialidade::class);
     }
 
     /**

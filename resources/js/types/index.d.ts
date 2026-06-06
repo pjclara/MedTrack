@@ -36,8 +36,10 @@ export interface User {
     email: string;
     avatar?: string;
     email_verified_at: string | null;
-    hospital_de_origem: string | null;
-    especialidade: string | null;
+    hospital_id?: number | null;
+    especialidade_id?: number | null;
+    hospital?: { id: number; nome: string } | null;
+    especialidade?: { id: number; nome: string } | null;
     two_factor_enabled?: boolean;
     created_at: string;
     updated_at: string;

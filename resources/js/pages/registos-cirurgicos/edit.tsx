@@ -368,7 +368,7 @@ export default function RegistoCirurgicoEdit({
                                         <SelectContent>
                                             {hospitals.length > 0 ? (
                                                 hospitals.map((h) => (
-                                                    <SelectItem key={h.id} value={h.nome}>{h.nome}</SelectItem>
+                                                    <SelectItem key={h.id} value={h.id.toString()}>{h.nome}</SelectItem>
                                                 ))
                                             ) : (
                                                 <SelectItem value="none" disabled>Nenhum hospital registado</SelectItem>
@@ -391,7 +391,7 @@ export default function RegistoCirurgicoEdit({
                                         <SelectContent>
                                             {especialidades.length > 0 ? (
                                                 especialidades.map((a) => (
-                                                    <SelectItem key={a.id} value={a.nome}>{a.nome}</SelectItem>
+                                                    <SelectItem key={a.id} value={a.id.toString()}>{a.nome}</SelectItem>
                                                 ))
                                             ) : (
                                                 <SelectItem value="none" disabled>Nenhuma especialidade registada</SelectItem>

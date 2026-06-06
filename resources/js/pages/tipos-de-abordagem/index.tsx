@@ -26,9 +26,11 @@ import { type BreadcrumbItem } from '@/types';
 import { type PaginatedData, type TipoDeAbordagem } from '@/types/models';
 import { toast } from 'react-toastify';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { usePage } from '@inertiajs/react';
 
 interface TipoDeAbordagemIndexProps {
     tipos: PaginatedData<TipoDeAbordagem>;
+    canManage?: boolean;
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -37,8 +39,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Tipos de Abordagem', href: '/tipos-de-abordagem' },
 ];
 
-export default function TipoDeAbordagemIndex({ tipos }: TipoDeAbordagemIndexProps) {
+export default function TipoDeAbordagemIndex({ tipos, canManage }: TipoDeAbordagemIndexProps) {
     const isMobile = useIsMobile();
+    const auth = (usePage().props as any)?.auth;
+    const canManageTipos = canManage ?? !!auth?.is_admin;
+
     const handleDelete = (id: number) => {
         router.delete(`/tipos-de-abordagem/${id}`, {
             onSuccess: () => toast.success('Tipo de abordagem removido com sucesso!'),
@@ -57,12 +62,14 @@ export default function TipoDeAbordagemIndex({ tipos }: TipoDeAbordagemIndexProp
                             Gestão dos tipos de abordagem cirúrgica
                         </p>
                     </div>
-                    <Link href="/tipos-de-abordagem/create" className={isMobile ? 'w-full' : ''}>
-                        <Button className="bg-emerald-600 hover:bg-emerald-700 w-full">
-                            <PlusCircle className="mr-2 h-4 w-4" />
-                            Novo Tipo de Abordagem
-                        </Button>
-                    </Link>
+                    {canManageTipos && (
+                        <Link href="/tipos-de-abordagem/create" className={isMobile ? 'w-full' : ''}>
+                            <Button className="bg-emerald-600 hover:bg-emerald-700 w-full">
+                                <PlusCircle className="mr-2 h-4 w-4" />
+                                Novo Tipo de Abordagem
+                            </Button>
+                        </Link>
+                    )}
                 </div>
 
                 {isMobile ? (
@@ -88,37 +95,39 @@ export default function TipoDeAbordagemIndex({ tipos }: TipoDeAbordagemIndexProp
                                                 </h3>
                                             </div>
                                         </div>
-                                        <div className="flex gap-1 shrink-0">
-                                            <Link href={`/tipos-de-abordagem/${item.id}/edit`}>
-                                                <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-600">
-                                                    <Edit className="h-4 w-4" />
-                                                </Button>
-                                            </Link>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild>
-                                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600">
-                                                        <Trash2 className="h-4 w-4" />
+                                        {canManageTipos && (
+                                            <div className="flex gap-1 shrink-0">
+                                                <Link href={`/tipos-de-abordagem/${item.id}/edit`}>
+                                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-600">
+                                                        <Edit className="h-4 w-4" />
                                                     </Button>
-                                                </AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <AlertDialogHeader>
-                                                        <AlertDialogTitle>Confirmar eliminação</AlertDialogTitle>
-                                                        <AlertDialogDescription>
-                                                            Tem a certeza que deseja eliminar o tipo de abordagem "{item.nome}"?
-                                                        </AlertDialogDescription>
-                                                    </AlertDialogHeader>
-                                                    <AlertDialogFooter>
-                                                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                                        <AlertDialogAction
-                                                            onClick={() => handleDelete(item.id)}
-                                                            className="bg-red-600 hover:bg-red-700"
-                                                        >
-                                                            Eliminar
-                                                        </AlertDialogAction>
-                                                    </AlertDialogFooter>
-                                                </AlertDialogContent>
-                                            </AlertDialog>
-                                        </div>
+                                                </Link>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600">
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>Confirmar eliminação</AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                Tem a certeza que deseja eliminar o tipo de abordagem "{item.nome}"?
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                onClick={() => handleDelete(item.id)}
+                                                                className="bg-red-600 hover:bg-red-700"
+                                                            >
+                                                                Eliminar
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
+                                            </div>
+                                        )}
                                     </div>
                                 </Card>
                             ))
@@ -153,35 +162,39 @@ export default function TipoDeAbordagemIndex({ tipos }: TipoDeAbordagemIndexProp
                                                 <TableCell className="font-medium">{item.nome}</TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-1">
-                                                        <Link href={`/tipos-de-abordagem/${item.id}/edit`}>
-                                                            <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-600">
-                                                                <Edit className="h-4 w-4" />
-                                                            </Button>
-                                                        </Link>
-                                                        <AlertDialog>
-                                                            <AlertDialogTrigger asChild>
-                                                                <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600">
-                                                                    <Trash2 className="h-4 w-4" />
-                                                                </Button>
-                                                            </AlertDialogTrigger>
-                                                            <AlertDialogContent>
-                                                                <AlertDialogHeader>
-                                                                    <AlertDialogTitle>Confirmar eliminação</AlertDialogTitle>
-                                                                    <AlertDialogDescription>
-                                                                        Tem a certeza que deseja eliminar o tipo de abordagem "{item.nome}"?
-                                                                    </AlertDialogDescription>
-                                                                </AlertDialogHeader>
-                                                                <AlertDialogFooter>
-                                                                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                                                    <AlertDialogAction
-                                                                        onClick={() => handleDelete(item.id)}
-                                                                        className="bg-red-600 hover:bg-red-700"
-                                                                    >
-                                                                        Eliminar
-                                                                    </AlertDialogAction>
-                                                                </AlertDialogFooter>
-                                                            </AlertDialogContent>
-                                                        </AlertDialog>
+                                                        {canManageTipos && (
+                                                            <>
+                                                                <Link href={`/tipos-de-abordagem/${item.id}/edit`}>
+                                                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-600">
+                                                                        <Edit className="h-4 w-4" />
+                                                                    </Button>
+                                                                </Link>
+                                                                <AlertDialog>
+                                                                    <AlertDialogTrigger asChild>
+                                                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600">
+                                                                            <Trash2 className="h-4 w-4" />
+                                                                        </Button>
+                                                                    </AlertDialogTrigger>
+                                                                    <AlertDialogContent>
+                                                                        <AlertDialogHeader>
+                                                                            <AlertDialogTitle>Confirmar eliminação</AlertDialogTitle>
+                                                                            <AlertDialogDescription>
+                                                                                Tem a certeza que deseja eliminar o tipo de abordagem "{item.nome}"?
+                                                                            </AlertDialogDescription>
+                                                                        </AlertDialogHeader>
+                                                                        <AlertDialogFooter>
+                                                                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                                            <AlertDialogAction
+                                                                                onClick={() => handleDelete(item.id)}
+                                                                                className="bg-red-600 hover:bg-red-700"
+                                                                            >
+                                                                                Eliminar
+                                                                            </AlertDialogAction>
+                                                                        </AlertDialogFooter>
+                                                                    </AlertDialogContent>
+                                                                </AlertDialog>
+                                                            </>
+                                                        )}
                                                     </div>
                                                 </TableCell>
                                             </TableRow>

@@ -40,6 +40,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos, procedimentos, tipos_cirurgia, funcoes_cirurgiao }: RegistoCirurgicoIndexProps) {
     const isMobile = useIsMobile();
+    const getHospitalNome = (registo: RegistoCirurgico) =>
+        typeof registo.hospital === 'string' ? registo.hospital : registo.hospital?.nome;
 
     const [search, setSearch] = useState(filters.search ?? '');
     const [dataInicio, setDataInicio] = useState(filters.data_inicio ?? '');
@@ -448,7 +450,7 @@ export default function RegistoCirurgicoIndex({ registos, filters, diagnosticos,
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     <Hospital className="h-4 w-4 text-muted-foreground" />
-                                                    <span>{registo.hospital || '-'}</span>
+                                                    <span>{getHospitalNome(registo) || '-'}</span>
                                                 </div>
                                                 {registo.cirurgias && registo.cirurgias.length > 0 && (
                                                     <div className="mt-2 pt-2 border-t space-y-1.5">

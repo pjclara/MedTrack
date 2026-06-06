@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Settings;
 
 use App\Models\User;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -28,8 +27,20 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
 
-            'hospital_de_origem' => ['nullable', 'string', 'max:255'],
-            'especialidade' => ['nullable', 'string', 'max:255'],
+            'hospital_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('hospitals', 'id')->where(
+                    fn ($query) => $query->where('user_id', $this->user()->id)
+                ),
+            ],
+            'especialidade_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('especialidades', 'id')->where(
+                    fn ($query) => $query->where('user_id', $this->user()->id)
+                ),
+            ],
         ];
     }
 }

@@ -228,7 +228,7 @@ export default function UtenteShow({ utente }: UtenteShowProps) {
                                                     {registo.tipo_de_cirurgia?.nome || '-'}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {registo.hospital || '-'}
+                                                    {(typeof registo.hospital === 'string' ? registo.hospital : registo.hospital?.nome) || '-'}
                                                 </TableCell>
                                                 <TableCell>
                                                     <Badge variant="outline">

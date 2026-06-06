@@ -23,13 +23,13 @@ return new class extends Migration
             ->get();
 
         foreach ($registos as $registo) {
-            $existing = DB::table('tipo_de_abordagems')
+            $existing = DB::table('tipo_de_abordagens')
                 ->where('user_id', $registo->user_id)
                 ->where('nome', $registo->tipo_de_abordagem)
                 ->first();
 
             if (!$existing) {
-                DB::table('tipo_de_abordagems')->insert([
+                DB::table('tipo_de_abordagens')->insert([
                     'nome' => $registo->tipo_de_abordagem,
                     'user_id' => $registo->user_id,
                     'created_at' => now(),
@@ -39,7 +39,7 @@ return new class extends Migration
         }
 
         // 3. Update registo_cirurgicos to point to the new tipo_de_abordagem_id
-        $tiposAbordagem = DB::table('tipo_de_abordagems')->get();
+        $tiposAbordagem = DB::table('tipo_de_abordagens')->get();
         foreach ($tiposAbordagem as $tipo) {
             DB::table('registo_cirurgicos')
                 ->where('user_id', $tipo->user_id)
@@ -55,7 +55,7 @@ return new class extends Migration
         Schema::table('registo_cirurgicos', function (Blueprint $table) {
             $table->foreign('tipo_de_abordagem_id')
                 ->references('id')
-                ->on('tipo_de_abordagems')
+                ->on('tipo_de_abordagens')
                 ->nullOnDelete();
         });
     }
@@ -73,7 +73,7 @@ return new class extends Migration
             ->get();
 
         foreach ($registos as $registo) {
-            $tipo = DB::table('tipo_de_abordagems')->find($registo->tipo_de_abordagem_id);
+            $tipo = DB::table('tipo_de_abordagens')->find($registo->tipo_de_abordagem_id);
             if ($tipo) {
                 DB::table('registo_cirurgicos')
                     ->where('id', $registo->id)

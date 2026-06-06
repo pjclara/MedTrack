@@ -159,7 +159,11 @@ Route::middleware(['auth', 'active', 'verified'])->group(function () {
     Route::get('api/utentes/processo/{processo}', [UtenteController::class, 'findByProcesso'])
         ->name('api.utentes.processo');
     Route::resource('tipos-de-cirurgia', TipoDeCirurgiaController::class);
-    Route::resource('tipos-de-abordagem', TipoDeAbordagemController::class);
+    Route::resource('tipos-de-abordagem', TipoDeAbordagemController::class)
+        ->only(['index', 'show']);
+    Route::resource('tipos-de-abordagem', TipoDeAbordagemController::class)
+        ->only(['create', 'store', 'edit', 'update', 'destroy'])
+        ->middleware('admin');
     Route::resource('funcoes-cirurgiao', FuncaoCirurgiaoController::class);
     Route::resource('especialidades', EspecialidadeController::class);
     Route::resource('zona-anatomicas', ZonaAnatomicaController::class);

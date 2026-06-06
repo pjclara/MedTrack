@@ -9,8 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ChevronLeft, Save } from 'lucide-react';
 
 interface Props {
-    hospitals: string[];
-    especialidades: string[];
+    hospitals: { id: number; nome: string }[];
+    especialidades: { id: number; nome: string }[];
 }
 
 export default function UserCreate({ hospitals, especialidades }: Props) {
@@ -19,8 +19,8 @@ export default function UserCreate({ hospitals, especialidades }: Props) {
         email: '',
         password: '',
         password_confirmation: '',
-        hospital_de_origem: '',
-        especialidade: '',
+        hospital_id: '',
+        especialidade_id: '',
         is_active: true,
     });
 
@@ -106,29 +106,31 @@ export default function UserCreate({ hospitals, especialidades }: Props) {
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="hospital">Hospital de Origem</Label>
-                                    <Select value={data.hospital_de_origem} onValueChange={v => setData('hospital_de_origem', v)}>
+                                    <Select value={data.hospital_id} onValueChange={v => setData('hospital_id', v)}>
                                         <SelectTrigger id="hospital">
                                             <SelectValue placeholder="Selecionar hospital" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {hospitals.map(h => (
-                                                <SelectItem key={h} value={h}>{h}</SelectItem>
+                                                <SelectItem key={h.id} value={h.id.toString()}>{h.nome}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                    {errors.hospital_id && <p className="text-sm text-red-500">{errors.hospital_id}</p>}
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="especialidade">Especialidade</Label>
-                                    <Select value={data.especialidade} onValueChange={v => setData('especialidade', v)}>
+                                    <Select value={data.especialidade_id} onValueChange={v => setData('especialidade_id', v)}>
                                         <SelectTrigger id="especialidade">
                                             <SelectValue placeholder="Selecionar especialidade" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {especialidades.map(e => (
-                                                <SelectItem key={e} value={e}>{e}</SelectItem>
+                                                <SelectItem key={e.id} value={e.id.toString()}>{e.nome}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                    {errors.especialidade_id && <p className="text-sm text-red-500">{errors.especialidade_id}</p>}
                                 </div>
                             </div>
 

@@ -105,14 +105,14 @@ export default function Profile({
                                 <div className="grid gap-2">
                                     <Label htmlFor="hospital_de_origem">Hospital de Origem</Label>
 
-                                    <Select name="hospital_de_origem" defaultValue={auth.user.hospital_de_origem || ''}>
+                                    <Select name="hospital_id" defaultValue={auth.user.hospital_id?.toString() || ''}>
                                         <SelectTrigger className="mt-1 w-full">
                                             <SelectValue placeholder="Selecione o hospital" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {hospitals.length > 0 ? (
                                                 hospitals.map((h) => (
-                                                    <SelectItem key={h.nome} value={h.nome}>{h.nome}</SelectItem>
+                                                    <SelectItem key={h.id} value={h.id.toString()}>{h.nome}</SelectItem>
                                                 ))
                                             ) : (
                                                 <SelectItem value="none" disabled>Nenhum hospital registado</SelectItem>
@@ -122,21 +122,21 @@ export default function Profile({
 
                                     <InputError
                                         className="mt-2"
-                                        message={errors.hospital_de_origem}
+                                        message={errors.hospital_id}
                                     />
                                 </div>
 
                                 <div className="grid gap-2">
                                     <Label htmlFor="especialidade">Especialidade</Label>
 
-                                    <Select name="especialidade" defaultValue={auth.user.especialidade || ''}>
+                                    <Select name="especialidade_id" defaultValue={auth.user.especialidade_id?.toString() || ''}>
                                         <SelectTrigger className="mt-1 w-full">
                                             <SelectValue placeholder="Selecione a especialidade" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {especialidades.length > 0 ? (
                                                 especialidades.map((e) => (
-                                                    <SelectItem key={e.nome} value={e.nome}>{e.nome}</SelectItem>
+                                                    <SelectItem key={e.id} value={e.id.toString()}>{e.nome}</SelectItem>
                                                 ))
                                             ) : (
                                                 <SelectItem value="none" disabled>Nenhuma especialidade registada</SelectItem>
@@ -146,7 +146,7 @@ export default function Profile({
 
                                     <InputError
                                         className="mt-2"
-                                        message={errors.especialidade}
+                                        message={errors.especialidade_id}
                                     />
                                 </div>
 

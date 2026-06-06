@@ -23,6 +23,7 @@ class UserController extends Controller
         $this->authorize('viewAny', User::class);
 
         $users = User::orderBy('name')
+            ->with(['hospital:id,nome', 'especialidade:id,nome'])
             ->paginate(15);
 
         return Inertia::render('users/index', [
@@ -38,8 +39,8 @@ class UserController extends Controller
         $this->authorize('create', User::class);
 
         return Inertia::render('users/create', [
-            'hospitals' => Hospital::select('nome')->distinct()->orderBy('nome')->get(),
-            'especialidades' => Especialidade::select('nome')->distinct()->orderBy('nome')->get(),
+            'hospitals' => Hospital::select('id', 'nome')->orderBy('nome')->get(),
+            'especialidades' => Especialidade::select('id', 'nome')->orderBy('nome')->get(),
         ]);
     }
 
@@ -54,8 +55,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'hospital_de_origem' => 'nullable|string|max:255',
-            'especialidade' => 'nullable|string|max:255',
+            'hospital_id' => 'nullable|integer|exists:hospitals,id',
+            'especialidade_id' => 'nullable|integer|exists:especialidades,id',
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
@@ -74,9 +75,9 @@ class UserController extends Controller
         $this->authorize('update', $user);
 
         return Inertia::render('users/edit', [
-            'user' => $user,
-            'hospitals' => Hospital::select('nome')->distinct()->orderBy('nome')->get(),
-            'especialidades' => Especialidade::select('nome')->distinct()->orderBy('nome')->get(),
+            'user' => $user->load(['hospital:id,nome', 'especialidade:id,nome']),
+            'hospitals' => Hospital::select('id', 'nome')->orderBy('nome')->get(),
+            'especialidades' => Especialidade::select('id', 'nome')->orderBy('nome')->get(),
         ]);
     }
 
@@ -97,8 +98,8 @@ class UserController extends Controller
                 Rule::unique('users')->ignore($user->id),
             ],
             'password' => 'nullable|string|min:8|confirmed',
-            'hospital_de_origem' => 'nullable|string|max:255',
-            'especialidade' => 'nullable|string|max:255',
+            'hospital_id' => 'nullable|integer|exists:hospitals,id',
+            'especialidade_id' => 'nullable|integer|exists:especialidades,id',
         ]);
 
         if (!empty($validated['password'])) {

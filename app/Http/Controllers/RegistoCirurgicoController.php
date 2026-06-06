@@ -52,6 +52,8 @@ class RegistoCirurgicoController extends Controller
                 'utente:id,nome,processo',
                 'tipoDeCirurgia:id,nome',
                 'tipoDeAbordagem:id,nome',
+            'hospital:id,nome,user_id',
+            'especialidade:id,nome,user_id',
                 'user:id,name,email',
                 'cirurgias',
                 'cirurgias.procedimento:id,nome',
@@ -67,7 +69,13 @@ class RegistoCirurgicoController extends Controller
                 $q->whereHas('utente', function ($q2) use ($search) {
                     $q2->where('nome', 'like', "%{$search}%")
                        ->orWhere('processo', 'like', "%{$search}%");
-                })->orWhere('hospital', 'like', "%{$search}%");
+                })
+                ->orWhereHas('hospital', function ($q2) use ($search) {
+                    $q2->where('nome', 'like', "%{$search}%");
+                })
+                ->orWhereHas('especialidade', function ($q2) use ($search) {
+                    $q2->where('nome', 'like', "%{$search}%");
+                });
             });
         }
 
@@ -139,7 +147,7 @@ class RegistoCirurgicoController extends Controller
         return Inertia::render('registos-cirurgicos/create', [
             'duplicateData' => $duplicateData,
             'tiposDeCirurgia' => TipoDeCirurgia::orderBy('nome')->get(['id', 'nome']),
-            'tiposDeAbordagem' => TipoDeAbordagem::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
+            'tiposDeAbordagem' => TipoDeAbordagem::orderBy('nome')->get(['id', 'nome']),
             'diagnosticos' => Diagnostico::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'procedimentos' => Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'especialidades' => Especialidade::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
@@ -187,8 +195,8 @@ class RegistoCirurgicoController extends Controller
 
             $registo = $utente->registosCirurgicos()->create([
                 'user_id' => auth()->id(),
-                'hospital' => $registoData['hospital'] ?? null,
-                'especialidade' => $registoData['especialidade'] ?? null,
+                'hospital_id' => $registoData['hospital'] ?? null,
+                'especialidade_id' => $registoData['especialidade'] ?? null,
                 'data_cirurgia' => $registoData['data_cirurgia'],
                 'tipo_de_cirurgia_id' => $registoData['tipo_de_cirurgia_id'],
                 'ambulatorio' => $registoData['ambulatorio'],
@@ -227,6 +235,8 @@ class RegistoCirurgicoController extends Controller
             'utente',
             'tipoDeCirurgia',
             'tipoDeAbordagem',
+            'hospital',
+            'especialidade',
             'cirurgias.diagnostico',
             'cirurgias.procedimento',
             'cirurgias.funcaoCirurgiao',
@@ -251,7 +261,7 @@ class RegistoCirurgicoController extends Controller
                 $this->transformForWizard($registo)
             ),
             'tiposDeCirurgia' => TipoDeCirurgia::orderBy('nome')->get(['id', 'nome']),
-            'tiposDeAbordagem' => TipoDeAbordagem::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
+            'tiposDeAbordagem' => TipoDeAbordagem::orderBy('nome')->get(['id', 'nome']),
             'diagnosticos' => Diagnostico::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'procedimentos' => Procedimento::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
             'especialidades' => Especialidade::where('user_id', auth()->id())->orderBy('nome')->get(['id', 'nome']),
@@ -275,6 +285,8 @@ class RegistoCirurgicoController extends Controller
             'utente',
             'tipoDeCirurgia',
             'tipoDeAbordagem',
+            'hospital',
+            'especialidade',
             'cirurgias.diagnostico',
             'cirurgias.procedimento',
             'cirurgias.funcaoCirurgiao',
@@ -308,8 +320,8 @@ class RegistoCirurgicoController extends Controller
                 'sexo' => $registo->utente->sexo,
             ],
             'registo' => [
-                'hospital' => $registo->hospital,
-                'especialidade' => $registo->especialidade,
+                'hospital' => (string) ($registo->hospital_id ?? ''),
+                'especialidade' => (string) ($registo->especialidade_id ?? ''),
                 'data_cirurgia' => $registo->data_cirurgia?->format('Y-m-d'),
                 'tipo_de_cirurgia_id' => (string) $registo->tipo_de_cirurgia_id,
                 'ambulatorio' => $registo->ambulatorio,
@@ -347,8 +359,8 @@ class RegistoCirurgicoController extends Controller
             // Update registo
             $registoData = $payload['registo'];
             $registo->update([
-                'hospital' => $registoData['hospital'] ?? null,
-                'especialidade' => $registoData['especialidade'] ?? null,
+                'hospital_id' => $registoData['hospital'] ?? null,
+                'especialidade_id' => $registoData['especialidade'] ?? null,
                 'data_cirurgia' => $registoData['data_cirurgia'],
                 'tipo_de_cirurgia_id' => $registoData['tipo_de_cirurgia_id'],
                 'ambulatorio' => $registoData['ambulatorio'],

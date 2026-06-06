@@ -12,23 +12,25 @@ interface User {
     id: number;
     name: string;
     email: string;
-    hospital_de_origem: string | null;
-    especialidade: string | null;
+    hospital_id?: number | null;
+    especialidade_id?: number | null;
+    hospital?: { id: number; nome: string } | null;
+    especialidade?: { id: number; nome: string } | null;
     is_active: boolean;
 }
 
 interface UserEditProps {
     user: User;
-    hospitals: string[];
-    especialidades: string[];
+    hospitals: { id: number; nome: string }[];
+    especialidades: { id: number; nome: string }[];
 }
 
 export default function UserEdit({ user, hospitals, especialidades }: UserEditProps) {
     const { data, setData, put, processing, errors } = useForm({
         name: user.name,
         email: user.email,
-        hospital_de_origem: user.hospital_de_origem || '',
-        especialidade: user.especialidade || '',
+        hospital_id: user.hospital_id?.toString() || '',
+        especialidade_id: user.especialidade_id?.toString() || '',
         is_active: user.is_active,
     });
 
@@ -89,31 +91,31 @@ export default function UserEdit({ user, hospitals, especialidades }: UserEditPr
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="hospital">Hospital de Origem</Label>
-                                    <Select value={data.hospital_de_origem} onValueChange={v => setData('hospital_de_origem', v)}>
+                                    <Select value={data.hospital_id} onValueChange={v => setData('hospital_id', v)}>
                                         <SelectTrigger id="hospital">
                                             <SelectValue placeholder="Selecionar hospital" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {hospitals.map(h => (
-                                                <SelectItem key={h} value={h}>{h}</SelectItem>
+                                                <SelectItem key={h.id} value={h.id.toString()}>{h.nome}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    {errors.hospital_de_origem && <p className="text-sm text-red-500">{errors.hospital_de_origem}</p>}
+                                    {errors.hospital_id && <p className="text-sm text-red-500">{errors.hospital_id}</p>}
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="especialidade">Especialidade</Label>
-                                    <Select value={data.especialidade} onValueChange={v => setData('especialidade', v)}>
+                                    <Select value={data.especialidade_id} onValueChange={v => setData('especialidade_id', v)}>
                                         <SelectTrigger id="especialidade">
                                             <SelectValue placeholder="Selecionar especialidade" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {especialidades.map(e => (
-                                                <SelectItem key={e} value={e}>{e}</SelectItem>
+                                                <SelectItem key={e.id} value={e.id.toString()}>{e.nome}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    {errors.especialidade && <p className="text-sm text-red-500">{errors.especialidade}</p>}
+                                    {errors.especialidade_id && <p className="text-sm text-red-500">{errors.especialidade_id}</p>}
                                 </div>
                             </div>
 

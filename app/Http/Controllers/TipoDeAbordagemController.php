@@ -8,24 +8,36 @@ use Inertia\Inertia;
 
 class TipoDeAbordagemController extends Controller
 {
+    private function ensureAdmin(): void
+    {
+        abort_unless(auth()->user()?->hasRole('admin'), 403);
+    }
+
     public function index()
     {
         $tipos = TipoDeAbordagem::orderBy('nome')->paginate(15);
         return Inertia::render('tipos-de-abordagem/index', [
-            'tipos' => $tipos
+            'tipos' => $tipos,
+            'canManage' => auth()->user()?->hasRole('admin') ?? false,
         ]);
     }
 
     public function create()
     {
+        $this->ensureAdmin();
+
         return Inertia::render('tipos-de-abordagem/create');
     }
 
     public function store(Request $request)
     {
+        $this->ensureAdmin();
+
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
         ]);
+
+        $validated['user_id'] = auth()->id();
 
         $tipo = TipoDeAbordagem::create($validated);
 
@@ -48,6 +60,7 @@ class TipoDeAbordagemController extends Controller
 
     public function edit(TipoDeAbordagem $tiposDeAbordagem)
     {
+        $this->ensureAdmin();
 
         return Inertia::render('tipos-de-abordagem/edit', [
             'tipo' => $tiposDeAbordagem
@@ -56,6 +69,8 @@ class TipoDeAbordagemController extends Controller
 
     public function update(Request $request, TipoDeAbordagem $tiposDeAbordagem)
     {
+        $this->ensureAdmin();
+
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
         ]);
@@ -68,7 +83,9 @@ class TipoDeAbordagemController extends Controller
 
     public function destroy(TipoDeAbordagem $tiposDeAbordagem)
     {
-        $tipoDeAbordagem->delete();
+        $this->ensureAdmin();
+
+        $tiposDeAbordagem->delete();
 
         return redirect()->route('tipos-de-abordagem.index')
             ->with('success', 'Tipo de abordagem removido com sucesso.');

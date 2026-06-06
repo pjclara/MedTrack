@@ -24,8 +24,10 @@ export interface Utente {
 export interface RegistoCirurgico {
     id: number;
     utente_id: number;
-    hospital?: string;
-    especialidade?: string;
+    hospital_id?: number;
+    especialidade_id?: number;
+    hospital?: Hospital | string;
+    especialidade?: Especialidade | string;
     data_cirurgia: string;
     tipo_de_cirurgia_id: number;
     asa_score?: number;

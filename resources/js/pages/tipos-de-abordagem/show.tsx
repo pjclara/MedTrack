@@ -13,6 +13,7 @@ import {
 import { ArrowLeft, Edit, Crosshair } from 'lucide-react';
 import { type BreadcrumbItem } from '@/types';
 import { type TipoDeAbordagem, type RegistoCirurgico } from '@/types/models';
+import { usePage } from '@inertiajs/react';
 
 interface TipoDeAbordagemShowProps {
     tipo: TipoDeAbordagem & {
@@ -28,6 +29,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function TipoDeAbordagemShow({ tipo }: TipoDeAbordagemShowProps) {
+    const auth = (usePage().props as any)?.auth;
+    const canManageTipos = !!auth?.is_admin;
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Tipo de Abordagem - ${tipo.nome}`} />
@@ -40,12 +44,14 @@ export default function TipoDeAbordagemShow({ tipo }: TipoDeAbordagemShowProps) 
                             Voltar
                         </Button>
                     </Link>
-                    <Link href={`/tipos-de-abordagem/${tipo.id}/edit`}>
-                        <Button className="bg-emerald-600 hover:bg-emerald-700">
-                            <Edit className="mr-2 h-4 w-4" />
-                            Editar
-                        </Button>
-                    </Link>
+                    {canManageTipos && (
+                        <Link href={`/tipos-de-abordagem/${tipo.id}/edit`}>
+                            <Button className="bg-emerald-600 hover:bg-emerald-700">
+                                <Edit className="mr-2 h-4 w-4" />
+                                Editar
+                            </Button>
+                        </Link>
+                    )}
                 </div>
 
                 <Card className="max-w-4xl mx-auto">

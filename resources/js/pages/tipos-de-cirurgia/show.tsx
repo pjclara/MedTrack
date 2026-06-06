@@ -102,7 +102,7 @@ export default function TipoDeCirurgiaShow({ tipo }: TipoDeCirurgiaShowProps) {
                                                 <TableRow key={registo.id}>
                                                     <TableCell className="font-medium">#{registo.id}</TableCell>
                                                     <TableCell>{registo.data_cirurgia || '-'}</TableCell>
-                                                    <TableCell>{registo.hospital || '-'}</TableCell>
+                                                    <TableCell>{(typeof registo.hospital === 'string' ? registo.hospital : registo.hospital?.nome) || '-'}</TableCell>
                                                 </TableRow>
                                             ))
                                         ) : (

@@ -16,6 +16,8 @@ class UpdateRegistoCirurgicoRequest extends FormRequest
 
     public function rules(): array
     {
+        $ownerId = $this->route('registo')?->user_id ?? auth()->id();
+
         return [
             // Utente data
             'utente.id' => 'nullable|exists:utentes,id',
@@ -25,12 +27,20 @@ class UpdateRegistoCirurgicoRequest extends FormRequest
             'utente.sexo' => ['required', Rule::enum(SexoEnum::class)],
 
             // Registo data
-            'registo.hospital' => 'required|string|max:255',
-            'registo.especialidade' => 'required|string|max:255',
+            'registo.hospital' => [
+                'required',
+                'integer',
+                Rule::exists('hospitals', 'id')->where(fn ($query) => $query->where('user_id', $ownerId)),
+            ],
+            'registo.especialidade' => [
+                'required',
+                'integer',
+                Rule::exists('especialidades', 'id')->where(fn ($query) => $query->where('user_id', $ownerId)),
+            ],
             'registo.data_cirurgia' => 'required|date',
             'registo.tipo_de_cirurgia_id' => 'required|exists:tipo_de_cirurgias,id',
             'registo.ambulatorio' => 'required|boolean',
-            'registo.tipo_de_abordagem_id' => ['required', 'exists:tipo_de_abordagems,id'],
+            'registo.tipo_de_abordagem_id' => ['required', 'exists:tipo_de_abordagens,id'],
             'registo.observacoes' => 'nullable|string|max:2000',
 
             // Diagnosticos and procedimentos

@@ -22,8 +22,8 @@ import { ArrowLeft, Save } from 'lucide-react';
 
 interface UserEditProps {
     user: User;
-    hospitals: { nome: string }[];
-    especialidades: { nome: string }[];
+    hospitals: { id: number; nome: string }[];
+    especialidades: { id: number; nome: string }[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -38,8 +38,8 @@ export default function UserEdit({ user, hospitals, especialidades }: UserEditPr
         email: user.email,
         password: '',
         password_confirmation: '',
-        hospital_de_origem: user.hospital_de_origem || '',
-        especialidade: user.especialidade || '',
+        hospital_id: user.hospital_id?.toString() || '',
+        especialidade_id: user.especialidade_id?.toString() || '',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -128,44 +128,44 @@ export default function UserEdit({ user, hospitals, especialidades }: UserEditPr
                             <div className="space-y-2">
                                 <Label htmlFor="hospital_de_origem">Hospital de Origem</Label>
                                 <Select 
-                                    value={data.hospital_de_origem} 
-                                    onValueChange={(value) => setData('hospital_de_origem', value)}
+                                    value={data.hospital_id} 
+                                    onValueChange={(value) => setData('hospital_id', value)}
                                 >
-                                    <SelectTrigger id="hospital_de_origem" className={errors.hospital_de_origem ? 'border-destructive' : ''}>
+                                    <SelectTrigger id="hospital_de_origem" className={errors.hospital_id ? 'border-destructive' : ''}>
                                         <SelectValue placeholder="Selecione um hospital" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {hospitals.map((hospital) => (
-                                            <SelectItem key={hospital.nome} value={hospital.nome}>
+                                            <SelectItem key={hospital.id} value={hospital.id.toString()}>
                                                 {hospital.nome}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                {errors.hospital_de_origem && (
-                                    <p className="text-sm text-destructive">{errors.hospital_de_origem}</p>
+                                {errors.hospital_id && (
+                                    <p className="text-sm text-destructive">{errors.hospital_id}</p>
                                 )}
                             </div>
 
                             <div className="space-y-2">
                                 <Label htmlFor="especialidade">Especialidade</Label>
                                 <Select 
-                                    value={data.especialidade} 
-                                    onValueChange={(value) => setData('especialidade', value)}
+                                    value={data.especialidade_id} 
+                                    onValueChange={(value) => setData('especialidade_id', value)}
                                 >
-                                    <SelectTrigger id="especialidade" className={errors.especialidade ? 'border-destructive' : ''}>
+                                    <SelectTrigger id="especialidade" className={errors.especialidade_id ? 'border-destructive' : ''}>
                                         <SelectValue placeholder="Selecione uma especialidade" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {especialidades.map((especialidade) => (
-                                            <SelectItem key={especialidade.nome} value={especialidade.nome}>
+                                            <SelectItem key={especialidade.id} value={especialidade.id.toString()}>
                                                 {especialidade.nome}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                {errors.especialidade && (
-                                    <p className="text-sm text-destructive">{errors.especialidade}</p>
+                                {errors.especialidade_id && (
+                                    <p className="text-sm text-destructive">{errors.especialidade_id}</p>
                                 )}
                             </div>
                         </CardContent>

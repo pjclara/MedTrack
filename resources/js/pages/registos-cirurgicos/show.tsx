@@ -40,6 +40,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function RegistoCirurgicoShow({ registo }: RegistoCirurgicoShowProps) {
+    const hospitalNome = typeof registo.hospital === 'string' ? registo.hospital : registo.hospital?.nome;
+    const especialidadeNome = typeof registo.especialidade === 'string' ? registo.especialidade : registo.especialidade?.nome;
+
     const formatDate = (date: string) => {
         return new Date(date).toLocaleDateString('pt-PT', {
             day: '2-digit',
@@ -164,17 +167,17 @@ export default function RegistoCirurgicoShow({ registo }: RegistoCirurgicoShowPr
                                 <p className="text-lg">{formatDate(registo.data_cirurgia)}</p>
                             </div>
 
-                            {registo.hospital && (
+                            {hospitalNome && (
                                 <div>
                                     <p className="text-sm font-medium text-muted-foreground">Hospital</p>
-                                    <p className="text-lg">{registo.hospital}</p>
+                                    <p className="text-lg">{hospitalNome}</p>
                                 </div>
                             )}
 
-                            {registo.especialidade && (
+                            {especialidadeNome && (
                                 <div>
                                     <p className="text-sm font-medium text-muted-foreground">Especialidade</p>
-                                    <p className="text-lg">{registo.especialidade}</p>
+                                    <p className="text-lg">{especialidadeNome}</p>
                                 </div>
                             )}
                         </CardContent>

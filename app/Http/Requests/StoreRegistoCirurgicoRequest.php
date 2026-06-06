@@ -24,6 +24,8 @@ class StoreRegistoCirurgicoRequest extends FormRequest
      */
     public function rules(): array
     {
+        $ownerId = auth()->id();
+
         return [
             'utente.id' => ['nullable', 'exists:utentes,id'],
             'utente.nome' => 'nullable|string|max:255',
@@ -35,13 +37,21 @@ class StoreRegistoCirurgicoRequest extends FormRequest
             'utente.idade' => 'required|integer',
             'utente.sexo' => ['required', Rule::enum(SexoEnum::class)],
 
-            'registo.hospital' => 'required|string|max:255',
-            'registo.especialidade' => 'required|string|max:255',
+            'registo.hospital' => [
+                'required',
+                'integer',
+                Rule::exists('hospitals', 'id')->where(fn ($query) => $query->where('user_id', $ownerId)),
+            ],
+            'registo.especialidade' => [
+                'required',
+                'integer',
+                Rule::exists('especialidades', 'id')->where(fn ($query) => $query->where('user_id', $ownerId)),
+            ],
             'registo.data_cirurgia' => 'required|date',
             'registo.tipo_de_cirurgia_id' => 'required|exists:tipo_de_cirurgias,id',
             'registo.ambulatorio' => 'required|boolean',
             'registo.observacoes' => 'nullable|string|max:2000',
-            'registo.tipo_de_abordagem_id' => ['nullable', 'exists:tipo_de_abordagems,id'],
+            'registo.tipo_de_abordagem_id' => ['nullable', 'exists:tipo_de_abordagens,id'],
 
             'diagnosticos' => 'required|array|min:1',
             'diagnosticos.*.diagnostico_id' => 'required|exists:diagnosticos,id',

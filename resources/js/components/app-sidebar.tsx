@@ -71,6 +71,7 @@ const adminNavItems: NavItem[] = [
         href: '/procedimentos',
         icon: Activity,
     },
+    /*
     {
         title: 'Tipos de Cirurgia',
         href: '/tipos-de-cirurgia',
@@ -86,6 +87,7 @@ const adminNavItems: NavItem[] = [
         href: '/funcoes-cirurgiao',
         icon: UserCheck,
     },
+    */
 ];
 
 const footerNavItems: NavItem[] = [];
