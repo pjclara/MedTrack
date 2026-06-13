@@ -12,6 +12,7 @@ enum TipoAtividadeEnum: string
     case WORKSHOP = 'Workshop';
     case CONFERENCIA = 'Conferência';
     case CAPITULO_LIVRO = 'Capítulo de Livro';
+    case VIDEO = 'Vídeo';
 
     /**
      * Obtém todos os valores do enum
