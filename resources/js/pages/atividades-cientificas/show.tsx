@@ -110,7 +110,7 @@ export default function ShowAtividade({ atividade }: ShowAtividadeProps) {
                                             <Calendar className="h-4 w-4" />
                                             Data
                                         </div>
-                                        <p className="text-sm font-medium">{atividade.data_formatada}</p>
+                                        <p className="text-sm font-medium">{atividade.data}</p>
                                     </div>
 
                                     {atividade.localizacao && (

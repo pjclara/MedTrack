@@ -22,5 +22,4 @@ export interface AtividadeCientifica {
     observacoes?: string;
     created_at: string;
     updated_at: string;
-    data_formatada: string;
 }

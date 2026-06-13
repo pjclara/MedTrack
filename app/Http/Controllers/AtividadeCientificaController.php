@@ -76,7 +76,25 @@ class AtividadeCientificaController extends Controller
         $this->authorize('view', $atividade);
 
         return Inertia::render('atividades-cientificas/show', [
-            'atividade' => $atividade,
+            'atividade' => [
+                'id' => $atividade->id,
+                'titulo' => $atividade->titulo,
+                'descricao' => $atividade->descricao,
+                'tipo' => $atividade->tipo,
+                'data' => $atividade->data?->format('Y-m-d'),
+                'revista_conferencia' => $atividade->revista_conferencia,
+                'localizacao' => $atividade->localizacao,
+                'categoria' => $atividade->categoria,
+                'autores' => $atividade->autores,
+                'autor_principal' => $atividade->autor_principal,
+                'posicao_autor' => $atividade->posicao_autor,
+                'doi' => $atividade->doi,
+                'isbn' => $atividade->isbn,
+                'link' => $atividade->link,
+                'fator_impacto' => $atividade->fator_impacto,
+                'tem_ficheiro' => $atividade->temFicheiro(),
+                'observacoes' => $atividade->observacoes,
+            ]
         ]);
     }
 
@@ -88,7 +106,25 @@ class AtividadeCientificaController extends Controller
         $this->authorize('update', $atividade);
 
         return Inertia::render('atividades-cientificas/edit', [
-            'atividade' => $atividade,
+            'atividade' => [
+                'id' => $atividade->id,
+                'titulo' => $atividade->titulo,
+                'descricao' => $atividade->descricao,
+                'tipo' => $atividade->tipo,
+                'data' => $atividade->data?->format('Y-m-d'),
+                'revista_conferencia' => $atividade->revista_conferencia,
+                'localizacao' => $atividade->localizacao,
+                'categoria' => $atividade->categoria,
+                'autores' => $atividade->autores,
+                'autor_principal' => $atividade->autor_principal,
+                'posicao_autor' => $atividade->posicao_autor,
+                'doi' => $atividade->doi,
+                'isbn' => $atividade->isbn,
+                'link' => $atividade->link,
+                'fator_impacto' => $atividade->fator_impacto,
+                'tem_ficheiro' => $atividade->temFicheiro(),
+                'observacoes' => $atividade->observacoes,
+            ],
             'tipos' => config('medfolio.tipo_atividade_options'),
             'categorias' => config('medfolio.categoria_atividade_options'),
         ]);
