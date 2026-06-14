@@ -25,8 +25,9 @@ class Diagnostico extends Model
      */
     public function zonaAnatomica()
     {
-        return $this->belongsTo(ZonaAnatomica::class, 'zona_anatomica', 'nome')->orderBy('ordem');
+        return $this->belongsTo(ZonaAnatomica::class, 'zona_anatomica', 'nome');
     }
+
 
 
     /**

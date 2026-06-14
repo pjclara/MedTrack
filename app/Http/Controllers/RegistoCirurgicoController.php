@@ -432,6 +432,7 @@ class RegistoCirurgicoController extends Controller
                     ->join('zona_anatomicas', 'zona_anatomicas.nome', '=', 'diagnosticos.zona_anatomica')
                     ->whereColumn('cirurgias.registo_cirurgico_id', 'registo_cirurgicos.id')
                     ->select('zona_anatomicas.ordem')
+                    ->orderBy('zona_anatomicas.ordem', 'asc')
                     ->limit(1);
             }, 'zona_ordem')
             ->with([
@@ -509,7 +510,7 @@ class RegistoCirurgicoController extends Controller
                         'urgente_ajud' => 0,
                         'formativa_electivo' => 0,
                         'formativa_urgente' => 0,
-                        'ordem_zona' => $c->diagnostico->zonaAnatomica->ordem ?? 999,
+                        'ordem_zona' => $diagnostico->zonaAnatomica->ordem ?? 999,
                     ];
                 }
 

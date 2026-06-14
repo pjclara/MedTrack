@@ -16,7 +16,7 @@ class ZonaAnatomicaController extends Controller
      */
     public function index()
     {
-        $zonaAnatomicas = ZonaAnatomica::orderBy('nome')
+        $zonaAnatomicas = ZonaAnatomica::orderBy('ordem', 'asc')
             ->paginate(15);
         return Inertia::render('zona-anatomicas/index', [
             'zonaAnatomicas' => $zonaAnatomicas
@@ -105,7 +105,7 @@ class ZonaAnatomicaController extends Controller
     public function reorder(Request $request)
     {
         foreach ($request->ordem as $item) {
-            ZonaAnatomica::where('id', $item['id'])
+            ZonaAnatomica::findOrFail($item['id'])
                 ->update(['ordem' => $item['ordem']]);
         }
 

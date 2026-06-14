@@ -10,6 +10,9 @@ class ZonaAnatomica extends Model
 {
     use HasFactory, BelongsToUser;
 
+    // with timestamps = false, the model won't automatically manage created_at and updated_at fields
+    public $timestamps = false;
+
     protected $table = 'zona_anatomicas';
 
     protected $fillable = [
