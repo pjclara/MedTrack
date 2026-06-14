@@ -104,4 +104,7 @@ class RegistoCirurgico extends Model
     {
         return $query->where('tipo_de_cirurgia_id', $tipoId);
     }
+
+
+
 }

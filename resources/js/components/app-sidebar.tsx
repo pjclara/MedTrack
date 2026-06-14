@@ -29,6 +29,11 @@ const mainNavItems: NavItem[] = [
         icon: FileText,
     },
     {
+        title: 'Cirurgias por Área',
+        href: '/registos-cirurgicos/cirurgias-por-area',
+        icon: Scissors,
+    },
+    {
         title: 'Atividade Científica',
         href: '/atividades-cientificas',
         icon: GraduationCap,

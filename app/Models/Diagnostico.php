@@ -25,9 +25,9 @@ class Diagnostico extends Model
      */
     public function zonaAnatomica()
     {
-        return $this->belongsTo(ZonaAnatomica::class, 'zona_anatomica', 'nome')
-            ->where('user_id', $this->user_id);
+        return $this->belongsTo(ZonaAnatomica::class, 'zona_anatomica', 'nome');
     }
+
 
     /**
      * Relação com cirurgias

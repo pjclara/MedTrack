@@ -49,17 +49,17 @@ class RegistoCirurgicoController extends Controller
         }
 
         $query = RegistoCirurgico::with([
-                'utente:id,nome,processo',
-                'tipoDeCirurgia:id,nome',
-                'tipoDeAbordagem:id,nome',
+            'utente:id,nome,processo',
+            'tipoDeCirurgia:id,nome',
+            'tipoDeAbordagem:id,nome',
             'hospital:id,nome,user_id',
             'especialidade:id,nome,user_id',
-                'user:id,name,email',
-                'cirurgias',
-                'cirurgias.procedimento:id,nome',
-                'cirurgias.funcaoCirurgiao:id,nome',
-                'cirurgias.diagnostico:id,nome',
-            ])
+            'user:id,name,email',
+            'cirurgias',
+            'cirurgias.procedimento:id,nome',
+            'cirurgias.funcaoCirurgiao:id,nome',
+            'cirurgias.diagnostico:id,nome',
+        ])
             ->withCount('cirurgias')
             ->orderBy('data_cirurgia', 'desc');
 
@@ -68,14 +68,14 @@ class RegistoCirurgicoController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->whereHas('utente', function ($q2) use ($search) {
                     $q2->where('nome', 'like', "%{$search}%")
-                       ->orWhere('processo', 'like', "%{$search}%");
+                        ->orWhere('processo', 'like', "%{$search}%");
                 })
-                ->orWhereHas('hospital', function ($q2) use ($search) {
-                    $q2->where('nome', 'like', "%{$search}%");
-                })
-                ->orWhereHas('especialidade', function ($q2) use ($search) {
-                    $q2->where('nome', 'like', "%{$search}%");
-                });
+                    ->orWhereHas('hospital', function ($q2) use ($search) {
+                        $q2->where('nome', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('especialidade', function ($q2) use ($search) {
+                        $q2->where('nome', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -133,7 +133,7 @@ class RegistoCirurgicoController extends Controller
             $original = RegistoCirurgico::findOrFail($request->duplicate_from);
             $this->authorize('view', $original);
             $duplicateData = $this->transformForWizard($original);
-            
+
             // Clear utente and date for duplication
             $duplicateData['utente'] = [
                 'nome' => '',
@@ -221,7 +221,6 @@ class RegistoCirurgicoController extends Controller
 
         return redirect()->route('registos-cirurgicos.index')
             ->with('success', 'Registo cirúrgico criado com sucesso.');
-
     }
 
     /**
@@ -412,5 +411,115 @@ class RegistoCirurgicoController extends Controller
         $this->authorize('viewAny', RegistoCirurgico::class);
 
         return Excel::download(new RegistosCirurgicosExport(auth()->id()), 'registos-cirurgicos-' . now()->format('Y-m-d') . '.xlsx');
+    }
+
+
+
+    /**
+     * criar uma pagina com uma tabela com os registos cirurgicos
+     * 
+     */
+
+    public function cirurgiasPorArea()
+    {
+        $this->authorize('viewAny', RegistoCirurgico::class);
+
+        $registos = RegistoCirurgico::with([
+            'cirurgias',
+            'cirurgias.diagnostico.zonaAnatomica:id,nome',
+            'cirurgias.diagnostico:id,nome,tipo,zona_anatomica',
+            'cirurgias.procedimento:id,nome',
+            'cirurgias.funcaoCirurgiao:id,nome',
+            'tipoDeCirurgia:id,nome',
+        ])
+            ->orderBy('data_cirurgia', 'desc')
+            ->get();
+
+        // remover pequena cirurgia
+        $registos = $registos->filter(fn($r) => $r->tipoDeCirurgia?->nome !== 'Pequena Cirurgia');
+
+        $resultado = [];
+
+        foreach ($registos as $reg) {
+
+            foreach ($reg->cirurgias as $c) {
+
+                // ZONA ANATÓMICA (via nome)
+                $zona = $c->diagnostico->zonaAnatomica->nome
+                    ?? $c->diagnostico->zona_anatomica
+                    ?? 'Sem área definida';
+
+                // TIPO DA PATOLOGIA (Benigno / Maligno)
+                $tipoPatologia = $c->diagnostico->tipo ?? 'Benigno';
+
+                // PATOLOGIA
+                $patologia = $c->diagnostico->nome ?? 'Sem diagnóstico';
+
+                // PROCEDIMENTO
+                $procedimento = $c->procedimento->nome ?? 'Sem procedimento';
+
+                // TIPO DE CIRURGIA (Electivo / Urgente)
+                $tipoCir = strtolower($reg->tipoDeCirurgia->nome) === 'cirurgia de urgência'
+                    ? 'Urgente'
+                    : 'Electivo';
+
+                // FUNÇÃO (Cir / Ajud)
+                $nomeFuncao = strtolower($c->funcaoCirurgiao->nome);
+
+                if ($nomeFuncao === 'principal') {
+                    $funcao = 'cir';
+                    $isFormativa = false;
+                } else {
+                    $funcao = 'ajud';
+                    $isFormativa = str_contains($nomeFuncao, 'formativa');
+                }
+
+
+                // Inicializar zona
+                if (!isset($resultado[$zona])) {
+                    $resultado[$zona] = [];
+                }
+
+                // Inicializar tipo benigno/maligno
+                if (!isset($resultado[$zona][$tipoPatologia])) {
+                    $resultado[$zona][$tipoPatologia] = [];
+                }
+
+                // Chave única patologia + procedimento
+                $key = $patologia . '|' . $procedimento;
+
+                if (!isset($resultado[$zona][$tipoPatologia][$key])) {
+                    $resultado[$zona][$tipoPatologia][$key] = [
+                        'patologia' => $patologia,
+                        'procedimento' => $procedimento,
+                        'electivo_cir' => 0,
+                        'electivo_ajud' => 0,
+                        'urgente_cir' => 0,
+                        'urgente_ajud' => 0,
+                        'formativa_electivo' => 0,
+                        'formativa_urgente' => 0,
+                    ];
+                }
+
+                // Incrementar contagem
+                if ($tipoCir === 'Electivo') {
+                    $resultado[$zona][$tipoPatologia][$key]["electivo_{$funcao}"]++;
+
+                    if ($isFormativa) {
+                        $resultado[$zona][$tipoPatologia][$key]["formativa_electivo"]++;
+                    }
+                } else {
+                    $resultado[$zona][$tipoPatologia][$key]["urgente_{$funcao}"]++;
+
+                    if ($isFormativa) {
+                        $resultado[$zona][$tipoPatologia][$key]["formativa_urgente"]++;
+                    }
+                }
+            }
+        }
+
+        return Inertia::render('registos-cirurgicos/cirurgiasPorArea', [
+            'areas' => $resultado
+        ]);
     }
 }

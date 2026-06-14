@@ -174,6 +174,10 @@ Route::middleware(['auth', 'active', 'verified'])->group(function () {
     Route::get('registos-cirurgicos/export', [RegistoCirurgicoController::class, 'export'])
         ->name('registos-cirurgicos.export');
 
+    //cirurgiasPorArea
+    Route::get('registos-cirurgicos/cirurgias-por-area', [RegistoCirurgicoController::class, 'cirurgiasPorArea'])
+        ->name('registos-cirurgicos.cirurgias-por-area');
+
     Route::resource('registos-cirurgicos', RegistoCirurgicoController::class)
         ->parameters(['registos-cirurgicos' => 'registo']);
 

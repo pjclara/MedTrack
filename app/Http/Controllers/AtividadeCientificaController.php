@@ -212,4 +212,6 @@ class AtividadeCientificaController extends Controller
 
         return Excel::download(new AtividadesCientificasExport(auth()->id()), 'atividades-cientificas-' . now()->format('Y-m-d') . '.xlsx');
     }
+
+
 }

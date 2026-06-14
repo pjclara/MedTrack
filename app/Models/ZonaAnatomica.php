@@ -17,4 +17,11 @@ class ZonaAnatomica extends Model
         'descricao',
         'user_id',
     ];
+
+
+    public function diagnosticos()
+    {
+        return $this->hasMany(Diagnostico::class, 'zona_anatomica', 'nome')
+            ->where('user_id', $this->user_id);
+    }
 }
