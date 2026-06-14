@@ -12,7 +12,7 @@ class Diagnostico extends Model
 
     protected $fillable = [
         'nome',
-        'zona_anatomica',
+        'zona_anatomica_id',
         'tipo',
         'descricao',
         'user_id',
@@ -21,11 +21,11 @@ class Diagnostico extends Model
     protected $guarded = ['id'];
 
     /**
-     * Relação com a zona anatómica (por nome)
+     * Relação com a zona anatómica
      */
     public function zonaAnatomica()
     {
-        return $this->belongsTo(ZonaAnatomica::class, 'zona_anatomica', 'nome');
+        return $this->belongsTo(ZonaAnatomica::class, 'zona_anatomica_id');
     }
 
 

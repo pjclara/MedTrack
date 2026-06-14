@@ -8,6 +8,7 @@ use App\Models\Cirurgia;
 use App\Enums\TipoDiagnosticoEnum;
 use App\Http\Requests\StoreDiagnosticoRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
@@ -20,10 +21,13 @@ class DiagnosticoController extends Controller
     {
         $search = $request->input('search');
 
-        $diagnosticos = Diagnostico::addSelect([
-                'registos_cirurgicos_count' => Cirurgia::selectRaw('COUNT(DISTINCT registo_cirurgico_id)')
-                    ->whereColumn('diagnostico_id', 'diagnosticos.id'),
+        $diagnosticos = Diagnostico::query()
+            ->addSelect([
+                'registos_cirurgicos_count' => Cirurgia::query()
+                    ->selectRaw('COUNT(DISTINCT registo_cirurgico_id)')
+                    ->whereColumn('diagnostico_id', '=', 'diagnosticos.id'),
             ])
+            ->with('zonaAnatomica:id,nome')
             ->when($search, function ($query, $search) {
                 $query->where('nome', 'like', "%{$search}%");
             })
@@ -45,7 +49,10 @@ class DiagnosticoController extends Controller
         Gate::authorize('create', Diagnostico::class);
         return Inertia::render('diagnosticos/create', [
             'tipos' => TipoDiagnosticoEnum::values(),
-            'zonaAnatomicas' => ZonaAnatomica::orderBy('nome')->get(),
+            'zonaAnatomicas' => ZonaAnatomica::query()
+                ->where('user_id', '=', Auth::id())
+                ->orderBy('nome', 'asc')
+                ->get(),
         ]);
     }
 
@@ -56,7 +63,7 @@ class DiagnosticoController extends Controller
     {
         Gate::authorize('create', Diagnostico::class);
         $validated = $request->validated();
-        $validated['user_id'] = auth()->id();
+        $validated['user_id'] = Auth::id();
 
         $diagnostico = Diagnostico::create($validated);
 
@@ -77,7 +84,7 @@ class DiagnosticoController extends Controller
     public function show(Diagnostico $diagnostico)
     {
         Gate::authorize('view', $diagnostico);
-        $diagnostico->load('cirurgias');
+        $diagnostico->load(['cirurgias', 'zonaAnatomica:id,nome']);
         return Inertia::render('diagnosticos/show', [
             'diagnostico' => $diagnostico
         ]);
@@ -89,10 +96,15 @@ class DiagnosticoController extends Controller
     public function edit(Diagnostico $diagnostico)
     {
         Gate::authorize('update', $diagnostico);
+        $diagnostico->load('zonaAnatomica:id,nome');
+
         return Inertia::render('diagnosticos/edit', [
             'diagnostico' => $diagnostico,
             'tipos' => TipoDiagnosticoEnum::values(),
-            'zonaAnatomicas' => ZonaAnatomica::where('user_id', auth()->id())->orderBy('nome')->get(),
+            'zonaAnatomicas' => ZonaAnatomica::query()
+                ->where('user_id', '=', Auth::id())
+                ->orderBy('nome', 'asc')
+                ->get(),
         ]);
     }
 

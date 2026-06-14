@@ -429,22 +429,16 @@ class RegistoCirurgicoController extends Controller
             ->selectSub(function ($q) {
                 $q->from('cirurgias')
                     ->join('diagnosticos', 'diagnosticos.id', '=', 'cirurgias.diagnostico_id')
-                    ->join('zona_anatomicas', 'zona_anatomicas.nome', '=', 'diagnosticos.zona_anatomica')
+                    ->join('zona_anatomicas', 'zona_anatomicas.id', '=', 'diagnosticos.zona_anatomica_id')
                     ->whereColumn('cirurgias.registo_cirurgico_id', 'registo_cirurgicos.id')
                     ->select('zona_anatomicas.ordem')
                     ->orderBy('zona_anatomicas.ordem', 'asc')
                     ->limit(1);
             }, 'zona_ordem')
-            ->with([
-                'cirurgias',
-                'cirurgias.diagnostico.zonaAnatomica:id,nome,ordem',
-                'cirurgias.diagnostico:id,nome,tipo,zona_anatomica',
-                'cirurgias.procedimento:id,nome',
-                'cirurgias.funcaoCirurgiao:id,nome',
-                'tipoDeCirurgia:id,nome',
-            ])
-            ->orderBy('zona_ordem', 'asc')
+            ->where('registo_cirurgicos.user_id', auth()->id())
+            ->orderBy('zona_ordem')
             ->get();
+
 
 
         // remover pequena cirurgia
@@ -458,7 +452,6 @@ class RegistoCirurgicoController extends Controller
 
                 // ZONA ANATÓMICA (via nome)
                 $zona = $c->diagnostico->zonaAnatomica->nome
-                    ?? $c->diagnostico->zona_anatomica
                     ?? 'Sem área definida';
 
                 // TIPO DA PATOLOGIA (Benigno / Maligno)
@@ -510,7 +503,7 @@ class RegistoCirurgicoController extends Controller
                         'urgente_ajud' => 0,
                         'formativa_electivo' => 0,
                         'formativa_urgente' => 0,
-                        'ordem_zona' => $diagnostico->zonaAnatomica->ordem ?? 999,
+                        'ordem_zona' => $c->diagnostico->zonaAnatomica->ordem ?? 999,
                     ];
                 }
 

@@ -131,7 +131,7 @@ export default function DiagnosticoIndex({ diagnosticos, filters }: DiagnosticoI
                                                     {diagnostico.nome}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {diagnostico.zona_anatomica || 'N/A'}
+                                                    {diagnostico.zona_anatomica?.nome || 'N/A'}
                                                 </TableCell>
                                                 <TableCell>
                                                     {diagnostico.tipo ? (

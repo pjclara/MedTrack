@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Diagnostico;
+use App\Models\ZonaAnatomica;
 
 class DiagnosticoSeeder extends Seeder
 {
@@ -17,42 +18,52 @@ class DiagnosticoSeeder extends Seeder
         foreach ($users as $user) {
             $diagnosticos = [
                 // Abdomen
-                ['nome' => 'Apendicite Aguda', 'zona_anatomica' => 'Abdomen', 'descricao' => 'Inflamação aguda do apêndice', 'user_id' => $user->id],
-                ['nome' => 'Colecistite', 'zona_anatomica' => 'Abdomen', 'descricao' => 'Inflamação da vesícula biliar', 'user_id' => $user->id],
-                ['nome' => 'Peritonite', 'zona_anatomica' => 'Abdomen', 'descricao' => 'Inflamação do peritônio', 'user_id' => $user->id],
-                ['nome' => 'Mioma Uterino', 'zona_anatomica' => 'Abdomen', 'descricao' => 'Tumor benigno do útero', 'user_id' => $user->id],
-                ['nome' => 'Endometriose', 'zona_anatomica' => 'Abdomen', 'descricao' => 'Presença de endométrio fora do útero', 'user_id' => $user->id],
+                ['nome' => 'Apendicite Aguda', 'zona_anatomica_nome' => 'Abdomen', 'descricao' => 'Inflamação aguda do apêndice', 'user_id' => $user->id],
+                ['nome' => 'Colecistite', 'zona_anatomica_nome' => 'Abdomen', 'descricao' => 'Inflamação da vesícula biliar', 'user_id' => $user->id],
+                ['nome' => 'Peritonite', 'zona_anatomica_nome' => 'Abdomen', 'descricao' => 'Inflamação do peritônio', 'user_id' => $user->id],
+                ['nome' => 'Mioma Uterino', 'zona_anatomica_nome' => 'Abdomen', 'descricao' => 'Tumor benigno do útero', 'user_id' => $user->id],
+                ['nome' => 'Endometriose', 'zona_anatomica_nome' => 'Abdomen', 'descricao' => 'Presença de endométrio fora do útero', 'user_id' => $user->id],
                 
                 // Inguinal/Pélvica
-                ['nome' => 'Hérnia Inguinal', 'zona_anatomica' => 'Pélvica', 'descricao' => 'Protrusão de conteúdo abdominal pela região inguinal', 'user_id' => $user->id],
-                ['nome' => 'Hérnia Umbilical', 'zona_anatomica' => 'Abdomen', 'descricao' => 'Protrusão pela região umbilical', 'user_id' => $user->id],
-                ['nome' => 'Litíase Renal', 'zona_anatomica' => 'Pélvica', 'descricao' => 'Cálculos renais', 'user_id' => $user->id],
-                ['nome' => 'Hiperplasia Benigna da Próstata', 'zona_anatomica' => 'Pélvica', 'descricao' => 'Aumento benigno do volume prostático', 'user_id' => $user->id],
+                ['nome' => 'Hérnia Inguinal', 'zona_anatomica_nome' => 'Pélvica', 'descricao' => 'Protrusão de conteúdo abdominal pela região inguinal', 'user_id' => $user->id],
+                ['nome' => 'Hérnia Umbilical', 'zona_anatomica_nome' => 'Abdomen', 'descricao' => 'Protrusão pela região umbilical', 'user_id' => $user->id],
+                ['nome' => 'Litíase Renal', 'zona_anatomica_nome' => 'Pélvica', 'descricao' => 'Cálculos renais', 'user_id' => $user->id],
+                ['nome' => 'Hiperplasia Benigna da Próstata', 'zona_anatomica_nome' => 'Pélvica', 'descricao' => 'Aumento benigno do volume prostático', 'user_id' => $user->id],
 
                 // Tórax
-                ['nome' => 'Doença Arterial Coronária', 'zona_anatomica' => 'Tórax', 'descricao' => 'Obstrução das artérias coronárias', 'user_id' => $user->id],
-                ['nome' => 'Aneurisma da Aorta', 'zona_anatomica' => 'Tórax', 'descricao' => 'Dilatação anormal da aorta', 'user_id' => $user->id],
-                ['nome' => 'Valvulopatia', 'zona_anatomica' => 'Tórax', 'descricao' => 'Doença das válvulas cardíacas', 'user_id' => $user->id],
+                ['nome' => 'Doença Arterial Coronária', 'zona_anatomica_nome' => 'Tórax', 'descricao' => 'Obstrução das artérias coronárias', 'user_id' => $user->id],
+                ['nome' => 'Aneurisma da Aorta', 'zona_anatomica_nome' => 'Tórax', 'descricao' => 'Dilatação anormal da aorta', 'user_id' => $user->id],
+                ['nome' => 'Valvulopatia', 'zona_anatomica_nome' => 'Tórax', 'descricao' => 'Doença das válvulas cardíacas', 'user_id' => $user->id],
                 
                 // Membros
-                ['nome' => 'Varizes', 'zona_anatomica' => 'Membros Inferiores', 'descricao' => 'Veias dilatadas e tortuosas', 'user_id' => $user->id],
-                ['nome' => 'Insuficiência Venosa Crónica', 'zona_anatomica' => 'Membros Inferiores', 'descricao' => 'Má circulação venosa dos membros', 'user_id' => $user->id],
-                ['nome' => 'Fratura do Fémur', 'zona_anatomica' => 'Membros Inferiores', 'descricao' => 'Fratura do osso do fémur', 'user_id' => $user->id],
-                ['nome' => 'Gonartrose', 'zona_anatomica' => 'Membros Inferiores', 'descricao' => 'Artrose do joelho', 'user_id' => $user->id],
-                ['nome' => 'Coxartrose', 'zona_anatomica' => 'Membros Inferiores', 'descricao' => 'Artrose da anca', 'user_id' => $user->id],
+                ['nome' => 'Varizes', 'zona_anatomica_nome' => 'Membros Inferiores', 'descricao' => 'Veias dilatadas e tortuosas', 'user_id' => $user->id],
+                ['nome' => 'Insuficiência Venosa Crónica', 'zona_anatomica_nome' => 'Membros Inferiores', 'descricao' => 'Má circulação venosa dos membros', 'user_id' => $user->id],
+                ['nome' => 'Fratura do Fémur', 'zona_anatomica_nome' => 'Membros Inferiores', 'descricao' => 'Fratura do osso do fémur', 'user_id' => $user->id],
+                ['nome' => 'Gonartrose', 'zona_anatomica_nome' => 'Membros Inferiores', 'descricao' => 'Artrose do joelho', 'user_id' => $user->id],
+                ['nome' => 'Coxartrose', 'zona_anatomica_nome' => 'Membros Inferiores', 'descricao' => 'Artrose da anca', 'user_id' => $user->id],
                 
                 // Cabeça e Pescoço
-                ['nome' => 'Hérnia Discal', 'zona_anatomica' => 'Coluna', 'descricao' => 'Protrusão do disco intervertebral', 'user_id' => $user->id],
-                ['nome' => 'Tumor Cerebral', 'zona_anatomica' => 'Cabeça', 'descricao' => 'Neoplasia do sistema nervoso central', 'user_id' => $user->id],
-                ['nome' => 'Catarata', 'zona_anatomica' => 'Cabeça', 'descricao' => 'Opacificação do cristalino', 'user_id' => $user->id],
-                ['nome' => 'Amigdalite Crónica', 'zona_anatomica' => 'Cabeça', 'descricao' => 'Inflamação crónica das amígdalas', 'user_id' => $user->id],
+                ['nome' => 'Hérnia Discal', 'zona_anatomica_nome' => 'Coluna', 'descricao' => 'Protrusão do disco intervertebral', 'user_id' => $user->id],
+                ['nome' => 'Tumor Cerebral', 'zona_anatomica_nome' => 'Cabeça', 'descricao' => 'Neoplasia do sistema nervoso central', 'user_id' => $user->id],
+                ['nome' => 'Catarata', 'zona_anatomica_nome' => 'Cabeça', 'descricao' => 'Opacificação do cristalino', 'user_id' => $user->id],
+                ['nome' => 'Amigdalite Crónica', 'zona_anatomica_nome' => 'Cabeça', 'descricao' => 'Inflamação crónica das amígdalas', 'user_id' => $user->id],
             ];
 
             foreach ($diagnosticos as $diagnostico) {
+                $zonaAnatomica = ZonaAnatomica::firstOrCreate(
+                    [
+                        'nome' => $diagnostico['zona_anatomica_nome'],
+                        'user_id' => $user->id,
+                    ],
+                    [
+                        'descricao' => $diagnostico['zona_anatomica_nome'],
+                    ],
+                );
+
                 Diagnostico::firstOrCreate(
                     ['nome' => $diagnostico['nome'], 'user_id' => $diagnostico['user_id']],
                     [
-                        'zona_anatomica' => $diagnostico['zona_anatomica'],
+                        'zona_anatomica_id' => $zonaAnatomica->id,
                         'descricao' => $diagnostico['descricao']
                     ]
                 );

@@ -70,11 +70,13 @@ export interface Cirurgia {
 export interface Diagnostico {
     id: number;
     nome: string;
-    zona_anatomica: string;
+    zona_anatomica_id: number | null;
+    zona_anatomica?: ZonaAnatomica | null;
     tipo?: string;
     descricao?: string;
     created_at: string;
     updated_at: string;
+    registos_cirurgicos_count?: number;
 }
 
 export interface Procedimento {

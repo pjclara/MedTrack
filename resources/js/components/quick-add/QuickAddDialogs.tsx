@@ -18,7 +18,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { useForm, usePage } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -144,8 +144,6 @@ export function QuickAddZonaAnatomica({
         descricao: '',
     });
 
-    const { flash } = usePage<any>().props;
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -242,7 +240,7 @@ export function QuickAddDiagnostico({
     const [open, setOpen] = useState(false);
     const { data, setData, post, processing, reset, errors } = useForm({
         nome: '',
-        zona_anatomica: '',
+        zona_anatomica_id: '',
         tipo: '',
         descricao: '',
     });
@@ -251,7 +249,7 @@ export function QuickAddDiagnostico({
         e.preventDefault();
 
         // Validação adicional
-        if (!data.nome || !data.zona_anatomica) {
+        if (!data.nome || !data.zona_anatomica_id) {
             toast.error('Por favor preencha todos os campos obrigatórios');
             return;
         }
@@ -278,7 +276,7 @@ export function QuickAddDiagnostico({
             onError: (errors) => {
                 console.error('Erro ao criar diagnóstico:', errors);
                 const errorMessage =
-                    errors.zona_anatomica ||
+                    errors.zona_anatomica_id ||
                     errors.nome ||
                     'Erro ao criar diagnóstico';
                 toast.error(errorMessage);
@@ -329,14 +327,17 @@ export function QuickAddDiagnostico({
                                 </Label>
                                 <QuickAddZonaAnatomica
                                     onCreated={(newZona) => {
-                                        setData('zona_anatomica', newZona.nome);
+                                        setData(
+                                            'zona_anatomica_id',
+                                            String(newZona.id),
+                                        );
                                     }}
                                 />
                             </div>
                             <Select
-                                value={data.zona_anatomica}
+                                value={data.zona_anatomica_id}
                                 onValueChange={(val) =>
-                                    setData('zona_anatomica', val)
+                                    setData('zona_anatomica_id', val)
                                 }
                                 required
                             >
@@ -351,7 +352,7 @@ export function QuickAddDiagnostico({
                                                 key={
                                                     zona.id || zona.nome || zona
                                                 }
-                                                value={zona.nome || zona}
+                                                value={String(zona.id ?? zona)}
                                             >
                                                 {zona.nome || zona}
                                             </SelectItem>
@@ -363,9 +364,9 @@ export function QuickAddDiagnostico({
                                     )}
                                 </SelectContent>
                             </Select>
-                            {errors.zona_anatomica && (
+                            {errors.zona_anatomica_id && (
                                 <p className="text-xs text-destructive">
-                                    {errors.zona_anatomica}
+                                    {errors.zona_anatomica_id}
                                 </p>
                             )}
                             {(!zonaAnatomicas ||
@@ -433,7 +434,7 @@ export function QuickAddDiagnostico({
                                 disabled={
                                     processing ||
                                     !data.nome ||
-                                    !data.zona_anatomica
+                                    !data.zona_anatomica_id
                                 }
                             >
                                 {processing

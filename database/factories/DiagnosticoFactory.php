@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Diagnostico;
-use App\Models\Especialidade;
 use App\Models\User;
+use App\Models\ZonaAnatomica;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +18,7 @@ class DiagnosticoFactory extends Factory
     {
         return [
             'nome' => fake()->unique()->words(3, true),
-            'zona_anatomica' => fake()->randomElement(['Abdomen', 'Tórax', 'Pescoço', 'Membros Superiores', 'Membros Inferiores']),
+            'zona_anatomica_id' => ZonaAnatomica::factory(),
             'descricao' => fake()->sentence(),
             'user_id' => User::factory(),
         ];

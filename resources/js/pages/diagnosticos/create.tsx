@@ -12,7 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Save, Plus } from 'lucide-react';
+import { ArrowLeft, Save } from 'lucide-react';
 import { 
     Select, 
     SelectContent, 
@@ -44,7 +44,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function DiagnosticoCreate({ tipos, zonaAnatomicas }: DiagnosticoCreateProps) {
     const { data, setData, post, processing, errors } = useForm({
         nome: '',
-        zona_anatomica: '',
+        zona_anatomica_id: '',
         tipo: '',
         descricao: '',
     });
@@ -92,24 +92,24 @@ export default function DiagnosticoCreate({ tipos, zonaAnatomicas }: Diagnostico
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="zona_anatomica">Zona Anatómica</Label>
+                                <Label htmlFor="zona_anatomica_id">Zona Anatómica</Label>
                                 <Select 
-                                    value={data.zona_anatomica} 
-                                    onValueChange={(value) => setData('zona_anatomica', value)}
+                                    value={data.zona_anatomica_id} 
+                                    onValueChange={(value) => setData('zona_anatomica_id', value)}
                                 >
-                                    <SelectTrigger id="zona_anatomica" className={errors.zona_anatomica ? 'border-destructive' : ''}>
+                                    <SelectTrigger id="zona_anatomica_id" className={errors.zona_anatomica_id ? 'border-destructive' : ''}>
                                         <SelectValue placeholder="Selecione a zona anatómica" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {(zonaAnatomicas || []).map((zona) => (
-                                            <SelectItem key={zona.id} value={zona.nome}>
+                                            <SelectItem key={zona.id} value={String(zona.id)}>
                                                 {zona.nome}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                {errors.zona_anatomica && (
-                                    <p className="text-sm text-destructive">{errors.zona_anatomica}</p>
+                                {errors.zona_anatomica_id && (
+                                    <p className="text-sm text-destructive">{errors.zona_anatomica_id}</p>
                                 )}
                             </div>
 
