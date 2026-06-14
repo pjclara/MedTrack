@@ -101,6 +101,7 @@ export interface ZonaAnatomica {
     descricao?: string;
     created_at: string;
     updated_at: string;
+    ordem: number;
 }
 
 export interface TipoDeCirurgia {

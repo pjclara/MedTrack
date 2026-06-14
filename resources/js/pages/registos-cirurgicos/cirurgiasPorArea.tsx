@@ -276,107 +276,123 @@ export default function CirurgiasPorArea({ areas }: Props) {
                     Tabela de Patologias e Procedimentos por Zona Anatómica
                 </h1>
 
-                {Object.entries(areas).map(([zona, tipos]) => (
-                    <div key={zona} className="mb-12">
-                        <h2 className="mb-1 text-2xl font-semibold">{zona}</h2>
-                        <div className="mb-4 font-medium text-gray-700">
-                            Total da Zona: {totaisZona[zona].total}
-                        </div>
+                {Object.entries(areas)
+                    .sort((a, b) => {
+                        const zonaA = Object.values(a[1])[0];
+                        const zonaB = Object.values(b[1])[0];
 
-                        {Object.entries(tipos).map(([tipo, linhas]) => {
-                            const linhasArray = Object.values(linhas).sort(
-                                (a, b) =>
-                                    modo === 'diag'
-                                        ? a.patologia.localeCompare(b.patologia)
-                                        : a.procedimento.localeCompare(
-                                              b.procedimento,
-                                          ),
-                            );
+                        const ordemA =
+                            Object.values(zonaA)[0].ordem_zona ?? 999;
+                        const ordemB =
+                            Object.values(zonaB)[0].ordem_zona ?? 999;
 
-                            const totaisTipo = {
-                                electivo_cir: 0,
-                                electivo_ajud: 0,
-                                urgente_cir: 0,
-                                urgente_ajud: 0,
-                                formativa_electivo: 0,
-                                formativa_urgente: 0,
-                            };
+                        return ordemA - ordemB;
+                    })
+                    .map(([zona, tipos]) => (
+                        <div key={zona} className="mb-12">
+                            <h2 className="mb-1 text-2xl font-semibold">
+                                {zona}
+                            </h2>
+                            <div className="mb-4 font-medium text-gray-700">
+                                Total da Zona: {totaisZona[zona].total}
+                            </div>
 
-                            linhasArray.forEach((l) => {
-                                totaisTipo.electivo_cir += l.electivo_cir;
-                                totaisTipo.electivo_ajud += l.electivo_ajud;
-                                totaisTipo.urgente_cir += l.urgente_cir;
-                                totaisTipo.urgente_ajud += l.urgente_ajud;
-                                totaisTipo.formativa_electivo +=
-                                    l.formativa_electivo;
-                                totaisTipo.formativa_urgente +=
-                                    l.formativa_urgente;
-                            });
+                            {Object.entries(tipos).map(([tipo, linhas]) => {
+                                const linhasArray = Object.values(linhas).sort(
+                                    (a, b) =>
+                                        modo === 'diag'
+                                            ? a.patologia.localeCompare(
+                                                  b.patologia,
+                                              )
+                                            : a.procedimento.localeCompare(
+                                                  b.procedimento,
+                                              ),
+                                );
 
-                            return (
-                                <div key={tipo} className="mb-8 pl-4">
-                                    <h3 className="mb-1 text-xl font-semibold">
-                                        {tipo}
-                                    </h3>
-                                    <div className="mb-3 text-gray-600">
-                                        Total {tipo}:{' '}
-                                        {totaisZona[zona].tipos[tipo]}
-                                    </div>
-                                    <div className="mb-6 flex items-center gap-2 text-gray-600">
-                                        <Star
-                                            size={12}
-                                            className="text-yellow-500"
-                                        />
-                                        Ajuda Formativa (Electivo):{' '}
-                                        {Object.values(tipos).reduce(
-                                            (acc, t) =>
-                                                acc +
-                                                Object.values(t).reduce(
-                                                    (a, l) =>
-                                                        a +
-                                                        l.formativa_electivo,
-                                                    0,
-                                                ),
-                                            0,
-                                        )}
-                                    </div>
-                                    <div className="mb-6 flex items-center gap-2 text-gray-600">
-                                        <Star
-                                            size={12}
-                                            className="text-yellow-500"
-                                        />
-                                        <span>
-                                            Ajuda Formativa (Urgente):{' '}
+                                const totaisTipo = {
+                                    electivo_cir: 0,
+                                    electivo_ajud: 0,
+                                    urgente_cir: 0,
+                                    urgente_ajud: 0,
+                                    formativa_electivo: 0,
+                                    formativa_urgente: 0,
+                                };
+
+                                linhasArray.forEach((l) => {
+                                    totaisTipo.electivo_cir += l.electivo_cir;
+                                    totaisTipo.electivo_ajud += l.electivo_ajud;
+                                    totaisTipo.urgente_cir += l.urgente_cir;
+                                    totaisTipo.urgente_ajud += l.urgente_ajud;
+                                    totaisTipo.formativa_electivo +=
+                                        l.formativa_electivo;
+                                    totaisTipo.formativa_urgente +=
+                                        l.formativa_urgente;
+                                });
+
+                                return (
+                                    <div key={tipo} className="mb-8 pl-4">
+                                        <h3 className="mb-1 text-xl font-semibold">
+                                            {tipo}
+                                        </h3>
+                                        <div className="mb-3 text-gray-600">
+                                            Total {tipo}:{' '}
+                                            {totaisZona[zona].tipos[tipo]}
+                                        </div>
+                                        <div className="mb-6 flex items-center gap-2 text-gray-600">
+                                            <Star
+                                                size={12}
+                                                className="text-yellow-500"
+                                            />
+                                            Ajuda Formativa (Electivo):{' '}
                                             {Object.values(tipos).reduce(
                                                 (acc, t) =>
                                                     acc +
                                                     Object.values(t).reduce(
                                                         (a, l) =>
                                                             a +
-                                                            l.formativa_urgente,
+                                                            l.formativa_electivo,
                                                         0,
                                                     ),
                                                 0,
                                             )}
-                                        </span>
-                                    </div>
+                                        </div>
+                                        <div className="mb-6 flex items-center gap-2 text-gray-600">
+                                            <Star
+                                                size={12}
+                                                className="text-yellow-500"
+                                            />
+                                            <span>
+                                                Ajuda Formativa (Urgente):{' '}
+                                                {Object.values(tipos).reduce(
+                                                    (acc, t) =>
+                                                        acc +
+                                                        Object.values(t).reduce(
+                                                            (a, l) =>
+                                                                a +
+                                                                l.formativa_urgente,
+                                                            0,
+                                                        ),
+                                                    0,
+                                                )}
+                                            </span>
+                                        </div>
 
-                                    {modo === 'diag' ? (
-                                        <TabelaDiagProced
-                                            linhasArray={linhasArray}
-                                            totaisTipo={totaisTipo}
-                                        />
-                                    ) : (
-                                        <TabelaProcedDiag
-                                            linhasArray={linhasArray}
-                                            totaisTipo={totaisTipo}
-                                        />
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
-                ))}
+                                        {modo === 'diag' ? (
+                                            <TabelaDiagProced
+                                                linhasArray={linhasArray}
+                                                totaisTipo={totaisTipo}
+                                            />
+                                        ) : (
+                                            <TabelaProcedDiag
+                                                linhasArray={linhasArray}
+                                                totaisTipo={totaisTipo}
+                                            />
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ))}
             </div>
         </AppLayout>
     );

@@ -199,6 +199,7 @@ Route::middleware(['auth', 'active', 'verified'])->group(function () {
     Route::get('formacoes/{formacao}/download', [FormacaoController::class, 'download'])
         ->name('formacoes.download');
 });
+Route::post('/zona-anatomicas/reorder', [ZonaAnatomicaController::class, 'reorder']);
 
 // Admin Authentication (Public)
 Route::prefix('admin')->name('admin.')->group(function () {

@@ -16,6 +16,7 @@ class ZonaAnatomica extends Model
         'nome',
         'descricao',
         'user_id',
+        'ordem'
     ];
 
 

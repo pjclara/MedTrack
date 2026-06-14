@@ -424,16 +424,27 @@ class RegistoCirurgicoController extends Controller
     {
         $this->authorize('viewAny', RegistoCirurgico::class);
 
-        $registos = RegistoCirurgico::with([
-            'cirurgias',
-            'cirurgias.diagnostico.zonaAnatomica:id,nome',
-            'cirurgias.diagnostico:id,nome,tipo,zona_anatomica',
-            'cirurgias.procedimento:id,nome',
-            'cirurgias.funcaoCirurgiao:id,nome',
-            'tipoDeCirurgia:id,nome',
-        ])
-            ->orderBy('data_cirurgia', 'desc')
+        $registos = RegistoCirurgico::query()
+            ->select('registo_cirurgicos.*')
+            ->selectSub(function ($q) {
+                $q->from('cirurgias')
+                    ->join('diagnosticos', 'diagnosticos.id', '=', 'cirurgias.diagnostico_id')
+                    ->join('zona_anatomicas', 'zona_anatomicas.nome', '=', 'diagnosticos.zona_anatomica')
+                    ->whereColumn('cirurgias.registo_cirurgico_id', 'registo_cirurgicos.id')
+                    ->select('zona_anatomicas.ordem')
+                    ->limit(1);
+            }, 'zona_ordem')
+            ->with([
+                'cirurgias',
+                'cirurgias.diagnostico.zonaAnatomica:id,nome,ordem',
+                'cirurgias.diagnostico:id,nome,tipo,zona_anatomica',
+                'cirurgias.procedimento:id,nome',
+                'cirurgias.funcaoCirurgiao:id,nome',
+                'tipoDeCirurgia:id,nome',
+            ])
+            ->orderBy('zona_ordem', 'asc')
             ->get();
+
 
         // remover pequena cirurgia
         $registos = $registos->filter(fn($r) => $r->tipoDeCirurgia?->nome !== 'Pequena Cirurgia');
@@ -498,6 +509,7 @@ class RegistoCirurgicoController extends Controller
                         'urgente_ajud' => 0,
                         'formativa_electivo' => 0,
                         'formativa_urgente' => 0,
+                        'ordem_zona' => $c->diagnostico->zonaAnatomica->ordem ?? 999,
                     ];
                 }
 

@@ -21,10 +21,28 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { PlusCircle, Edit, Trash2 } from 'lucide-react';
+import { PlusCircle, Edit, Trash2, GripVertical } from 'lucide-react';
 import { type BreadcrumbItem } from '@/types';
 import { type PaginatedData, type ZonaAnatomica } from '@/types/models';
 import { toast } from 'react-toastify';
+
+import {
+    DndContext,
+    closestCenter,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
+
+import {
+    arrayMove,
+    SortableContext,
+    useSortable,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+
+import { CSS } from '@dnd-kit/utilities';
+import { useState } from 'react';
 
 interface ZonaAnatomicaIndexProps {
     zonaAnatomicas: PaginatedData<ZonaAnatomica>;
@@ -36,10 +54,63 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Zonas Anatómicas', href: '/zona-anatomicas' },
 ];
 
+// COMPONENTE SORTABLE PARA CADA LINHA
+function SortableRow({ item, children }: any) {
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+        id: item.id,
+    });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
+
+    return (
+        <TableRow ref={setNodeRef} style={style}>
+            <TableCell className="w-4 cursor-grab" {...attributes} {...listeners}>
+                <GripVertical className="text-gray-400" />
+            </TableCell>
+            {children}
+        </TableRow>
+    );
+}
+
 export default function ZonaAnatomicaIndex({ zonaAnatomicas }: ZonaAnatomicaIndexProps) {
+    const [items, setItems] = useState(zonaAnatomicas.data);
+
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: { distance: 5 },
+        })
+    );
+
     const handleDelete = (id: number) => {
         router.delete(`/zona-anatomicas/${id}`, {
             onSuccess: () => toast.success('Zona anatómica removida com sucesso!'),
+        });
+    };
+
+    // QUANDO O UTILIZADOR SOLTA A LINHA
+    const handleDragEnd = (event: any) => {
+        const { active, over } = event;
+
+        if (!over || active.id === over.id) return;
+
+        const oldIndex = items.findIndex((i) => i.id === active.id);
+        const newIndex = items.findIndex((i) => i.id === over.id);
+
+        const newOrder = arrayMove(items, oldIndex, newIndex);
+        setItems(newOrder);
+
+        // Enviar nova ordem para o backend
+        router.post('/zona-anatomicas/reorder', {
+            ordem: newOrder.map((item, index) => ({
+                id: item.id,
+                ordem: index + 1,
+            })),
+        }, {
+            preserveScroll: true,
+            onSuccess: () => toast.success('Ordem atualizada!'),
         });
     };
 
@@ -67,71 +138,86 @@ export default function ZonaAnatomicaIndex({ zonaAnatomicas }: ZonaAnatomicaInde
                     <CardHeader>
                         <CardTitle>Lista de Zonas Anatómicas</CardTitle>
                         <CardDescription>
-                            Total de {zonaAnatomicas.total} zonas registadas
+                            Arraste para reordenar (estilo Trello)
                         </CardDescription>
                     </CardHeader>
+
                     <CardContent>
                         <div className="rounded-md border">
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Nome</TableHead>
-                                        <TableHead>Descrição</TableHead>
-                                        <TableHead className="text-right">Ações</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {zonaAnatomicas.data.length === 0 ? (
-                                        <TableRow>
-                                            <TableCell colSpan={3} className="text-center text-muted-foreground py-10">
-                                                Nenhuma zona anatómica encontrada
-                                            </TableCell>
-                                        </TableRow>
-                                    ) : (
-                                        zonaAnatomicas.data.map((item) => (
-                                            <TableRow key={item.id}>
-                                                <TableCell className="font-medium">{item.nome}</TableCell>
-                                                <TableCell>{item.descricao || '-'}</TableCell>
-                                                <TableCell className="text-right">
-                                                    <div className="flex justify-end gap-2">
-                                                        <Link href={`/zona-anatomicas/${item.id}/edit`}>
-                                                            <Button variant="ghost" size="icon">
-                                                                <Edit className="h-4 w-4" />
-                                                            </Button>
-                                                        </Link>
-
-                                                        <AlertDialog>
-                                                            <AlertDialogTrigger asChild>
-                                                                <Button variant="ghost" size="icon" className="text-destructive">
-                                                                    <Trash2 className="h-4 w-4" />
-                                                                </Button>
-                                                            </AlertDialogTrigger>
-                                                            <AlertDialogContent>
-                                                                <AlertDialogHeader>
-                                                                    <AlertDialogTitle>Tem a certeza?</AlertDialogTitle>
-                                                                    <AlertDialogDescription>
-                                                                        Esta ação não pode ser desfeita. Isto irá eliminar permanentemente a zona anatómica
-                                                                        "{item.nome}".
-                                                                    </AlertDialogDescription>
-                                                                </AlertDialogHeader>
-                                                                <AlertDialogFooter>
-                                                                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                                                    <AlertDialogAction
-                                                                        onClick={() => handleDelete(item.id)}
-                                                                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                                                    >
-                                                                        Eliminar
-                                                                    </AlertDialogAction>
-                                                                </AlertDialogFooter>
-                                                            </AlertDialogContent>
-                                                        </AlertDialog>
-                                                    </div>
-                                                </TableCell>
+                            <DndContext
+                                sensors={sensors}
+                                collisionDetection={closestCenter}
+                                onDragEnd={handleDragEnd}
+                            >
+                                <SortableContext
+                                    items={items.map((i) => i.id)}
+                                    strategy={verticalListSortingStrategy}
+                                >
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead></TableHead>
+                                                <TableHead>Ordem</TableHead>
+                                                <TableHead>Nome</TableHead>
+                                                <TableHead>Descrição</TableHead>
+                                                <TableHead className="text-right">Ações</TableHead>
                                             </TableRow>
-                                        ))
-                                    )}
-                                </TableBody>
-                            </Table>
+                                        </TableHeader>
+
+                                        <TableBody>
+                                            {items.length === 0 ? (
+                                                <TableRow>
+                                                    <TableCell colSpan={5} className="text-center py-10 text-muted-foreground">
+                                                        Nenhuma zona anatómica encontrada
+                                                    </TableCell>
+                                                </TableRow>
+                                            ) : (
+                                                items.map((item, index) => (
+                                                    <SortableRow key={item.id} item={item}>
+                                                        <TableCell className="font-medium">{index + 1}</TableCell>
+                                                        <TableCell className="font-medium">{item.nome}</TableCell>
+                                                        <TableCell>{item.descricao || '-'}</TableCell>
+                                                        <TableCell className="text-right">
+                                                            <div className="flex justify-end gap-2">
+                                                                <Link href={`/zona-anatomicas/${item.id}/edit`}>
+                                                                    <Button variant="ghost" size="icon">
+                                                                        <Edit className="h-4 w-4" />
+                                                                    </Button>
+                                                                </Link>
+
+                                                                <AlertDialog>
+                                                                    <AlertDialogTrigger asChild>
+                                                                        <Button variant="ghost" size="icon" className="text-destructive">
+                                                                            <Trash2 className="h-4 w-4" />
+                                                                        </Button>
+                                                                    </AlertDialogTrigger>
+                                                                    <AlertDialogContent>
+                                                                        <AlertDialogHeader>
+                                                                            <AlertDialogTitle>Tem a certeza?</AlertDialogTitle>
+                                                                            <AlertDialogDescription>
+                                                                                Esta ação não pode ser desfeita. Isto irá eliminar permanentemente a zona anatómica "{item.nome}".
+                                                                            </AlertDialogDescription>
+                                                                        </AlertDialogHeader>
+                                                                        <AlertDialogFooter>
+                                                                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                                            <AlertDialogAction
+                                                                                onClick={() => handleDelete(item.id)}
+                                                                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                                                            >
+                                                                                Eliminar
+                                                                            </AlertDialogAction>
+                                                                        </AlertDialogFooter>
+                                                                    </AlertDialogContent>
+                                                                </AlertDialog>
+                                                            </div>
+                                                        </TableCell>
+                                                    </SortableRow>
+                                                ))
+                                            )}
+                                        </TableBody>
+                                    </Table>
+                                </SortableContext>
+                            </DndContext>
                         </div>
                     </CardContent>
                 </Card>

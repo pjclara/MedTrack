@@ -101,4 +101,14 @@ class ZonaAnatomicaController extends Controller
         return redirect()->route('zona-anatomicas.index')
             ->with('success', 'Zona anatómica removida com sucesso.');
     }
+
+    public function reorder(Request $request)
+    {
+        foreach ($request->ordem as $item) {
+            ZonaAnatomica::where('id', $item['id'])
+                ->update(['ordem' => $item['ordem']]);
+        }
+
+        return back();
+    }
 }
