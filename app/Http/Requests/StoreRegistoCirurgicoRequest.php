@@ -32,7 +32,9 @@ class StoreRegistoCirurgicoRequest extends FormRequest
             'utente.processo' => [
                 'required',
                 'integer',
-                Rule::unique('utentes', 'processo')->ignore($this->input('utente.id')),
+                Rule::unique('utentes', 'processo')
+                    ->where(fn($query) => $query->where('user_id', auth()->id()))
+                    ->ignore($this->input('utente.id')),
             ],
             'utente.idade' => 'required|integer',
             'utente.sexo' => ['required', Rule::enum(SexoEnum::class)],
@@ -40,12 +42,12 @@ class StoreRegistoCirurgicoRequest extends FormRequest
             'registo.hospital' => [
                 'required',
                 'integer',
-                Rule::exists('hospitals', 'id')->where(fn ($query) => $query->where('user_id', $ownerId)),
+                Rule::exists('hospitals', 'id')->where(fn($query) => $query->where('user_id', $ownerId)),
             ],
             'registo.especialidade' => [
                 'required',
                 'integer',
-                Rule::exists('especialidades', 'id')->where(fn ($query) => $query->where('user_id', $ownerId)),
+                Rule::exists('especialidades', 'id')->where(fn($query) => $query->where('user_id', $ownerId)),
             ],
             'registo.data_cirurgia' => 'required|date',
             'registo.tipo_de_cirurgia_id' => 'required|exists:tipo_de_cirurgias,id',
