@@ -18,9 +18,9 @@ class UserController extends Controller
         $search = $request->input('search');
 
         $users = User::when($search, function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%");
-            })
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        })
             ->with(['hospital:id,nome', 'especialidade:id,nome'])
             ->withCount(['registosCirurgicos', 'atividadesCientificas', 'formacoes'])
             ->orderBy('created_at', 'desc')
@@ -43,21 +43,41 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'hospital_id' => 'nullable|integer|exists:hospitals,id',
-            'especialidade_id' => 'nullable|integer|exists:especialidades,id',
-            'is_active' => 'boolean',
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
-        $validated['is_active'] = $request->boolean('is_active', true);
 
+        // 1) Criar o utilizador
         $user = User::create($validated);
 
-        AdminLogService::log('Create User', User::class, $user->id, $request->except('password'));
+        // 2) procurar hospital 
+
+        $hospitalNome = Hospital::whereId($request->input('hospital_id'))->first();
+
+
+        $hospital = Hospital::create([
+            'nome' => $hospitalNome->nome ?? 'Hospital de ' . $user->name,
+            'user_id' => $user->id,
+        ]);
+
+        // 3) Criar especialidade associada ao utilizador
+
+        $especialidadeNome = Especialidade::whereId($request->input('especialidade_id'))->first();
+        $especialidade = Especialidade::create([
+            'nome' => $especialidadeNome->nome ?? 'Especialidade de ' . $user->name,
+            'user_id' => $user->id,
+        ]);
+
+        // 4) Atualizar o user para apontar para estes dois registos
+        $user->update([
+            'hospital_id' => $hospital->id,
+            'especialidade_id' => $especialidade->id,
+        ]);
 
         return redirect()->route('admin.users.index')
             ->with('success', 'Utilizador criado com sucesso.');
@@ -68,11 +88,11 @@ class UserController extends Controller
         $user->load(['hospital:id,nome', 'especialidade:id,nome']);
 
         $user->loadCount([
-            'registosCirurgicos as registos_count', 
-            'atividadesCientificas as atividades_count', 
+            'registosCirurgicos as registos_count',
+            'atividadesCientificas as atividades_count',
             'formacoes as formacoes_count'
         ]);
-        
+
         $recentActivity = collect()
             ->merge($user->registosCirurgicos()->latest()->take(5)->get()->map(fn($i) => [
                 'type' => 'Registo Cirúrgico',
@@ -132,7 +152,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         AdminLogService::log('Delete User', User::class, $user->id, ['user_email' => $user->email]);
-        
+
         $user->delete();
 
         return redirect()->route('admin.users.index')

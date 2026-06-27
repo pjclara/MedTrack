@@ -55,13 +55,30 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'hospital_id' => 'nullable|integer|exists:hospitals,id',
-            'especialidade_id' => 'nullable|integer|exists:especialidades,id',
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
 
-        User::create($validated);
+        // 1) Criar o utilizador
+        $user = User::create($validated);
+
+        // 2) Criar hospital associado ao utilizador
+        $hospital = Hospital::create([
+            'nome' => 'Hospital de ' . $user->name,
+            'user_id' => $user->id,
+        ]);
+
+        // 3) Criar especialidade associada ao utilizador
+        $especialidade = Especialidade::create([
+            'nome' => 'Especialidade de ' . $user->name,
+            'user_id' => $user->id,
+        ]);
+
+        // 4) Atualizar o user para apontar para estes dois registos
+        $user->update([
+            'hospital_id' => $hospital->id,
+            'especialidade_id' => $especialidade->id,
+        ]);
 
         return redirect()->route('users.index')
             ->with('success', 'Utilizador criado com sucesso.');
